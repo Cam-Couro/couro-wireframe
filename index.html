@@ -1501,6 +1501,56 @@ body.mobile .rvm-grid{ grid-template-columns:1fr; }
 .ffrow .fdelta{ font-family:'Inter',sans-serif; font-weight:700; text-align:right; }
 .ffrow.hot{ background:#FFFDF3; border-radius:.8rem; padding-left:.8rem; padding-right:.8rem; margin:0 -.8rem; border-bottom:none; }
 body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6rem 1.8rem 6rem 5rem; }
+
+/* ============ SKIM + PATTERN-INTEL LAYER (Berkeley demo) ============ */
+/* Movement-pattern roll-up — turns the org from a scoreboard into a coaching brain.
+   .risk = injury/deficit pattern (gold rail) · .edge = excellence pattern (green rail). */
+.patgrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(25rem,1fr)); gap:1.4rem; }
+.patcard{ position:relative; border:1.5px solid var(--line); border-radius:var(--r-card);
+  background:#fff; padding:1.5rem 1.5rem 1.3rem 1.9rem; overflow:hidden; cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease; }
+.patcard:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(20,20,19,.08); }
+.patcard::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:5px; }
+.patcard.risk::before{ background:#FFC700; }
+.patcard.edge::before{ background:var(--s-good); }
+.pat-k{ font-size:1rem; letter-spacing:.14em; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:.5rem; }
+.patcard.risk .pat-k{ color:#B8860B; }
+.patcard.edge .pat-k{ color:var(--s-good); }
+.pat-count{ font-family:'Inter',sans-serif; }
+.pat-name{ font-size:1.65rem; font-weight:700; margin:.35rem 0 .45rem; line-height:1.22; color:var(--ink); }
+.pat-why{ font-size:1.22rem; color:var(--muted); line-height:1.5; margin:0 0 1.1rem; }
+.pat-why b{ color:var(--ink); font-weight:650; }
+.pat-foot{ display:flex; align-items:center; justify-content:space-between; gap:.8rem; }
+.pat-ath{ display:flex; align-items:center; }
+.pat-ath .avx{ width:2.6rem; height:2.6rem; font-size:1rem; margin-left:-.6rem; border:2px solid #fff; }
+.pat-ath .avx:first-child{ margin-left:0; }
+.pat-ath .more{ margin-left:.7rem; font-size:1.12rem; color:var(--muted); font-weight:600; }
+.pat-go{ font-size:1.18rem; font-weight:700; white-space:nowrap; }
+.patcard.risk .pat-go{ color:#B8860B; }
+.patcard.edge .pat-go{ color:var(--s-good); }
+
+/* Archetype micro-tag — gives every roster row a movement identity, not just a number */
+.archtag{ display:inline-block; font-size:1rem; font-weight:600; letter-spacing:.01em;
+  padding:.12rem .55rem; border-radius:.5rem; background:var(--fill); color:var(--muted);
+  border:1px solid var(--line); white-space:nowrap; }
+
+/* Breadcrumb + prev/next athlete nav (wayfinding across a roster) */
+.crumb{ display:flex; align-items:center; gap:.55rem; flex-wrap:wrap; margin:0 0 1.2rem; font-size:1.2rem; }
+.crumb a{ color:var(--muted); font-weight:600; cursor:pointer; text-decoration:none; }
+.crumb a:hover{ color:var(--ink); text-decoration:underline; }
+.crumb .sep{ color:var(--muted-2); }
+.crumb .here{ color:var(--ink); font-weight:700; }
+.crumb .spacer{ flex:1; }
+.athnav{ display:flex; align-items:center; gap:.4rem; }
+.athnav button{ font-size:1.12rem; font-weight:600; color:var(--ink); background:#fff;
+  border:1.5px solid var(--line); border-radius:.7rem; padding:.35rem .8rem; cursor:pointer; }
+.athnav button:hover{ background:var(--fill); }
+.athnav button:disabled{ opacity:.35; cursor:default; }
+body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-between; }
+
+/* Triage elevation — the single "look here first" block */
+.triage-hero{ border:1.5px solid #F0E4B8 !important; background:#FFFDF3;
+  box-shadow:0 8px 22px rgba(184,134,11,.07); }
 </style>
 
 <!-- ===================== DEMO NAV (chrome, not app) ===================== -->
@@ -1691,6 +1741,19 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 
     <!-- ============ VIEW: athlete profile ============ -->
     <div id="v-athlete" class="view page" hidden>
+      <!-- Wayfinding: where am I, and move through the roster without bouncing back to the table -->
+      <div class="crumb">
+        <a onclick="backToOrg()">Westgate Athletics</a>
+        <span class="sep">›</span>
+        <a onclick="backToOrg('athletes')">Roster</a>
+        <span class="sep">›</span>
+        <span class="here" id="crumb-name">Montana Carlson</span>
+        <span class="spacer"></span>
+        <span class="athnav">
+          <button id="ath-prev" onclick="stepAthlete(-1)">◂ Prev athlete</button>
+          <button id="ath-next" onclick="stepAthlete(1)">Next athlete ▸</button>
+        </span>
+      </div>
       <div class="lbl">Sessions Types</div>
       <div class="tabs" id="stypes">
         <button class="on" onclick="stype(this)">Track</button><button onclick="stype(this)">Treadmill</button><button onclick="stype(this)">FreeFlow</button><button onclick="stype(this)">Basketball</button><button onclick="stype(this)">Softball</button>
@@ -2947,12 +3010,6 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
         <span class="struct-sub">everyone, one profile each</span>
       </div>
     </div>
-    <p class="struct-rule">
-      <b>An athlete belongs to the organisation, not to a coach or a squad.</b>
-      One profile, one history — a two-sport athlete (say football <span class="amp">&amp;</span> track)
-      lives on the roster once and appears on both squads.
-    </p>
-
     <div class="tabs" style="margin-bottom:.4rem">
       <button class="on" onclick="orgTab(this,'today')">Today</button>
       <button onclick="orgTab(this,'overview')">Overview</button>
@@ -2976,7 +3033,7 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
       </div>
 
       <div class="zone"><span class="zn act"></span><span class="zl">Needs you first</span><span class="zr"></span><span class="zc">2 of your athletes</span></div>
-      <div class="card" style="margin-bottom:1.4rem">
+      <div class="card triage-hero" style="margin-bottom:1.4rem">
         <div class="trow sev-hi" onclick="openAthleteByName('Rosa Delgado')" style="cursor:pointer">
           <span class="avx hi">RD</span>
           <span class="tinfo"><b>Rosa Delgado</b><small>arm path drifting 3 sessions straight — check before she throws today</small></span>
@@ -2986,6 +3043,29 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
           <span class="avx md">MW</span>
           <span class="tinfo"><b>Marcus Webb</b><small>knee load rising, score falling — Return-to-Sport, week 6</small></span>
           <span class="acts"><button onclick="event.stopPropagation();openAthleteByName('Marcus Webb')">Review ▸</button></span>
+        </div>
+      </div>
+
+      <!-- Coach-scoped pattern intel: same intelligence, narrowed to their 12 sprinters -->
+      <div class="zone"><span class="zn calm"></span><span class="zl">Patterns in your sprint group</span><span class="zr"></span><span class="zc">across the 12 you coach</span></div>
+      <div class="patgrid" style="margin-bottom:.4rem">
+        <div class="patcard risk" onclick="patternDrill('crossover')">
+          <div class="pat-k">⚠ Watch · <span class="pat-count">4 of your 12</span></div>
+          <div class="pat-name">Crossover landing → knee-valgus load</div>
+          <p class="pat-why">Four of your sprinters plant across midline. <b>Rosa and Dev are the sharpest</b> — worth a cue before today's runs.</p>
+          <div class="pat-foot">
+            <div class="pat-ath"><span class="avx hi">RD</span><span class="avx">DO</span><span class="avx">KC</span><span class="avx">JR</span></div>
+            <span class="pat-go">See the 4 ▸</span>
+          </div>
+        </div>
+        <div class="patcard edge" onclick="patternDrill('spring')">
+          <div class="pat-k">★ Strength · <span class="pat-count">3 of your 12</span></div>
+          <div class="pat-name">Spring-loaded push-off</div>
+          <p class="pat-why">Montana leads a group with elite ground-contact elasticity. <b>Use them as the model</b> the crossover group trains toward.</p>
+          <div class="pat-foot">
+            <div class="pat-ath"><span class="avx ok">MC</span><span class="avx ok">AB</span><span class="avx ok">ET</span></div>
+            <span class="pat-go">See the 3 ▸</span>
+          </div>
         </div>
       </div>
 
@@ -3008,6 +3088,52 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
     <!-- ===== ORG TAB: OVERVIEW ===== -->
     <div id="ot-overview" hidden>
       <div class="headline" id="og-line" style="margin-top:1.4rem"><b>Trending up 5 points this quarter.</b> Two athletes are falling — Rosa (arm path) and Marcus (knee load) — both fatigue-pattern, both flagged below.</div>
+
+      <!-- ===== MOVEMENT-PATTERN INTELLIGENCE (the coaching brain) =====
+           Rolls every athlete's Signature + Risk Map findings UP to the org, so staff
+           see shared movement STRATEGIES — the risk mechanisms and the excellence
+           edges — not 912 separate scores. This is the layer they can actually coach on. -->
+      <div class="zone"><span class="zn act"></span><span class="zl">Movement patterns across your roster</span><span class="zr"></span><span class="zc">what's driving risk — and what's driving wins</span></div>
+      <div class="patgrid">
+        <div class="patcard risk" onclick="patternDrill('crossover')">
+          <div class="pat-k">⚠ Injury-risk pattern · <span class="pat-count">6 athletes</span></div>
+          <div class="pat-name">Crossover landing → knee-valgus load</div>
+          <p class="pat-why">Six sprinters plant with the foot crossing midline. That inward knee collapse is the <b>mechanism behind non-contact knee injury</b> — and it's clustering in your speed group.</p>
+          <div class="pat-foot">
+            <div class="pat-ath"><span class="avx hi">RD</span><span class="avx hi">MW</span><span class="avx">DO</span><span class="avx">KC</span><span class="more">+2</span></div>
+            <span class="pat-go">See the 6 ▸</span>
+          </div>
+        </div>
+        <div class="patcard risk" onclick="patternDrill('armpath')">
+          <div class="pat-k">⚠ Injury-risk pattern · <span class="pat-count">3 pitchers</span></div>
+          <div class="pat-name">Late trunk rotation → shoulder overload</div>
+          <p class="pat-why">Three softball pitchers open the trunk early, so the arm plays catch-up. Arm-path drift follows — <b>Rosa's is three sessions and climbing.</b></p>
+          <div class="pat-foot">
+            <div class="pat-ath"><span class="avx hi">RD</span><span class="avx">ET</span><span class="avx">BE</span></div>
+            <span class="pat-go">See the 3 ▸</span>
+          </div>
+        </div>
+        <div class="patcard edge" onclick="patternDrill('spring')">
+          <div class="pat-k">★ Performance edge · <span class="pat-count">4 athletes</span></div>
+          <div class="pat-name">Spring-loaded push-off</div>
+          <p class="pat-why">Your top four share a short, elastic ground contact — energy in, energy straight back out. <b>This is the program's signature strength;</b> coach the rest toward it.</p>
+          <div class="pat-foot">
+            <div class="pat-ath"><span class="avx ok">MC</span><span class="avx ok">JF</span><span class="avx ok">AB</span><span class="avx ok">SW</span></div>
+            <span class="pat-go">See the 4 ▸</span>
+          </div>
+        </div>
+        <div class="patcard edge" onclick="patternDrill('symmetry')">
+          <div class="pat-k">★ Performance edge · <span class="pat-count">9 athletes</span></div>
+          <div class="pat-name">Balanced left–right loading</div>
+          <p class="pat-why">Nine athletes load both legs within 3% — the <b>durability signature</b> that keeps them available all season. Swimming leads the org here.</p>
+          <div class="pat-foot">
+            <div class="pat-ath"><span class="avx ok">AB</span><span class="avx ok">JF</span><span class="avx ok">MC</span><span class="avx ok">SW</span><span class="more">+5</span></div>
+            <span class="pat-go">See the 9 ▸</span>
+          </div>
+        </div>
+      </div>
+      <div class="insight" style="margin:1.1rem 0 .4rem"><span class="ico">💡</span><span>Patterns are found automatically from every athlete's Signature and Risk Map — <b>you're reading the roster's shared strategies, not opening 912 reports.</b></span></div>
+
       <div class="zone"><span class="zn"></span><span class="zl">Momentum map · every athlete</span><span class="zr"></span><span class="zc">score vs 30-day change · click a dot</span></div>
       <div class="card">
         <svg id="momap" viewBox="0 0 560 306" style="width:100%"></svg>
@@ -3030,7 +3156,7 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
       </div>
 
       <div class="zone"><span class="zn act"></span><span class="zl">Act first</span><span class="zr"></span><span class="zc">3 items</span></div>
-      <div class="card" id="og-triage">
+      <div class="card triage-hero" id="og-triage">
         <div class="trow sev-hi">
           <span class="avx hi">RD</span>
           <span class="tinfo"><b class="athlink">Rosa Delgado</b><small>Westgate Softball — Pitchers · arm path drifting 3 sessions straight</small></span>
@@ -3085,13 +3211,6 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 
     <!-- ===== ORG TAB: TEAMS ===== -->
     <div id="ot-teams" hidden>
-      <div class="tablead">
-        <span class="tl-ico">👥</span>
-        <p><b>Squads are how you group athletes</b> — by sport, level, or programme
-          (Softball, Sprint, Return-to-Sport). They're views into the roster, not
-          separate lists: adding or removing someone here never touches their profile
-          or history, and an athlete can sit on several at once.</p>
-      </div>
       <div class="headline"><b>RTS is the fastest-improving roster</b> — its lower scores are protocol, not problems. Softball carries the only open drift alerts.</div>
       <div class="zone"><span class="zn"></span><span class="zl">Compare teams</span><span class="zr"></span><span class="zc">6 of 31 · click a team to open it</span></div>
       <div class="card" id="og-teamscard" style="margin-bottom:1.8rem">
@@ -3230,13 +3349,6 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 
     <!-- ===== ORG TAB: ATHLETES ===== -->
     <div id="ot-athletes" hidden>
-      <div class="tablead">
-        <span class="tl-ico">📋</span>
-        <p><b>The roster is every athlete in your organisation</b> — one profile each,
-          shared by all staff, whatever squad they're on. Search or filter by squad;
-          nobody scrolls 912 names. New athletes arrive by importing a list; removing
-          someone deactivates them and keeps their history.</p>
-      </div>
       <div class="headline"><b>Montana is the org's biggest riser (↑8).</b> Marcus needs Priya's eyes this week — score falling while knee load climbs.</div>
       <div class="zone"><span class="zn"></span><span class="zl">Leaderboard · all athletes</span><span class="zr"></span><span class="zc">top 6 of 912 · click to open</span></div>
       <div class="card" id="og-leaderboard" style="margin-bottom:1.8rem">
@@ -3256,12 +3368,12 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
           <thead><tr><th>Athlete</th><th>Squad</th><th>Score</th><th>Δ 30 days</th><th>Sessions</th><th>Status</th></tr></thead>
           <tbody>
             <tr onclick="openAthlete(1, null); document.getElementById('scr-org').hidden = true; document.getElementById('scr-app').hidden = false;">
-              <td><b>Montana Carlson</b></td><td>Track &amp; Field</td><td class="num" style="color:var(--s-good);font-weight:700">82</td><td class="d-up">↑ 8</td><td class="num">12</td><td><span class="alertchip ok">personal best</span></td></tr>
-            <tr onclick="openAthleteByName('Jaylen Ford')"><td><b>Jaylen Ford</b></td><td>Football</td><td class="num" style="color:var(--s-good);font-weight:700">81</td><td class="d-up">↑ 2</td><td class="num">9</td><td><span class="alertchip ok">steady</span></td><td><button class="boardbtn " onclick="event.stopPropagation();openAthleteByName('Jaylen Ford')">Report ▸</button></td></tr>
-            <tr onclick="openAthleteByName('Rosa Delgado')"><td><b>Rosa Delgado</b></td><td>Softball</td><td class="num" style="color:var(--s-good);font-weight:700">79</td><td class="d-dn">↓ 3</td><td class="num">11</td><td><span class="alertchip warn">drift alert</span></td><td><button class="boardbtn pri" onclick="event.stopPropagation();openAthleteByName('Rosa Delgado')">Report ▸</button></td></tr>
-            <tr onclick="openAthleteByName('Aaliyah Brooks')"><td><b>Aaliyah Brooks</b></td><td>Track &amp; Field</td><td class="num" style="color:var(--s-good);font-weight:700">77</td><td class="d-up">↑ 1</td><td class="num">8</td><td><span class="alertchip ok">steady</span></td></tr>
-            <tr onclick="openAthleteByName('Sam Whitfield')"><td><b>Sam Whitfield</b></td><td>Return-to-Sport <small style="color:var(--muted-2)">· Football</small></td><td class="num" style="color:var(--s-warn);font-weight:700">66</td><td class="d-up">↑ 6</td><td class="num">10</td><td><span class="alertchip info">week 6 of ACL protocol</span></td></tr>
-            <tr onclick="openAthleteByName('Marcus Webb')"><td><b>Marcus Webb</b></td><td>Return-to-Sport <small style="color:var(--muted-2)">· Soccer</small></td><td class="num" style="color:var(--s-warn);font-weight:700">61</td><td class="d-dn">↓ 4</td><td class="num">4</td><td><span class="alertchip warn">knee load</span></td></tr>
+              <td><b>Montana Carlson</b><br><span class="archtag">Spring-loaded</span></td><td>Track &amp; Field</td><td class="num" style="color:var(--s-good);font-weight:700">82</td><td class="d-up">↑ 8</td><td class="num">12</td><td><span class="alertchip ok">personal best</span></td></tr>
+            <tr onclick="openAthleteByName('Jaylen Ford')"><td><b>Jaylen Ford</b><br><span class="archtag">Spring-loaded</span></td><td>Football</td><td class="num" style="color:var(--s-good);font-weight:700">81</td><td class="d-up">↑ 2</td><td class="num">9</td><td><span class="alertchip ok">steady</span></td><td><button class="boardbtn " onclick="event.stopPropagation();openAthleteByName('Jaylen Ford')">Report ▸</button></td></tr>
+            <tr onclick="openAthleteByName('Rosa Delgado')"><td><b>Rosa Delgado</b><br><span class="archtag">Crossover-lander</span></td><td>Softball</td><td class="num" style="color:var(--s-good);font-weight:700">79</td><td class="d-dn">↓ 3</td><td class="num">11</td><td><span class="alertchip warn">drift alert</span></td><td><button class="boardbtn pri" onclick="event.stopPropagation();openAthleteByName('Rosa Delgado')">Report ▸</button></td></tr>
+            <tr onclick="openAthleteByName('Aaliyah Brooks')"><td><b>Aaliyah Brooks</b><br><span class="archtag">Balanced loader</span></td><td>Track &amp; Field</td><td class="num" style="color:var(--s-good);font-weight:700">77</td><td class="d-up">↑ 1</td><td class="num">8</td><td><span class="alertchip ok">steady</span></td></tr>
+            <tr onclick="openAthleteByName('Sam Whitfield')"><td><b>Sam Whitfield</b><br><span class="archtag">Rebuilding · ACL</span></td><td>Return-to-Sport <small style="color:var(--muted-2)">· Football</small></td><td class="num" style="color:var(--s-warn);font-weight:700">66</td><td class="d-up">↑ 6</td><td class="num">10</td><td><span class="alertchip info">week 6 of ACL protocol</span></td></tr>
+            <tr onclick="openAthleteByName('Marcus Webb')"><td><b>Marcus Webb</b><br><span class="archtag">Crossover-lander</span></td><td>Return-to-Sport <small style="color:var(--muted-2)">· Soccer</small></td><td class="num" style="color:var(--s-warn);font-weight:700">61</td><td class="d-dn">↓ 4</td><td class="num">4</td><td><span class="alertchip warn">knee load</span></td></tr>
           </tbody>
         </table>
         </div>
@@ -3921,12 +4033,15 @@ function filterRoster(v){ renderRoster(v); }
 function openAthlete(id, el){
   document.querySelectorAll('.athlete-card').forEach(c => c.classList.remove('active'));
   if (el) el.classList.add('active');
-  document.getElementById('ath-name').textContent = ATHLETES.find(a=>a.id===id).name;
+  const nm = ATHLETES.find(a=>a.id===id).name;
+  document.getElementById('ath-name').textContent = nm;
+  setCrumb(nm);
   show('athlete');
 }
 /* open any athlete by name, from org / roster / anywhere -> their profile */
 function openAthleteByName(name){
   document.getElementById('ath-name').textContent = name;
+  setCrumb(name);
   document.getElementById('scr-login').hidden = true;
   document.getElementById('scr-hub').hidden = true;
   document.getElementById('scr-org').hidden = true;
@@ -3936,6 +4051,40 @@ function openAthleteByName(name){
   show('athlete');
   window.scrollTo(0,0);
   toast('Opening <b>' + name + '</b>’s profile');
+}
+/* ---- wayfinding: breadcrumb + prev/next through the roster ---- */
+const ROSTER_ORDER = ['Montana Carlson','Jaylen Ford','Rosa Delgado','Aaliyah Brooks','Sam Whitfield','Marcus Webb'];
+let athIdx = 0;
+function setCrumb(name){
+  const el = document.getElementById('crumb-name'); if (el) el.textContent = name;
+  const i = ROSTER_ORDER.indexOf(name); if (i >= 0) athIdx = i;
+  const p = document.getElementById('ath-prev'), n = document.getElementById('ath-next');
+  if (p) p.disabled = athIdx <= 0;
+  if (n) n.disabled = athIdx >= ROSTER_ORDER.length - 1;
+}
+function stepAthlete(d){
+  const i = Math.min(Math.max(athIdx + d, 0), ROSTER_ORDER.length - 1);
+  if (i === athIdx) return;
+  athIdx = i;
+  openAthleteByName(ROSTER_ORDER[i]);
+}
+function backToOrg(tab){ go('org'); if (tab) orgTabByKey(tab); }
+/* ---- movement-pattern drill-down: org pattern -> the athlete who shows it clearest ---- */
+function patternDrill(key){
+  const map = {
+    crossover:{ who:'Rosa Delgado',    tab:'risk',      n:6, label:'crossover landing' },
+    armpath:  { who:'Rosa Delgado',    tab:'risk',      n:3, label:'late trunk rotation' },
+    spring:   { who:'Montana Carlson', tab:'signature', n:4, label:'spring-loaded push-off' },
+    symmetry: { who:'Aaliyah Brooks',  tab:'signature', n:9, label:'balanced left–right loading' }
+  };
+  const p = map[key]; if (!p) return;
+  openAthleteByName(p.who);
+  setTimeout(() => {
+    const btn = [...document.querySelectorAll('#athtabs button')]
+      .find(b => b.textContent.trim().toLowerCase().startsWith(p.tab));
+    if (btn) athTab(btn, p.tab === 'risk' ? 'riskmap' : 'signature');
+  }, 70);
+  toast(p.n + ' athletes share <b>' + p.label + '</b> — opening ' + p.who + ', the clearest example');
 }
 /* any element tagged .athlink opens that athlete's profile */
 document.addEventListener('click', e => {
