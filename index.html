@@ -1784,7 +1784,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       <div class="crumb">
         <a onclick="backToOrg()">Westgate Athletics</a>
         <span class="sep">›</span>
-        <a onclick="backToOrg('athletes')">Roster</a>
+        <a onclick="backToOrg('teams')">Teams</a>
         <span class="sep">›</span>
         <span class="here" id="crumb-name">Montana Carlson</span>
         <span class="spacer"></span>
@@ -2657,12 +2657,12 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         Back
       </div>
       <h1 style="font-size:2.6rem;font-weight:700">Add a <span class="yel">squad</span></h1>
-      <p style="color:var(--muted);font-size:1.4rem;font-weight:400;margin:.4rem 0 .2rem">Name the squad and paste your athletes. Profiles belong to your organization, not to the squad — so an athlete on two squads stays one profile with one history, and anyone on your staff can film them.</p>
+      <p style="color:var(--muted);font-size:1.4rem;font-weight:400;margin:.4rem 0 .2rem">Name the team and paste your athletes. Profiles belong to your organization, not to the team — so an athlete on two teams stays one profile with one history, and anyone on your staff can film them.</p>
 
       <div class="upsec">
-        <div class="lbl">1 · Squad details</div>
+        <div class="lbl">1 · Team details</div>
         <div class="frow">
-          <div class="fld"><label>Squad name</label><input id="rname" placeholder="e.g. Westgate — Sprints"></div>
+          <div class="fld"><label>Team name</label><input id="rname" placeholder="e.g. Westgate — Sprints"></div>
           <div class="fld"><label>Sport &amp; group</label>
             <select id="rsport" onchange="rosterConfirm()"><option>Track — Sprints</option><option>Track — Distance</option><option>Softball — Pitching</option><option>Baseball — Pitching</option><option>Basketball</option><option>Soccer</option><option>Other</option></select>
           </div>
@@ -2672,7 +2672,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
       <div class="upsec">
         <div class="lbl">2 · Add your athletes <span style="font-weight:400;color:var(--muted-2);text-transform:none;letter-spacing:0">· one profile per person, org-wide</span></div>
-        <p class="stepnote">Two ways: <b>upload your roster spreadsheet</b> (Excel — fastest, and if it has height &amp; weight the profiles come out <b>already personalized</b>), or <b>paste names</b> below. If the sheet has a <b>Student ID</b>, re-importing next term <b>updates</b> those athletes rather than duplicating them — and a <b>Team</b> column creates squads as it goes.</p>
+        <p class="stepnote">Two ways: <b>upload your roster spreadsheet</b> (Excel — fastest, and if it has height &amp; weight the profiles come out <b>already personalized</b>), or <b>paste names</b> below. If the sheet has a <b>Student ID</b>, re-importing next term <b>updates</b> those athletes rather than duplicating them — and a <b>Team</b> column creates teams as it goes.</p>
         <div class="importdz" id="importdz" onclick="rosterImport()">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4A504A" stroke-width="1.6"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg>
           <div><h5 id="importdz-h">Upload your roster (Excel)</h5><p id="importdz-p">.xlsx or .csv · Couro maps the columns for you. <span style="color:var(--muted-2)">PDF works too — best-effort.</span></p></div>
@@ -3011,7 +3011,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
     <div class="org-hero">
       <div>
         <h1>Your <span class="yel">Organization</span></h1>
-        <p>Compare performance at every level — organization, squad, and athlete</p>
+        <p>Compare performance at every level — organization, team, and athlete</p>
         <!-- Only appears for staff who belong to two orgs — someone who used Couro
              alone and was later added to a department. Hidden for everyone else. -->
         <div class="orgswitch">
@@ -3024,44 +3024,42 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
         <button class="walkbtn" onclick="startOrgTour()">✨ Walk me through Program view</button>
-        <button class="btn btn-yellow" onclick="newRoster()">＋ &nbsp;New Squad</button>
+        <button class="btn btn-yellow" onclick="newRoster()">＋ &nbsp;New Team</button>
       </div>
     </div>
 
     <!-- Structure strip: teaches the model once, stays visible on every tab.
          Org owns athletes · squads are groupings · roster is everyone. -->
     <div class="structstrip">
-      <div class="struct-node" onclick="orgTabByKey('access')">
-        <span class="struct-k">Organisation</span>
+      <div class="struct-node" onclick="orgTabByKey('overview')">
+        <span class="struct-k">Organization</span>
         <span class="struct-v">Westgate Athletics</span>
-        <span class="struct-sub">one club · owns every athlete</span>
+        <span class="struct-sub">the department · owns every athlete</span>
       </div>
-      <span class="struct-arrow">contains</span>
+      <span class="struct-arrow">→</span>
       <div class="struct-node" onclick="orgTabByKey('teams')">
-        <span class="struct-k">Squads <em>(teams)</em></span>
+        <span class="struct-k">Teams</span>
         <span class="struct-v">31 teams</span>
-        <span class="struct-sub">groupings — join more than one</span>
+        <span class="struct-sub">sport groups — an athlete can be on several</span>
       </div>
-      <span class="struct-arrow">of</span>
-      <div class="struct-node" onclick="orgTabByKey('athletes')">
-        <span class="struct-k">Roster</span>
+      <span class="struct-arrow">→</span>
+      <div class="struct-node" onclick="orgTabByKey('teams')">
+        <span class="struct-k">Athletes</span>
         <span class="struct-v">912 athletes</span>
-        <span class="struct-sub">everyone, one profile each</span>
+        <span class="struct-sub">one profile each · open a team to see them</span>
       </div>
     </div>
     <div class="tabs" style="margin-bottom:.4rem">
-      <button class="on" onclick="orgTab(this,'today')">Today</button>
-      <button onclick="orgTab(this,'overview')">Overview</button>
-      <button onclick="orgTab(this,'teams')">Squads</button>
-      <button onclick="orgTab(this,'athletes')">Roster</button>
-      <button onclick="orgTab(this,'access')">Staff &amp; access</button>
+      <button class="on" onclick="orgTab(this,'overview')">Overview</button>
+      <button onclick="orgTab(this,'teams')">Teams</button>
+      <button onclick="orgTab(this,'access')">Staff</button>
     </div>
 
     <!-- ===== ORG TAB: TODAY (the trainer's daily landing) =====
          Westgate's ask was "40/day, minimal admin". A trainer opens HERE — their
          own block for today, scoped to their athletes — not the department map.
          Overview (the director altitude) is one tab over. -->
-    <div id="ot-today">
+    <div id="ot-today" hidden>
       <div class="today-hero">
         <div>
           <div class="today-date">Tuesday · 21 Jul</div>
@@ -3126,8 +3124,8 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       </div>
     </div>
 
-    <!-- ===== ORG TAB: OVERVIEW ===== -->
-    <div id="ot-overview" hidden>
+    <!-- ===== ORG TAB: OVERVIEW (org landing — Today folded in) ===== -->
+    <div id="ot-overview">
       <div class="headline" id="og-line" style="margin-top:1.4rem"><b>Trending up 5 points this quarter.</b> Two athletes are falling — Rosa (arm path) and Marcus (knee load) — both fatigue-pattern, both flagged below.</div>
 
       <!-- ===== MOVEMENT-PATTERN INTELLIGENCE (the coaching brain) =====
@@ -3361,14 +3359,14 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Softball</b></td><td class="num" style="color:var(--s-ok);font-weight:700">73</td>
               <td><div class="hbar"><i style="width:73%;background:var(--s-ok)"></i></div></td>
               <td class="d-up">↑ 3</td><td class="num">22</td><td class="num">14</td><td><span class="alertchip warn">2</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,15 14,13 26,12 38,10 50,8 62,6" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="6" r="2.5" fill="#FFC700"/></svg></td></tr>
-            <tr onclick="orgTabByKey('teams')" style="cursor:pointer"><td colspan="8" style="text-align:center;color:var(--muted);padding:.9rem"><b>+ 25 more teams</b> — Baseball, Basketball, Volleyball, Water Polo, Gymnastics, Rugby, Lacrosse, Golf… · open Squads to see all</td></tr>
+            <tr onclick="orgTabByKey('teams')" style="cursor:pointer"><td colspan="8" style="text-align:center;color:var(--muted);padding:.9rem"><b>+ 25 more teams</b> — Baseball, Basketball, Volleyball, Water Polo, Gymnastics, Rugby, Lacrosse, Golf… · open Teams to see all</td></tr>
           </tbody>
         </table>
         </div>
       </div>
 
       <!-- Squad membership: teams are groupings, not owners -->
-      <div class="zone"><span class="zn calm"></span><span class="zl">Who is on a squad</span><span class="zr"></span><span class="zc">an athlete can be on more than one</span></div>
+      <div class="zone"><span class="zn calm"></span><span class="zl">Who is on a team</span><span class="zr"></span><span class="zc">an athlete can be on more than one</span></div>
       <div class="card">
         <div class="squadhead">
           <b>Track &amp; Field — Sprints</b>
@@ -3385,7 +3383,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <span class="sqchip est">Priya Raman<small>estimated</small><i onclick="dropSquad(this)">×</i></span>
         </div>
         <p class="accessnote">
-          Removing someone here takes them off <b>this squad only</b> — they stay on your
+          Removing someone here takes them off <b>this team only</b> — they stay on your
           organization's roster with their full history. Deleting a squad outright does the
           same: the athletes are never removed from the department.
         </p>
@@ -3468,7 +3466,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         </div>
         <div style="overflow-x:auto">
         <table class="orgtbl">
-          <thead><tr><th>Athlete</th><th>Squad</th><th>Score</th><th>Δ 30 days</th><th>Sessions</th><th>Status</th></tr></thead>
+          <thead><tr><th>Athlete</th><th>Team</th><th>Score</th><th>Δ 30 days</th><th>Sessions</th><th>Status</th></tr></thead>
           <tbody>
             <tr onclick="openAthlete(1, null); document.getElementById('scr-org').hidden = true; document.getElementById('scr-app').hidden = false;">
               <td><b>Montana Carlson</b><br><span class="archtag">Spring-loaded</span></td><td>Track &amp; Field</td><td class="num" style="color:var(--s-good);font-weight:700">82</td><td class="d-up">↑ 8</td><td class="num">12</td><td><span class="alertchip ok">personal best</span></td></tr>
@@ -3650,6 +3648,54 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       <div>
         <div class="lbl" style="margin-bottom:.4rem">Westgate Softball · Pitching · Coach Dana Ruiz · In-season</div>
         <h1 id="roster-title">Westgate Softball — <span class="yel">Pitchers</span></h1>
+      </div>
+    </div>
+
+    <!-- ===== TEAM MOVEMENT-STRATEGY SYNTHESIS (team-detail / roster) ===== -->
+    <div class="zone" style="margin-top:0"><span class="zn act"></span><span class="zl">Team movement strategy</span><span class="zr"></span><span class="zc">Westgate Softball — Pitchers · 14 athletes</span></div>
+
+    <div class="card tms-hero">
+      <div class="tms-k">The read</div>
+      <h2 class="tms-headline">Your pitchers win on trunk stability — but 3 share a late-trunk-rotation pattern quietly loading the throwing shoulder.</h2>
+      <p class="tms-move"><span class="tms-move-k">🎯 One move</span>Sequence-fix those 3 before season load peaks — Rosa's arm-path drift is the early warning. The same fix protects all three shoulders.</p>
+    </div>
+
+    <div class="grid2 tms-grid">
+      <div class="card">
+        <h3>Where the pitchers carry load <span style="font-size:1.15rem;color:var(--muted-2);font-weight:400">· across all 14</span></h3>
+        <div class="tms-heat">
+          <img class="tms-heatimg" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBMRXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAA0KADAAQAAAABAAABVAAAAAD/4QqPaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA2LjAuMCI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOklwdGM0eG1wRXh0PSJodHRwOi8vaXB0Yy5vcmcvc3RkL0lwdGM0eG1wRXh0LzIwMDgtMDItMjkvIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIElwdGM0eG1wRXh0OkRpZ2l0YWxTb3VyY2VGaWxlVHlwZT0iaHR0cDovL2N2LmlwdGMub3JnL25ld3Njb2Rlcy9kaWdpdGFsc291cmNldHlwZS90cmFpbmVkQWxnb3JpdGhtaWNNZWRpYSIgSXB0YzR4bXBFeHQ6RGlnaXRhbFNvdXJjZVR5cGU9Imh0dHA6Ly9jdi5pcHRjLm9yZy9uZXdzY29kZXMvZGlnaXRhbHNvdXJjZXR5cGUvdHJhaW5lZEFsZ29yaXRobWljTWVkaWEiIHBob3Rvc2hvcDpDcmVkaXQ9Ik1hZGUgd2l0aCBHb29nbGUgQUkiLz4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8P3hwYWNrZXQgZW5kPSJ3Ij8+AP/tAGBQaG90b3Nob3AgMy4wADhCSU0EBAAAAAAAJxwBWgADGyVHHAIAAAIAAhwCbgATTWFkZSB3aXRoIEdvb2dsZSBBSQA4QklNBCUAAAAAABAmT33pDUKHQ2d8dhjOVoRd/8AAEQgBVADQAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMAAQEBAQEBAgEBAgMCAgIDBQMDAwMFBgUFBQUFBgcGBgYGBgYHBwcHBwcHBwgICAgICAoKCgoKCwsLCwsLCwsLC//bAEMBAgICAwMDBQMDBQwIBggMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/dAAQADf/aAAwDAQACEQMRAD8A/uwooooAKM45oooAKKKKADPeiiigAGKWko+lAAaKKUAnpQAlFfI/jD9uj9l7wdrlx4Y/4SN9c1K0Yxz2+gWl3qjRMOqyGyhmRGHdWYGn+Df24/2YPGetweGl8SPompXTCOC21+0utLaVj0WM3sMKux7KrE+1R7SHNy8yuX7Odua2h9a5opzKVODTasgM0UlLQAUUUUAFFFGe1ABRRhhwaXj8aAEooPtRQB//0P7selGR6UZ7U3OelAC0vSkoLY60AKaSkBz0pQOKAFFKcCmk0mQaAFooozigBcjHSvzA/am+I2tfFn4oXX7O+j3U1n4X0SCObxE9s5jku5Zhujs96kMsQX5ptpBb7vTNfp4HUmvx7sbdv+Fq/Ee9uOZ5PE1wHJ64VUCD8B0ry84rzpYZuG70PSyqhGrXSnstTZ0zRdI0PTIdD0C1hsLG2UJDBbqEjRR2VVAApNU0nStb0ufQtetYb+xuVKTW9wgeNwezKwINaoNRvycV8JzO9z7K2ljc/ZW+I+u/Cr4pWv7O2s3M154W1qCSXw49w7SSWksI3SWW9ss0RX5oQxJX7o4r9QwmBX463yeT8Tvh3fwjE8fie2VCOuGVw35jrX7Gs4/h5r7vJ8ROrhk5u7Wh8bmtGFLENQVk9RmAPej6U0tgUleoeaPIHagYpv1oLDvQAtNxRkUtAC+5+lB9qTIB60mRQAtKPWkozigD/9H+645zSgU7HFLnHNADaTmlpQM8mgBoFLSmkoATtRTgPWgjFACU0k4p1GM0AcZ45uNcs/BGsXnhn/kIxWUz2pIz+8CErx9cV+O3wU0CfS/C8nia+16/8RXPiZ01S4udRdXkEkka713Iq5AOcZGR0r9uWAx83IPGDX4z3nw78a/s+/FgfCTVZLK68Laul1f6BPGZBcIBJve2mVlCfuwxKsjHI6gV4ee0qk6ClDZb/wBeR7OTVacazjPd7HoXuKiLHtUj8DFRgA18WfVnjfxu8K3XiLwtFrmneINQ8N3XhuRtWgu9NZEl8yFG2Dc6vhc9cDJ6V+yXw+u9cvvAejX3iUf8TGexhkucDH7xkBbjjvX5K23w/wDHHx8+KZ+D+hyWVp4c0+K3vtfu5Wk+0GNpdy28KKpQmQL8zOwwOgNfswuwALGMADAA7Cvs8hpVI0XKez2PlM6q05VVGG63F5paUY70ZB6V7p4whPtSc0tOC5oAbRTjj602gBOaOacBnrR7UAJTTmnU4LmgD//S/uxzjpSU3qc0oUdaAFpc+1JTWPbvQA4mge9NA9adQA7NNz7Uh96QAdMUAOpabkUhYHpQAj4xX5Yf8FaPEeu/D/4A6F8UfBflx6/oPiG3azeQZVllDLLE2P4ZVG0/ga/TvVtW0rQ9Nn1nXLmGys7VDJNPcOEjRR1ZnYhVA9SQK/nL/wCCnP7dfw0+OfhzR/hR8Ephq+g2WswXOpa6VK20roSI4bRmwZvmOWlUbMcKTUVFFxalsy4ycWpR3R7L+zz+0t4C/aI8Lw6ro0i2GsLGGvNIuGAnhY9SB/HGT92Rcg+x4q98ev2j/hv+z14cl1jxbdC41AxlrXSrYh7mdh0CoDlVz952wo7ntX4MnQtFGt22h+IrGC7FncS28ZmQNhZBvTGRkZOelQSaHow1i90Xw9YwWn22eG1doUCkqnzvnAyccda+a/sOnz35vd7f8E9z+26nJbl97v8A8A/p3/4JO+KdX+JXwL8Q/FvxbHGut+IPEFwbjyxwkUIVYYR14jU49zk1+pHI5Ffzb/8ABMf9uj4bfAXQdb+F3xnl/szw7eaxNc6frkas8ELtgSRXe3LRDcMrLjYBwxHWv6NdJ13RvEGlW+u6Bdw31jdoJILi3dZI5FPRkdcqwPqDX0lPkjFRjsjxJOUm292a249hSg+tVDOo7UC4Q8LT9pEPZy7F2lOPSolkB707rzVp3IsL15pw4puBS0CFzjtSE+1NI55pcDtQAopc8UhppoA//9P+7ED3o4pc44ppPNAAc0oXPNJTs0AJgev+fypKMjpTHzxQApPpTd5zScqtcV8RvHfh74Y+AtY+I3iyYQabodnLe3DnskSlj+JxigDzf9oX9pz4NfsxeF4vE3xa1X7K14xSysLdGnvLpwMlYIEy747tgKvViBzX4x+P/wDgt9471LUbjQ/gN8LkZ0O37Tr14Cyehe3tAYlPfY12p9cV+YHxN+L/AMQP2hvive/ELx5NLHq3iIGVlzzp+nA/ubSH+4SCN5HVyzHoMPe00bw5pLPbrHZ2Vqhc9FVVHJJP6knr3rCdXWyKSN/4/fGv40/tH3UWr/HPVL7XEiPmLo80Zg02IjkGK3tPPiYjs1xvf/bFfLHibxnpvjKS10J4yLG3LSv5TRykzR/6tQsbs+A3J+UV0umeKtd+IMpuNMs5W0ZjiISEwxyj+/I+C7KeyRrgj7zfw13l94J/tuJYtduzLAowLa3UQQgemBlz/wB9/hWLevvFHEa/qkF9d2WsBnhuJIY5pI5o3jbfCeSA6rnKk9KZomqWlpqF3qLuZbpI5Jo4olaRt8v3flUE/dAr1Dwv4R8IaPPH4PmslTR9UJjkt0JUCTGUkUg5V/8AaBzTPE3g/wAJ6veTeEobQPpGmkRJA7MQZMZZ2JOWfoNxyabty3Ert2PLvhdfweEr670eGBjZXpW4JmeKHbO/+sBEsithjz932r9Nv2dovil8Djca58HtV1Tw08x8w6Naw/adMmY8lp4Ls20KE92tnRz1LmvkrwT4Dl0QBNAvWiixj7NcqJoiPTnD/wDj/wCFfQmhfFPxF8K7Zf8AhI9Om/4R9OJfJJnSBf78TY8xUHUxyLgD7jfwn8y4uzTG0Jc+Bdpr8f8AP0P0HhnL8NVjyYpe6/6/pn2Ev/BWn4y/DnVI9K+PPwwhkhZtgu9CvCjSD1WC5UxFsc7Bdk/Wv1A/Z3/an+D/AO034Yl8S/C3UmmktCFvdPukMN3aseizQt8y57MMq38LGvyL1jRPC/jrwyl9+51LTNQiEkbDDxyIwyCD+oPavzj1rxd8RP2Tvjhp/wATPhy0puNJPmBAT/ptiW/fWsv94gA7SejhW7mvF4c8Q62JrKjjUr99vn8uq6b+R+hV/DbB4vDP+zW1WSbSbup2V+XupNbO9m9LK93/AGTWl8JCBmt+IhlzXgHwp+IOi/ErwNo/xB8NSibT9atI7y3cd0kUMP517hYy71GT0r9kwtfmPwvG4fkehp4xSU0Nmnjk813nmiU7AHvRux0ppOaACige9PzigD//1P7rT3604D1pQvcUuMdKAEpp6cU6kwCKAG49fyp+MUYpM807gRvya/Nf/gq7q97pf7GesWdsxWPUtS0+yuMd4ZrqNXB9iCQa/SlhnNfn7/wVF8PQa1+wv4+up3WI6TZrqiMxwA1pIsw/Mripew0fzL6VCs+u6xqpHzmZIP8AgKIGA/NzXn2seKLHxP4nk8LfZpdQsNPYG5hhTcJJeqo5OECrwzBmGTgcjNVdI8Zy6n4p1XwZ4VbNzcut29ywzHBDJGmG9Gdv4F/E8Co/DVjo3gH4oHwNpxkFvq9l9sVpWLF7iNj5hLH+KRSWPQfLwK415lnp0msaqD5h0W72/wCy1uT+QlqO38X6K062l472UznAS6VoiT6AsArf8BJrrApHC9qgubeC8t2tbpFljcYZHAKke4PFToBk6tcujWVzB96G6ifj64/rU+jSO1zeXM/DTXcj/rj+lcrP4ak0FVuNDn8u1Mse+1lJKAbxzGeqH2+77CmW2jP4hZ21eXfbLNIFtoiVQ/OeZDwX+n3fY1Tty2BOzPZtD8Y6Mt59hsjJfTKcNHaIZSD6MVBVf+BEV9QeEfEGsoqyjw/elfeS2B/75M1fN/hSaDToUtLVVjjTAVEAAA9gOBX0H4c1nhVZsA1+W8WYRzT92/8AXyP0ThrFKNrs2vDnizRvCXiyHwjFZz6TputuxgtriPy1iueWZYypaMpKMttRjhgeBkVxf7Rnha3n0+w1aVBuguDHk/3XQk/qorH8W33hz4lfGGz+F2qvMYNG0/8AtR2gcoY7l3UQsCD9+NRvAII+bkEGsH4sfE6U39l8MfG5A1BHN3BeIu2K6gjjfc3okqH76Z9GXg8fkVXLa9PF08RBO9ryXlrr56b/AH66n7Dw7m0aeIpw5rLnjZ+d1df5fd2P12/4JWard6n+yJotnOxaPTL++soM9o4bmRUH0AAAr9UNOGFJ9q/On/gmD4ZtdK/Ys8E6jZyLMurwSamzp0LXUrSkfUFsGv0js4dqj86/qHKqUo0Yc+9l+R/PfEGKp1cZWnT+Fyk16NuxcHXFOpeOopK9s+bY057UAU7bnmnYxQIbSHI6UtG3PWgD/9X+7L8aaSc5ppPpQBxQA6nZ4ptIT2oAOOgoxmkyaUUwEYjvX5F/8FgPiUNI+C3h/wCDNs3zeM9VX7Yo72dmPtEoPs5VUP8AvV+uT+1fzO/8FgPHk9/+0jD4cjbI8PeGAsS+k2oTn9cQj86ibsho/N3wF4c0fTNOuNX0e3WCPUJmkRVzxGpKpyeT3Yc9DjoBXh/xIum1j4k2NvYyi31CGYJYTH7qzRxO+Gx/C28KfXOK+ptOtodJ0+GwT/V20SoPogx/SvBP+FKeI/EuhxftFSvJFoB1qTQIpAOBczwtcCUf7gjgUe74rljdtspo9U8IeNtO8QodNu8WOsQjFzYSkCRD6qD9+M/wuuQR6HIrq7u8tbCJp7+RII15LSEKB9Sa8w0/QT8RNOtr/wCIGn6fdW3lnyIdnm5JP+szIoKZAyFXOM8sam8P/DT4YW+pXf2Pw5p6/ZHVFdoVY7sZP3gcYqbDNGPxRo/jO9h0nw1P9tt4pRJcXMI3QqE52iT7rMT2UnHeq154g0nwLfTWfiGX7JbXMxlguZARCd/VGk+6pB7MRntXaa3dppOjT3MO2JYIiVAGFGBwMdKbot7Hq2kwXblZVniVm7g5HI9KBWNPRNYt7xFuLCVJ426PGwYEfUE10mq/FXSfCUS2mTearOCLXT4DummfsAo5Vc/edsKo5JrwvxH8OPhlcXtqbzw9p7G8kMbSJCqNuIyvKAZyfWkez/4VJpd1q/w40bT4UEf75AvlN1/1hdVZnCjkqeoHBBrzcdl8K8dVqehg8bKjLQm+DfinUtF+MGrXHiG4Fzq91c+XfyLnaJJIVYImf4IzGUH0r6Q+KVpo3ifRYb/XYhPHp8wlYZIPlt8smCDkYB3cHtXymPhN4p0HSD+0lBNLcaGNVTQJ5OdpuYI1uTKf9/zLhT/ugV9FX1/HqljNYyEeVdRmM/Rxj+tfOVOGEqkZve259FDiNqLUdD9wf+CUvj+11L4ceJvgyGG3wnqZmsl9LS9HnIB7I5dB7Cv1nRRGuM81/M5/wSE+IlzD+01J4dnbjXvDDxyD1m0+cfriY1/TFmvt8BTcKEIvdK33HymMqe0qymtm7/eJmlpAMc06uw5R2QOOtMJ700tzil69aAFp30pucUmc9KAP/9b+68KT6mn4pc0wmgBDRilo70AABo4oHSigCJuuDX8iH/BQrxRp3xB/bO8cSaXOJv7O1XTtJcDkf6KgdseoDuynHQgiv6gP2l/jLpP7PfwE8WfGfWMNH4f06W5jjJx5koGIox7vIVUe5r+OTT21PR/Hvg7xF4wkF9d6hquzWZm582a9cvK5+s7ZHoDiokuZqPcCH4ieI7vSfDbWGlI02p6pKlhZRJyzzTsEQKO5ya/oq+Ln7D0fhf8A4JW3v7OHh9VHiDRNJ/tgToMk6pEftLsPUeYNg/2QBX5PfsTfCTw18Wv+CgvhRmimm0fwrNd6rbpNho2ktIyEfP8AEVlK7eCAB1JOB/V1fwx3On3FpdDdFNEyOD6MCDUwjyqxVz+Krwc08vg/TZp1CsLaMAr91hsG1l9iMHHUHiub0y78SS6hq1jpcVvEv2osLmVixGQOPKAGSPdwK7PQbjSxPq/h3S33Joeq3unBT1CQXMiRn6FAMH2rjLO41LSvEOsxQ6dc3YlmWRWhCbeV6Es64P1rna1aGmaEnheyFs+p6076ncwKZA9wcqCBn5YxhF/Bc+9NbwrprWqanpBfTbm4USGS2YqCSM/MnKN/wJTU97N4lu9PkS6ht9NgdSJd7GWQKRzwu1FOO+5qIG8T2unxpZx2+pW6IBHhjDJtxx1DIxx7rUhc5y+uvEsF3pem6xHBOpu1IuYmKk7QThoyDgn2Yj6V1njL7R/wiOpSQrktbSbifuquw7mb2AycdzxXIahdanqniHRrSbTbq0KXBkZpgmzCr0DI7Ak+1d14qu9Nhs7HRdTbbHrGoWmnso6lJ7iOOQ/QIzZPaq6oLn76/Bv9iZPEP/BKrTf2dvESqdf1vR/7XeZhgjU5SblGPoN58s/7JIr+dv4eeI73WPDg0/VI2h1HSpXsLyJxhkmgYowYdjxmv7fdMt4LfSbWytRiOGFEQD0VQBX8nf7eXw00L4Jft0eNNR0+JoNN8QG11i5RB+7VrqMeY/H3T5qsScYIOM5AB3mkxK5gf8E/PFuk/Dj9tLwR/ak4h/tHWNQ0pOuMXcZdQewBdVUZ6kgV/XsozxX8MFvp2o6r4x8Ua74duja3Nnfr/ZV0n/LKe1KyxyD/AHZxn3AxX9kX7LXxx0v9pH9nrwl8a9LURjX9OjnniBz5c4GyeP6pKrL+FVBWvF9BN3Pf6SiitBBtzS4NKDSEmgBKQDNLTsAHmgD/1/7riaUc0YPrTscZoASkzS03B9aAAGlzjk0oFNb7poA/Gb/gudrl5B+xpZ+ELJ9p1/xDaRygHG6O1D3rD6ZgGa/nk+OlwP8AhFLS1LsktzqlpFEVOG3GZeh7Gv3Z/wCC5WqLF8PvAGgyH5Z73UrjHvHYSqP/AEOvwc+Jti/iX4heDdFjOY4LoahKOx2D5M/qfwrGo/eRS2P1/wD+CUGmteftdX80K4g0fwrPjHRfNuIEUfkDj6V/QF8VvEJ8IfDLxD4sHP8AZunT3OB/sRk1+U//AAR++FV3YeAvFXx+1OIxt4rvFsNO3DBNpYllLj2kmZx77Aa/Ub42an4c0j4N+Kr/AMXyrFpcWlXLXTscAR+W2auEdEFz+LvwzpOotoem+KrOQR6pcQCectyspnJmdZB6bnJBHIPTuD0uma1YWmt6lBqU8VpJKY5gkrqDgrg4yRkA9xVXwBcXkvhGxstUiNve2dvHDNEeo+QbD9GXH45HahI4Lnxlc2V9GkyfZkdFkAYDBIOAa5peYyPxB4n8M3FhcWMOo2zzTRsiIkisxJGAAASaND8TeHYNOt7Ga/t454Y1R0kkVWBAAIKsQetdPfaNp2oadNpMsISC4Qo4jG3g/SpLfR9Pt9Oh0pIlkhgQRoJAG4H1FRoM56+1bTb3XtMgsLiK5kiMkzLE4bgLgZxnAJ4rA8U6Bez6Bquu30ol1IWrvAV4SEx/vEWMHnhlBLdSfwA1zBa2vjO0sLKJIVNtI7rGoUHkAZxjvUfxK1K40nwffw2Sede3cEkNtEOrMUOT/wABGT+Q71URH9l/wP8AFJ8d/B/wt41cYOraVbXWP+ukak1+Dv8AwVd0T7N+1lp+ozoDBrPhaFTkcN5NxMjD34YZ+tfup+z7c+HLr4E+DZvCDiTTG0a1NqV/ueUuK/Nn/gr58Kr3WPhv4a+OujxGSTwhem1v9o5+xXpVCx9o5lj+gYmuiaumgufzl/Aq+gfwvd6XBndZardwMGOSCs7YyTz0xX9Cn/BCzW7hv2RNV8D3Tlv7B8RXBiBP3Y72OK9AHtvmfFfzufDvRZfCHxW8aWTEi2vphqMQ7Bio8zH1G0/jX7v/APBDnUv+Kc8f6DGfkj/sm52+8lnsJ/Hy6mm/e0A/ejnNLR2o+lbkCEgdKOaBS0AFGcUU3BoA/9D+7PGKaTSZFJz2oAXmnAdzTaCaAFNIaTrS0Afzt/8ABdm8ll174V6TAxxFDrE8gHo8EUCn/vqQV+O3w88LeLvi18fdA+HXhKLzL/W5k0q3kHHlFkCtKR3VFkdmx0C5r9Zv+Cx15qnin9onQvCGiWbXsuk+FzO6oyKVN1djHDsuSRbHgGqf/BGb4JS+KvjZ4r+PeuWrxQeFoP7Ls0mQqwuros0jYOOUg+TP+3WbSctRpH9EXgHwJ4c+GHgfR/h14Pi8nS9Cs4rK2TvsiUKCfdsbmPckmvzy/wCCuPi670H9kS68J6dO1tceLdTtNHDpgny5JQ02Acg/u1bqMV+nq5xzX4tf8FidVhn074aeESw3Tarc3xX2htZFB/BnFVJ2TYH8/niLx1P4V8Y2OmeJnSW9nhZobmJNiyxIQGinX7qtk5jcHbnghR17LVNsXifStfiP7i6RrYt/vDcn615z4q0u11z4jJqWoANa2DQ2EgbkEXIdXB/NTVvwNfaj4o8Nah4F1EBNU0CUiJunmKjZjce/8Le9cttBnuYBNKemKz9Mv49T0+K+j48xQSPQ9x+BpNUvk02wlvnGfLXIHqew/E8VmM5vSVS+8T6rrEp2x2Ua2wb6fO/5GuF0Tx1P4l8a3OiaE6w6lBbrLLdyJ5iwxMxCxQKThnyMyOflzwAwHFf4j6jf+FfBtj4H0vnXtelAfP8AAJGzI56cgfKvuKpeFNOtdI+Iba6iBIrx5tNhC9AtsqKgH1Kua0WgH9Pn/BInxle67+yePBOqXD3Nx4Q1a60oPJjd5QfzIc4AA/dOoGBiv0f8a+DfDnxE8H6r4C8XQi40vWrSSyuoz3jlUq2PcA5B7EZr8b/+COmqiCT4n+F3b5v7Qs9QVfaW2WMn84zX7ak5GK6o7JiSP4bfi14M8VfCj43a98JvFyNFe6DcNpclwCP9IQRuElUdlkjELDPPNfq5/wAEK76WP4jfFHTJnyk2l6JJCv8AsxJPE3/jwqv/AMFnPgr/AMI98XvBPx+0i3keDxAp0bUFgQszXFviWBsKCSzxbk+iCsH/AII7Tat4R/aY1Hw1rNm9m2reFZXAdkJY213GRwjNggTnrWcVaQM/pfNJTe9KRkVsSAPPFONMyBS55oAXg9KcAepptBP6UAf/0f7r8Z5NLTvwpCc0AJ7U0jNOpwxQA0A9qDTjim5GQDQB/K5/wUa1L/hKf28vF7w3FxEujaXpemZgleP5gkty2dhAJAnXqDX6Hf8ABHXxpoY+HvjP4SX1y0niGy1g6w5mxvmtLmOOOOQYAB8toyjYHGVz96vyb+P2sp4s/aQ+J/jJ23C78T3cKN/sWYSzA+gMBr1//gmh4ph1T9s/wfq/hW9Wa01Cx1K2mkjOVkjSB2Ke+JI1P1FYqXvjuz+prpX85X/BVvxtBrf7UuleHjIPI8H+G2uJucASXsuRn0ISA/nX9GqDzML61/GX+354vn+Kn7S/xEi0uY41DW49KkYH7ttarHAEH+/K0n4bj2qqj0HseLPptx4i+Gl3fqCl5qRbUFz1BODF+SKtczrt1P4f8bx+JtFG5poUvQq/xoRiZPy5/CvoV4oViEUShFC7Ao6AYwB+VeCakj2HhWy1qXmbRLp7Wb/rkx2n8gRXMmB7Rpy2LRm+0t91vd4nQdhuHOPr6U+/j08Ri/1R9sFnmdh2JXpn6enrXlfhbX7DwfNJofiO6itLSVjLYyzMETn70W5sDIPIHcVZ8T65p/i+WLQvDt1FdW0TCW9khcMmByse4EjJPJGelLzHc5TTJ5vEfjw+KPEC4e3he+Kn+BACIU/AfMfrXUx6VNpPw9tNUugWudMxqDepIy0v5qzfjXO6Wran4Z1DXV+WbWrpbWD/AK5qdo/PDV740EUqC3lGYyNpHqOlDYz79/4JWePYtK/asvdGSQfY/GHhvdDjo0llLvGPqk/6V/SIK/i6/Yd8Z33wx/aZ+Hen3L7YdH8QHT4pCfvW1yJLdkJ/2JDH+G2v7RThSRnpXTSehL1Px2/4LB+PfD0fw68I/B+1lb/hIdQ1hNYj8ojdBa2qSRySEkEDe0gROOfm/u1+cH/BPK5Tw1+3j4LumuLiQatYanpxM80knzNCk4wGJAz5B6AVvf8ABT3xJBo37Z3ijVvE92sNnYaTp0cckhwscbRbtvtmRmP414p+z5rsPhX9o74ZeMgwVLXxNaxMw/uXge0P4fvxQ5e8Jn9eoGBRSnqaac1qITBzzTsCkpaACkIPelpaAP/S/uwLAfjTdwo5pwFACY70ucCim80ALkVG3J56VIPemSDvQB/Fx8fPCuofDr9o/wCK3wT1SeRIIPET3UMzH5ltdUkE7Pk/3BLnPrmv068AfAvxn8If+CptloHhPwzd2mgW2qz3trPBbyCzTTZbHysiYL5Q2uCm3du3Y45FSf8ABY/9m+58P39r+2f4Ys3udPjtV0XxhDEMstm5xFeYHaAtiU9Qu09FNfrB+xP8Sta+LX7K3gvxr4hlM1/JYC0upc5E0tqxt2mB6ESGPeD71Cjqx3R9RyyGC2lmH8CFvyGa/iBlUap4tn8QXLeZc614n1O+mc+i3FwyL9FwMe5Nf26aln+zbnb/AM8X/wDQTX8ROl5TU9K3dtQ1Efj5txUVVoPc9PY5Brzc6fDea/rXh65x5N/As6j3I2Mfzwa9Ic/LXlev6hPZ/FHQbZFHk3UE0UjendB+JrmQz0P9maK11X40fDGTXLeG8tx4itraeC4RZEcfMhDIwKkEDoRUn7U62Vn8a/ijJ4atYLCAeILi1t7e2RYo0A2IAqIAoxnPAqx+zfby3H7Sfgvw9ZjIXxnbMPo2W/pV79qOy8n9pXxt4dQct4ynLj2GHra/ufMXU8wGm21vrWh+G7UYj0+EzuPdRsU/99ZNekOflrzDQdVa8+Jmt2ciAC0t4o0b17uPwNelM2axZR5Xtey8VxapZv5Nxo/iTTL+Jx2Bnty4+jc/jiv7hbSUy2sch/jQN+Yr+H+9BbX9RRf477TVx7maEf1r+3rTsjTrcf8ATJP/AEEV00dhH8/3xd+C/jT4w/8ABU5vC3iPw3eXei3WqWV7czy28hs20y3swrFptvlYaT5Nm7duzxxX5dfCHwhqvjf9oX4WfAbw/dPJFeeJY5WuU+81ppc5m8zP+0kOQfXFf1Y/tqfEvV/hB+yv438e6DIYr6105oLWTOBFNckW8crHoBG0gcn2r8hv+COP7NepeLPEdx+2Z4rs3tNHtLRtD8HRyjDTW4IWa+AP8EhUrCf4lLHoVNXyak3P6HlYMPpxT6aq4pT0qxBkDrSZ9KTmn0AFKTjvSdOaaeRmgD//0/7sQD3peMcGkJHpSE5oAKUCkpcigBelMYBhg96KWgDN1PSdN1nTp9H1e3iu7S6jaKaCdQ6SIwwysrZDKQcEEYIqpoWg6F4W0S08NeF7K303TrCIQ21raxrFFFGvCpHGgCqoHQAAVuH2qHpQBFPGJYXi/vqV/MYr+JPXLF9E8TS2UnynT/FOp2je267uEH/oQr+3EYBBNfxv/tTaC/hP42/FHQUTB0nxVLfIP9mQRXX67zWVbYaMzGVxXk3ixHudXutRthltJjhYH0Jfcf0zXrSbMZByp5z7V5tpFvLqWhajqLjD6o0jgf7PKoPwxXMhpH0n+xF4bbxJ+3r4P0uxG6O3uzq8mP7sEBIP5tW3+3L4XTwt+3T4rsnG37bcrqy59JYBk/mK93/4I4eCW8UftNa18T5MPHovheK1HtNNJtP4lFp//BZPwqfBv7R2gfE+FQset+Gp7Rj6zQvhf/HGrbl9wD8wvDStbatY6zcDEmrrOW+u7cv6CvV68/1OzltPDNjqCjMmmeVL+AADD9a9COCA2flPOaxkM4vw9Yf2v43itVG43nibSrUfhc2wP8jX9tFvHsiSPptUD8hX8bX7Lujt4r+N/wAN9JZSx1nxbFeEf7EZkuR+QjFf2WZG846Zroo7CM3W9C0TxLo9z4e8R2cGoafexNBc2tyiyxSxsMMjo4KspHBBBBqXS9L03RNPg0jR7eO0tLWNYoYIVCRxoowqqqgBVAGAAMAVfyMZoyBxWxItFFKDg80AKBzijjqKTNJnNABSgd6SlzQB/9T+67huaUD1pwHrSnFADaaeadQAKAEAFB6U7A9aSgBjN2NREZGamPPekwBTAir+X3/goh4Pj0T9tPxjbTKBD4i0mx1JfQnbJBJ/6Ama/qCPrX4Q/wDBXzwcuj/EP4efFWJcLqMN3oEzD+8QLmLP/fpwPrWdRe6xo/GOHXLiL4cveZ/0i3ha2Of+ekZMf6kZ/Gu9s7GOytYbOIfLEgQfgMV5Tqdu9lDrGnkfuxdW94B/suwD/qmfxr2SFlLAvwAea5Nyj9ev+CG/hS4sPgt468eX0Wx9U8Ry2UJPeGzG0fmWzTf+C4/ge51n4F+DvHljHul0fxFDaykf88bsbG/DKivo3/gkpaWyfsU6JqdmAF1LUL26z67piM/pWv8A8FW7K1k/Yk8SajdAbdPurO6ye2yYDP611dLC6H8609rHJbyWUoGyRSh+hGK4SXWLhvht9tU4unhFsP8Arqx8ofkxzXoVyys25e54ryzQo2uY9M0p+Y5b65uj/uxudv6uD+Fco7dT75/4J2+B01z9sjwTZIm6Lw3p17qbexVEt0/9Gtiv6jwAK/C3/gkb4GXUPiJ8QPinKuUsILXQoG/2sG5lx/38QH6V+6ddVJe6iWIScUZLtRQK0ETDGcU6ik5oAT71AAp4HvSkYoAQ0zOeKdQBk0Af/9X+7LOOaaTzzTevNKPWgBadnFNppyaAHFqKbj1p1ABximkZpSfSm84oAaw9K/Lb/gr34QfxF+yKfEFo4iuvDuu6dqEMhHC4uFjfPsUdgfY1+pvTrX58f8FSU839hPx8q/f+yx+X/veau39aGB/NZJp2raul9NPpQljvbb7Mhinj4wTkktt5DdMA1ympeK5H0aTT4B5equpga3J+dGx8zEdlAy27pXpvhGd18OWYf/nmCR79/wBc1zWoaTe61/bKaOvm3mpXEWm2+Bli8uI8A9eN2cVy27FXP6dP+CafhD/hCf2G/h1oLAgjTTMc9T5kjNn8etWv+CkvhiTxh+w78RtFjBZv7MMox/0zdWz+GM19UfDLwfB8PfhxoHgS3ACaNp8Fnx6xxhT+ZBp/xG8IwePvh/rvgi6AKaxYT2Zz0zKhUfqRXRYLXP4rvDvieV/DkUVx+91KJRF5APzO2PkIH91hg56da6WSy1HSrTT7u20plGnQGGXzZol3BiPmUqWGcjndjjv2qDS9L1Pw/d6VZamvlXGnXE2mXGeDuhJjwfrtziuj8YzsfDd8I+8RAx6ngfrXK1rYZ++H/BH7w1faP+yIPEesFXvfEWu6jfzOnQjz2jQD1ARAB7Cv1OAzX59f8Es49n7C3gUMMMYZt3+95z5/HNfoXgDpXWlYRD1NPAw2DQyrtyKYoySaZJNn0paQAUtADt1NJ7mmn8aUe9AC07oabSNmgD//1v7sQuelGBS8U3NAAaMA0U4bRQAmMcUHrSE+tFAAASaXbigYAoJzQAhxX5Vf8FfvF39jfsl/8IfbymK68T6zZ2URXriOQTyEfRI2r9VCecV+BP8AwWI8SPq/xR+HHw2Rv3Vha32syr/tkJbR5/CV8VMnZNgflforat/Y0MkOnXFylwDPFJbhGXEnz7Tl1KlWJXkdBXqX7J8Ed1+1x8MfhrqW2WCHWxdahIeQ9wqM6oO3ynr9K4T4eag2j+BpRM27+z5p057AMXH6MKk+AWqN4Q+MPw38dzPiS18Q2txcOe/nkq2f++gKwW5XQ/sszk5oIxz3p7IEcr6HFLt3OE9eK3QdD+Qj9r+3TT/2s/iV8PtJ2rBPrQurFhx5dyyK7IT6Mc49zXkestqiaRLdXWnXFvFbATzPcBFXEfzhRhySWYBeB3rsv2g9S/4Sz44/EzxmrZN14guZYGHYW5CqR/3yRWV8Qr7+2fA8SwNtGoywKPcFg5/RTWEt2M/dX/gjv4v/ALa/ZQl8E3Uplu/Cut3lnKSedsr/AGiM/ikor9Xa/n//AOCPPiR9E+MHxF+HMjYi1KxstYiXtvQvbyEf8BRK/f8ABzW8XdXJEYbhg0KoUUopQBnJqhC02looANop2MUZxzTaACgKCaKdxQB//9f+64kilGaNvanYoAMmmnJFLSBc0AFKOlLtxSUAITik607GaUDHFACV/Nb/AMFS7xz+2dHDP0g8K2wjH+/cSlv/AEEV/SlxX86f/BXXw3Lpn7T3g7xeqnyta8PXFmT232s0bqPrtkY1FT4WNH5q6I7v4U8XW56oTKoH+3EB/wCy1m3t22kaJa3yfft57WRMeqyxkVpaeTaW/ii3H3pdMWUD1Khx/UVT+DtkPjk/gfRNF+d/E+oWVsqjqPnVpMj/AGQhzWK1aGz+1LSLp73SLS9f700Ech+rKD/WpdRuGs9OuLtesUTuP+AqT/SrEUEVrElrDwkShF+ijApZIUnRreYfLICrD2PBroQ+h/FDFeNrNlf6hMcyXN3dyv8AVppKs6qzr4N8HQt96XbKw/3IiP5tVr4waOPghrvjvw9rh8v/AIRjUr2Js9wWaSP/AL6DjFVL1xeaZ4RiPDRaa0pHoWEY/oa52twR+gP/AATBvJI/2z0ghOBceGLwPj0SeEjP4sa/pTTFfznf8ElPDsurftVeKfFLKfK0Pw3FbBv9u7nYkf8AfMQNf0ZKMcVtT+FCbHU3d2ppb5uKkxjpVkhwKWlxSUAIT2pKcFpcetACfWkLYpaMZoA//9D+7KkJzTd3ODSc0AOp3bmm0hoAcT60lIDmlHAxQA6gnjFMJ70mcnigBc5HFfj7/wAFh/B6z/Cbwf8AE6Nct4f19IJW9I71Gt/y3shr9gxXxj/wUJ+Hs3xN/Y58eeG7OPzLqLTWvrUDr51qRNHj/gSik1dWBH8tWnF7jxVeWp6XGkzL+Ksn+NfXP/BKL4QXGr/tlWWpxBTofhzRm1pYf7l3MBCCB2B5b618neHp7efxBp+qwnMd7YzBfo8fmD+Vfrh/wRV0Y3+o/ELxpIP9XFYacjewjMjD86wprVFtH73KuTk0jdalGAMVXc810E7n8s3/AAVr+Et1Y/teNqQCJonifRl1WePvJdWuYQD/ALPRj618eakrW2vabbdPs+kxA/8AAmb/AAr9g/8AgtHoy2f/AAr7xoq87r/T3b2aLeo/Ovx/8U3MMXiG91OQ/u7KwhDewVDIf0NYVN2NH7m/8Ed/ByxfDPxr8U5E+bXddNpC/rFYxrD+XmBzX7GDjivij/gnZ8P7j4Z/sYeAtBvk2Xdzpy6jdA8HzrsmZ8/i9fawHcVtFWVhDQvz5p/NKBimk84piHUCm4zg06gB3uKQmmlqB1zQAuM04YFNoJxQB//R/uvAHU07FKKQmgBKbjnmncmngelADMUU4mm0AIRnrS4py+tBPtQA01ka9plvrWhXmk3Sh47qB4mB5yHUj+ta+c80DH8fTvQB/DtpOq6P4Z8UWXhLVL62gl0TULzSpVkkRSot2mtxkE8cKK/fD/gihY2S/AvxhrFqwk+0+IDHuBzxFGFFfjv4y1u4i+K3jW68OW2nT2jeJtSa3lmRy2PtLgnKnBG4N0xX6+/8EdPG91qeh/ETwRrUkR1C21aLUNsSlVMc8WAQGZjgMMZzWNO3M0im7n7Vmo2Bzipajc1sI/Gf/gtXbWv/AAoLwpqlywT7P4gVNx7eZGVNfgDq+saP4m8Qah4V02/t7iXWryz0qJY5FYn7QYYDtwTnG89K/ff/AILE+N7nSvC3w+8G6K8Y1C71l74LKCyiO3j5JCspwScZzX48+ENbvLv4n+C5/EFtpsFoPEumNcSwo+/H2qPByxwBu25zmsaluZDR/YT4d0m30Pw/YaLZqEis7aOFFHGAigf0rYxgU9MZ+XkdqHA6itiRh9qTGTS08CgBvSkpT7UmM9KAGgGnYp4FNyKAEpMZ70v0pwWgD//S/uwGM4pw44NNZcdsGgU9ADpRTuMVGRmkAtKOBRj1o6UABxik96CM9aAAOaAFrC8V6to+g+F9S17xBcJZ2FnbSTXM7naqRqpLMT2wK3cZr+d7/gov+22nxo1q9/Zm+E0xbwnp1wY/EWpIcLezRNzZQkfehRh+/ccMR5Yz82E2lqwPyt8PTWklrcXGkGU2E97dT2TTcSNbyzySQs4/vNGyk9+eea/aP/gjx4d0e88YfETxw1wft9rHaaYLcdBEwM3mH1Jbge1fkRJEknK4z7V+xX/BIX4PeOrJ/EX7ROpSx2mgeIbddNsLUNukmNvIS1xIBwgB+VFyWI5OKwpO8rlPsfuGGBqEnJoz3FJiugR+Gv8AwWL0XSbXXvhx4vWc/b5jd6eYOxiCCTePQhuD7V+K3iGaOHTkmvfN+yQ3VvNdGHmQQRzI8zIP76xqxX3HFftp/wAFfvhB46vx4b/aD0tku9B8OwPp2oWxbbJD9okBWdAeHGflcD5gORmvxyhXyPnfrWFTSVwR/ZZ4N1rRfEfhHS/EXhy5W806+tYpradDuWSNlBVge+RXRtya/na/4J0/tqr8Fdatf2cPipKV8IancBNB1Bz8tjPK3/HpKf4YJGP7luiMdhwCtf0R1smmroQvam5paTrTAO/NLn0oooAQml3YpuCaeFzQAAgdaTp0oIIpME0Af//T/uyzmkzzmgsaTOaAClGKAKTNADjim0daKAFApeKTPFJ1oAr3dsl5aS2chIWZGQlTg4YY4NfzmfEz/glL+0v4Cu54fg9LpPjXRVZ5LdZZ/wCz75FZ2YRssoeCVgDjzPNj3HkqvWv6PMDHFHI4pOKe4H8oyfsLft4xapaaT/wrR1kvsFZzqNi1vDk4zcusxZNvUiNJMjpk8V/Rz+y78DY/2cvgVoXwjN9/aNxp0bPdXQG1XmkO6Qop5C5OFB5x1r38kGgUowS2ABS9BSnqM8UmCeetUB4F+098Dbf9ov4H698IpLz+zptTiBt7rG4RzRkNGzL3XIwwHODxX84TfsK/t3ya1daH/wAK1d5LLJe5XULJbWYD/n3d5g7luoWSOPA+8Qa/q55HWjgVMop7jufzf/DX/glX+0548vY7L4utpXgrQ2KPcbLgaheyIGDFEjh2QxMQCN5lfaeQrda/o3s7WOxs4bGIkpBGsak8khRgZ/KrOR1pO9EYpbCFpRikozVAKT7UlJntS+9ACjA60vApucUgwSKAFyTRS9uKTd79KAP/1P7sAeM0goHQUDqaAFpCeRS00/eFADqKKKAEPAzQDmg9DSL/AEoAkJIOPSm5zSnqaSgBM4xS0h6iloAASaaHbO2lHSox9+gCXJJ5pDR3oPSgA70E4o70h6igBe+KB1o70DqaAHHnmmmndqaeooATJzilFN7n8KcOpoAWiiigD//Z" alt="Team body heat map — throwing shoulder elevated, trunk strong">
+          <div class="tms-legend">
+            <div class="tms-reg hot"><span class="dot"></span><b>Throwing shoulder</b><small>3 elevated — late trunk rotation</small></div>
+            <div class="tms-reg watch"><span class="dot"></span><b>Follow-through</b><small>decel −9 — team-wide watch</small></div>
+            <div class="tms-reg good"><span class="dot"></span><b>Trunk &amp; core</b><small>11 strong — your identity</small></div>
+          </div>
+        </div>
+        <div class="insight"><span class="ico">💡</span><span>The shoulder load isn't random — it <b>traces to one sequencing fault in 3 named pitchers.</b> Fixable upstream, before it reaches the joint.</span></div>
+      </div>
+      <div class="card">
+        <h3>How the pitchers move <span style="font-size:1.15rem;color:var(--muted-2);font-weight:400">· movement strategies</span></h3>
+        <div class="tms-dist">
+          <div class="tms-strat edge">
+            <div class="tms-strat-top"><b>Hips-lead sequenced</b><span class="tms-n">9</span></div>
+            <div class="tms-bar"><i class="edge" style="width:64%"></i></div>
+            <div class="tms-ath"><span class="avx ok">MC</span><span class="avx ok">AB</span><span class="avx ok">JF</span><span class="more">+6</span></div>
+            <small>Your identity — trunk leads, arm follows clean.</small>
+          </div>
+          <div class="tms-strat risk">
+            <div class="tms-strat-top"><b>Early-trunk (arm lags)</b><span class="tms-n">3</span></div>
+            <div class="tms-bar"><i class="risk" style="width:21%"></i></div>
+            <div class="tms-ath"><span class="avx hi">RD</span><span class="avx">ET</span><span class="avx">BE</span></div>
+            <small>Shared risk — trunk opens early, shoulder pays.</small>
+          </div>
+          <div class="tms-strat neutral">
+            <div class="tms-strat-top"><b>Developing</b><span class="tms-n">2</span></div>
+            <div class="tms-bar"><i class="neutral" style="width:15%"></i></div>
+            <div class="tms-ath"><span class="avx">PR</span><span class="avx">KC</span></div>
+            <small>Freshmen — signature still forming.</small>
+          </div>
+        </div>
+        <div class="insight"><span class="ico">💡</span><span><b>Two-thirds already sequence well.</b> The fix targets 3 names, not the whole staff.</span></div>
       </div>
     </div>
 
@@ -5331,7 +5377,9 @@ function tourTab(key){
   repTab(document.querySelectorAll('#reptabs button')[map[key]], key);
 }
 function orgTabByKey(key){
-  const map = { today:0, overview:1, teams:2, athletes:3, access:4 };
+  const alias = { today:'overview', athletes:'teams' };
+  key = alias[key] || key;
+  const map = { overview:0, teams:1, access:2 };
   const btns = document.querySelectorAll('#scr-org .tabs button');
   if (btns[map[key]]) orgTab(btns[map[key]], key);
 }
