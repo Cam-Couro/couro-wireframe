@@ -1557,6 +1557,11 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 .tms-strat small{ color:var(--muted); font-size:1.18rem; }
 body.mobile .tms-heat{ flex-direction:column; align-items:flex-start; }
 .grid2.solo{ grid-template-columns:1fr; }
+/* single-team picker on the Teams tab */
+.teampick{ display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin:.2rem 0 1.3rem; }
+.teampick-lbl{ font-size:1.05rem; letter-spacing:.14em; text-transform:uppercase; font-weight:800; color:var(--muted); }
+.teampick-sel{ font-size:1.5rem; font-weight:700; color:var(--ink); border:1.5px solid var(--line); border-radius:.7rem; padding:.5rem .9rem; background:#fff; cursor:pointer; }
+.teampick-hint{ font-size:1.15rem; color:var(--muted-2); }
 .pat-cap{ font-size:1.15rem; color:var(--muted); font-weight:500; line-height:1.4; margin:0 0 1rem; }
 .pat-cap b{ color:var(--ink); font-weight:650; }
 .pat-foot{ display:flex; align-items:center; justify-content:space-between; gap:.8rem; }
@@ -3228,6 +3233,36 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="kpi"><div class="k">Open flags</div><div class="v num" style="color:var(--s-warn)">18</div></div>
       </div>
 
+      <div class="zone"><span class="zn"></span><span class="zl">All teams</span><span class="zr"></span><span class="zc">31 teams · click one to open it</span></div>
+      <div class="card" id="og-teamscard" style="margin-bottom:1.8rem">
+        <div style="overflow-x:auto">
+        <table class="orgtbl">
+          <thead><tr><th>Team</th><th>Avg score</th><th></th><th>Δ 30 days</th><th>Athletes</th><th>Assessed 7d</th><th>Alerts</th><th>8-wk trend</th></tr></thead>
+          <tbody>
+            <tr onclick="go('roster')"><td><b>Track &amp; Field</b></td><td class="num" style="color:var(--s-good);font-weight:700">78</td>
+              <td><div class="hbar"><i style="width:78%;background:var(--s-good)"></i></div></td>
+              <td class="d-up">↑ 3</td><td class="num">85</td><td class="num">34</td><td><span class="alertchip warn">4</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,16 14,14 26,12 38,10 50,7 62,5" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round"/><circle cx="62" cy="5" r="2.5" fill="#FFC700"/></svg></td></tr>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Football</b></td><td class="num" style="color:var(--s-ok);font-weight:700">72</td>
+              <td><div class="hbar"><i style="width:72%;background:var(--s-ok)"></i></div></td>
+              <td class="d-up">↑ 1</td><td class="num">112</td><td class="num">61</td><td><span class="alertchip warn">7</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,12 14,13 26,11 38,12 50,10 62,9" fill="none" stroke="#1B1F1B" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="9" r="2.5" fill="#1B1F1B"/></svg></td></tr>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Women's Soccer</b></td><td class="num" style="color:var(--s-good);font-weight:700">76</td>
+              <td><div class="hbar"><i style="width:76%;background:var(--s-good)"></i></div></td>
+              <td class="d-up">↑ 2</td><td class="num">31</td><td class="num">22</td><td><span class="alertchip warn">2</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,14 14,12 26,13 38,10 50,8 62,6" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="6" r="2.5" fill="#FFC700"/></svg></td></tr>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Swimming &amp; Diving</b></td><td class="num" style="color:var(--s-good);font-weight:700">75</td>
+              <td><div class="hbar"><i style="width:75%;background:var(--s-good)"></i></div></td>
+              <td class="d-up">↑ 2</td><td class="num">58</td><td class="num">19</td><td><span class="alertchip ok">0</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,13 14,12 26,11 38,10 50,9 62,7" fill="none" stroke="#00CC00" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="7" r="2.5" fill="#00CC00"/></svg></td></tr>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Return-to-Sport</b> <small style="color:var(--muted-2)">cross-team</small></td><td class="num" style="color:var(--s-warn);font-weight:700">68</td>
+              <td><div class="hbar"><i style="width:68%;background:var(--s-warn)"></i></div></td>
+              <td class="d-up">↑ 4</td><td class="num">24</td><td class="num">18</td><td><span class="alertchip info">6 in protocol</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,18 14,16 26,15 38,11 50,8 62,4" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="4" r="2.5" fill="#FFC700"/></svg></td></tr>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Softball</b></td><td class="num" style="color:var(--s-ok);font-weight:700">73</td>
+              <td><div class="hbar"><i style="width:73%;background:var(--s-ok)"></i></div></td>
+              <td class="d-up">↑ 3</td><td class="num">22</td><td class="num">14</td><td><span class="alertchip warn">2</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,15 14,13 26,12 38,10 50,8 62,6" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="6" r="2.5" fill="#FFC700"/></svg></td></tr>
+            <tr onclick="orgTabByKey('teams')" style="cursor:pointer"><td colspan="8" style="text-align:center;color:var(--muted);padding:.9rem"><b>+ 25 more teams</b> — Baseball, Basketball, Volleyball, Water Polo, Gymnastics, Rugby, Lacrosse, Golf… · open Teams to see all</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
       <div class="zone"><span class="zn act"></span><span class="zl">Act first</span><span class="zr"></span><span class="zc">3 items</span></div>
       <div class="card triage-hero" id="og-triage">
         <div class="trow sev-hi">
@@ -3284,7 +3319,16 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
     <!-- ===== ORG TAB: TEAMS ===== -->
     <div id="ot-teams" hidden>
-      <div class="headline"><b>RTS is the fastest-improving roster</b> — its lower scores are protocol, not problems. Softball carries the only open drift alerts.</div>
+      <div class="teampick">
+        <span class="teampick-lbl">Team</span>
+        <select class="teampick-sel" onchange="toast('Switched to <b>'+this.value+'</b> — synthesis, roster and athletes all follow')">
+          <option>Track &amp; Field — Sprints</option>
+          <option>Westgate Softball — Pitchers</option>
+          <option>Return-to-Sport Group</option>
+          <option>Women's Soccer</option>
+        </select>
+        <span class="teampick-hint">one team at a time · Overview compares them all</span>
+      </div>
       <!-- ===== TEAM MOVEMENT-STRATEGY SYNTHESIS =====
            Not scores — HOW the squad moves. The mix of strategies, where load
            concentrates across the roster, the read, and the one coaching move. -->
@@ -3335,35 +3379,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         </div>
       </div>
 
-      <div class="zone"><span class="zn"></span><span class="zl">Compare teams</span><span class="zr"></span><span class="zc">6 of 31 · click a team to open it</span></div>
-      <div class="card" id="og-teamscard" style="margin-bottom:1.8rem">
-        <div style="overflow-x:auto">
-        <table class="orgtbl">
-          <thead><tr><th>Team</th><th>Avg score</th><th></th><th>Δ 30 days</th><th>Athletes</th><th>Assessed 7d</th><th>Alerts</th><th>8-wk trend</th></tr></thead>
-          <tbody>
-            <tr onclick="go('roster')"><td><b>Track &amp; Field</b></td><td class="num" style="color:var(--s-good);font-weight:700">78</td>
-              <td><div class="hbar"><i style="width:78%;background:var(--s-good)"></i></div></td>
-              <td class="d-up">↑ 3</td><td class="num">85</td><td class="num">34</td><td><span class="alertchip warn">4</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,16 14,14 26,12 38,10 50,7 62,5" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round"/><circle cx="62" cy="5" r="2.5" fill="#FFC700"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Football</b></td><td class="num" style="color:var(--s-ok);font-weight:700">72</td>
-              <td><div class="hbar"><i style="width:72%;background:var(--s-ok)"></i></div></td>
-              <td class="d-up">↑ 1</td><td class="num">112</td><td class="num">61</td><td><span class="alertchip warn">7</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,12 14,13 26,11 38,12 50,10 62,9" fill="none" stroke="#1B1F1B" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="9" r="2.5" fill="#1B1F1B"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Women's Soccer</b></td><td class="num" style="color:var(--s-good);font-weight:700">76</td>
-              <td><div class="hbar"><i style="width:76%;background:var(--s-good)"></i></div></td>
-              <td class="d-up">↑ 2</td><td class="num">31</td><td class="num">22</td><td><span class="alertchip warn">2</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,14 14,12 26,13 38,10 50,8 62,6" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="6" r="2.5" fill="#FFC700"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Swimming &amp; Diving</b></td><td class="num" style="color:var(--s-good);font-weight:700">75</td>
-              <td><div class="hbar"><i style="width:75%;background:var(--s-good)"></i></div></td>
-              <td class="d-up">↑ 2</td><td class="num">58</td><td class="num">19</td><td><span class="alertchip ok">0</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,13 14,12 26,11 38,10 50,9 62,7" fill="none" stroke="#00CC00" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="7" r="2.5" fill="#00CC00"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Return-to-Sport</b> <small style="color:var(--muted-2)">cross-team</small></td><td class="num" style="color:var(--s-warn);font-weight:700">68</td>
-              <td><div class="hbar"><i style="width:68%;background:var(--s-warn)"></i></div></td>
-              <td class="d-up">↑ 4</td><td class="num">24</td><td class="num">18</td><td><span class="alertchip info">6 in protocol</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,18 14,16 26,15 38,11 50,8 62,4" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="4" r="2.5" fill="#FFC700"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Softball</b></td><td class="num" style="color:var(--s-ok);font-weight:700">73</td>
-              <td><div class="hbar"><i style="width:73%;background:var(--s-ok)"></i></div></td>
-              <td class="d-up">↑ 3</td><td class="num">22</td><td class="num">14</td><td><span class="alertchip warn">2</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,15 14,13 26,12 38,10 50,8 62,6" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="6" r="2.5" fill="#FFC700"/></svg></td></tr>
-            <tr onclick="orgTabByKey('teams')" style="cursor:pointer"><td colspan="8" style="text-align:center;color:var(--muted);padding:.9rem"><b>+ 25 more teams</b> — Baseball, Basketball, Volleyball, Water Polo, Gymnastics, Rugby, Lacrosse, Golf… · open Teams to see all</td></tr>
-          </tbody>
-        </table>
-        </div>
-      </div>
+
 
       <!-- Squad membership: teams are groupings, not owners -->
       <div class="zone"><span class="zn calm"></span><span class="zl">Who is on a team</span><span class="zr"></span><span class="zc">an athlete can be on more than one</span></div>
@@ -3409,34 +3425,6 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           </div>
         </div>
       </div>
-
-      <div class="zone"><span class="zn"></span><span class="zl">Rosters</span><span class="zr"></span><span class="zc">3 active</span></div>
-      <div class="roster-grid">
-      <div class="roster-card" onclick="go('roster')">
-        <div class="sport">Softball · Pitching</div>
-        <h3>Westgate Softball — Pitchers</h3>
-        <p class="coach">Coach: Dana Ruiz</p>
-        <div class="row"><span>Athletes</span><span class="num">14</span></div>
-        <div class="row"><span>Avg score</span><span class="num" style="color:var(--s-good)">76</span></div>
-        <div class="row"><span>Status</span><span class="alertchip warn">2 drift alerts</span></div>
-      </div>
-      <div class="roster-card" onclick="toast('Roster breakdown built for Westgate Softball in this wireframe — same template'); go('roster')">
-        <div class="sport">Track · Sprint</div>
-        <h3>Track &amp; Field — Sprints</h3>
-        <p class="coach">Coach: Marcus Lee</p>
-        <div class="row"><span>Athletes</span><span class="num">16</span></div>
-        <div class="row"><span>Avg score</span><span class="num" style="color:var(--s-ok)">71</span></div>
-        <div class="row"><span>Status</span><span class="alertchip warn">1 drift alert</span></div>
-      </div>
-      <div class="roster-card" onclick="toast('Roster breakdown built for Westgate Softball in this wireframe — same template'); go('roster')">
-        <div class="sport">Rehab · Running</div>
-        <h3>Return-to-Sport Group</h3>
-        <p class="coach">Coach: Priya Shah</p>
-        <div class="row"><span>Athletes</span><span class="num">12</span></div>
-        <div class="row"><span>Avg score</span><span class="num" style="color:var(--s-warn)">68</span></div>
-        <div class="row"><span>Status</span><span class="alertchip info">3 in protocol</span></div>
-      </div>
-    </div>
 
     <div class="zone"><span class="zn calm"></span><span class="zl">Coaches</span><span class="zr"></span></div>
     <div class="card" style="margin-bottom:1.6rem">
