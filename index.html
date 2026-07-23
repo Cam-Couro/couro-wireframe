@@ -5722,20 +5722,25 @@ function tourEnd(){
 
 /* ---- speed-bucket bands — track_service_female.yaml → speed_bucket_targets (v21) ---- */
 const MB_BANDS = {
-  walk:        { cadence:[110,30,'higher'], contact:[630,110,'lower'], trunk:[5,10.81,'band'],  knee:[65,15,'higher'],  shin:[5,5,'lower'],   hip:[6,5.89,'lower'] },
-  jog:         { cadence:[155,30,'higher'], contact:[270,50,'lower'],  trunk:[8,10.81,'band'],  knee:[83,12,'higher'],  shin:[8,5,'lower'],   hip:[6.5,5.89,'lower'] },
-  run:         { cadence:[175,30,'higher'], contact:[230,50,'lower'],  trunk:[10,10.81,'band'], knee:[93,12,'higher'],  shin:[10,6,'lower'],  hip:[8,5.89,'lower'] },
-  sprint:      { cadence:[220,30,'higher'], contact:[110,30,'lower'],  trunk:[12,10.81,'band'], knee:[108,15,'higher'], shin:[18,8,'higher'], hip:[8,5.89,'lower'] },
-  acceleration:{ cadence:[195,30,'higher'], contact:[180,45,'lower'],  trunk:[30,15,'band'],    knee:[93,15,'higher'],  shin:[22,14,'higher'],hip:[5,5.89,'lower'] }
+  walk:        { cadence:[110,30,'higher'], contact:[630,110,'lower'], triple:[8,5,'higher'],  kneedrive:[28,12,'band'], stiff:[8,5,'band'],  thigh:[150,60,'higher'], vosc:[5,3,'lower'],  trunk:[5,10.81,'band'],  knee:[65,15,'higher'],  shin:[5,5,'lower'],   hip:[6,5.89,'lower'] },
+  jog:         { cadence:[155,30,'higher'], contact:[270,50,'lower'],  triple:[14,6,'higher'], kneedrive:[42,15,'band'], stiff:[12,5,'band'], thigh:[350,80,'higher'], vosc:[7,3,'lower'],  trunk:[8,10.81,'band'],  knee:[83,12,'higher'],  shin:[8,5,'lower'],   hip:[6.5,5.89,'lower'] },
+  run:         { cadence:[175,30,'higher'], contact:[230,50,'lower'],  triple:[18,7,'higher'], kneedrive:[70,15,'band'], stiff:[16,6,'band'], thigh:[500,90,'higher'], vosc:[8,3,'lower'],  trunk:[10,10.81,'band'], knee:[93,12,'higher'],  shin:[10,6,'lower'],  hip:[8,5.89,'lower'] },
+  sprint:      { cadence:[220,30,'higher'], contact:[110,30,'lower'],  triple:[22,8,'higher'], kneedrive:[70,20,'band'], stiff:[24,8,'band'], thigh:[650,100,'higher'],vosc:[6,3,'lower'],  trunk:[12,10.81,'band'], knee:[108,15,'higher'], shin:[18,8,'higher'], hip:[8,5.89,'lower'] },
+  acceleration:{ cadence:[195,30,'higher'], contact:[180,45,'lower'],  triple:[20,8,'higher'], kneedrive:[65,18,'band'], stiff:[20,8,'band'], thigh:[550,90,'higher'], vosc:[7,3,'lower'],  trunk:[30,15,'band'],    knee:[93,15,'higher'],  shin:[22,14,'higher'],hip:[5,5.89,'lower'] }
 };
 const MB_BUCKETS = [['walk','Walk'],['jog','Jog'],['run','Run · auto'],['sprint','Sprint'],['acceleration','Accel · proposed']];
 const MB_METRICS = [
-  { k:'cadence', n:'Cadence',              unit:'spm', r:172, rng:[80,260],  tag:'spd' },
-  { k:'contact', n:'Ground Contact Time',  unit:'ms',  r:238, rng:[40,740],  tag:'spd', ev:'contact' },
-  { k:'trunk',   n:'Trunk Lean',           unit:'°',   r:12,  rng:[-6,46],   tag:'eff', ev:'trunk' },
-  { k:'knee',    n:'Knee Flexion (swing)', unit:'°',   r:91,  rng:[45,130],  tag:'spd', fix:true },
-  { k:'shin',    n:'Shin Angle',           unit:'°',   r:7,   rng:[-10,40],  tag:'spd', ev:'shin' },
-  { k:'hip',     n:'Hip Drop',             unit:'°',   r:7.2, rng:[-1,14.5], tag:'dur' }
+  { k:'cadence',   n:'Cadence',               unit:'spm',  r:172, rng:[80,260],  tag:'spd' },
+  { k:'contact',   n:'Ground Contact Time',   unit:'ms',   r:238, rng:[40,740],  tag:'spd', ev:'contact' },
+  { k:'triple',    n:'Triple Extension',      unit:'\u00b0', r:19,  rng:[0,30],  tag:'spd', ev:'triple' },
+  { k:'kneedrive', n:'Knee Drive',            unit:'\u00b0', r:61,  rng:[10,110],tag:'spd', fix:true, lr:[62,60] },
+  { k:'stiff',     n:'Leg Stiffness',         unit:'kN/m', r:15,  rng:[0,40],    tag:'dur' },
+  { k:'thigh',     n:'Thigh Angular Velocity',unit:'\u00b0/s', r:530, rng:[0,800], tag:'dur', lr:[512,548] },
+  { k:'vosc',      n:'Vertical Oscillation',  unit:'cm',   r:6.5, rng:[0,16],    tag:'eff' },
+  { k:'knee',      n:'Knee Flexion (swing)',  unit:'\u00b0', r:91,  rng:[45,130],tag:'spd' },
+  { k:'trunk',     n:'Trunk Lean',            unit:'\u00b0', r:12,  rng:[-6,46], tag:'eff', ev:'trunk' },
+  { k:'shin',      n:'Shin Angle',            unit:'\u00b0', r:7,   rng:[-10,40],tag:'spd', ev:'shin' },
+  { k:'hip',       n:'Hip Drop',              unit:'\u00b0', r:7.2, rng:[-1,14.5],tag:'dur' }
 ];
 const MB_TAG = { spd:'<span class="otag spd">Speed</span>', eff:'<span class="otag eff">Efficiency</span>', dur:'<span class="otag dur">Durability</span>' };
 let mbBucket = 'run';
@@ -5764,7 +5769,7 @@ function renderMB(bucket){
       '<div class="toprow"><span>' + m.n + evLink + MB_TAG[m.tag] + (m.fix ? '<span class="fixtag">🔗 this week\'s fix</span>' : '') + '</span>' +
       '<span class="val">' + m.r + '<span class="unit">' + m.unit + '</span></span></div>' +
       '<div class="bandbar"><span class="bandseg" style="left:' + L + '%;width:' + W + '%"></span><span class="banddot" style="left:' + D + '%"></span></div>' +
-      '<div class="bandnote">target ' + t + ' ± ' + (Math.round(tol * 10) / 10) + ' · ' + dirTxt + flip + ' · <b style="color:' + (inb ? '#00CC00' : '#FFC700') + '">' + (inb ? 'IN RANGE' : 'OUTSIDE THIS BUCKET') + '</b></div></div>';
+      '<div class="bandnote">' + (m.lr ? 'L ' + m.lr[0] + m.unit + ' / R ' + m.lr[1] + m.unit + ' · gap ' + (Math.round(Math.abs(m.lr[0]-m.lr[1])*10)/10) + m.unit + ' · ' : '') + 'target ' + t + ' ± ' + (Math.round(tol * 10) / 10) + ' · ' + dirTxt + flip + ' · <b style="color:' + (inb ? '#00CC00' : '#FFC700') + '">' + (inb ? 'IN RANGE' : 'OUTSIDE THIS BUCKET') + '</b></div></div>';
   }).join('');
   document.getElementById('mb-src').innerHTML = 'Bands: <b>track_service_female.yaml → speed_bucket_targets.' + bucket + '</b>' +
     (bucket === 'acceleration' ? ' — <b style="color:#FFC700">proposed bucket (wf_b3a00e63), not live</b>' : ' (live config)') +
