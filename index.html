@@ -923,6 +923,18 @@ body.mobile .gaugegrid{ grid-template-columns:1fr 1fr; }
   background:var(--ink); border:3px solid #fff; box-shadow:0 0 0 1.5px rgba(0,0,0,.18); }
 .bandnote{ font-size:1.1rem; color:var(--muted-2); margin-top:.5rem; }
 
+/* --- responsive space-saver: full-width blocks reflow to 2-up on desktop, stack on phone/narrow (v27) --- */
+.way-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem 1.6rem; margin-top:1.4rem; align-items:stretch; }
+.way-grid > *{ margin:0 !important; }
+.way-grid .tt-bars{ height:11rem; align-self:stretch; }
+.way-grid .ev-thumb{ height:100%; }
+.way-grid .darkfoot{ display:flex; flex-direction:column; justify-content:center; }
+#mb-rows{ display:grid; grid-template-columns:1fr 1fr; gap:0 3rem; }
+#mb-rows .bandrow{ border-bottom:1px solid var(--line); }
+@media (max-width:860px){ .way-grid{ grid-template-columns:1fr; } #mb-rows{ grid-template-columns:1fr; } }
+body.mobile .way-grid{ grid-template-columns:1fr; }
+body.mobile #mb-rows{ grid-template-columns:1fr; }
+
 /* ---------- org/roster hierarchy refresh (v10) ---------- */
 .zone{ display:flex; align-items:center; gap:1.1rem; margin:2.8rem 0 1.3rem; }
 .zone .zn{ width:1rem; height:1rem; border-radius:.3rem; background:var(--yellow); flex:none; }
@@ -2655,6 +2667,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <p class="kick a">WHAT'S IN THE WAY<span class="otag eff">Efficiency</span></p>
           <div class="card lefta">
             <h4 style="font-size:1.7rem;margin-bottom:.4rem">Oscillation creeps up when she fatigues</h4>
+            <div class="way-grid">
             <div class="tt-bars">
               <div class="bcol"><div class="bar today">10.6</div><div class="bl">TODAY</div></div>
               <div class="bcol"><div class="bar target">8.8</div><div class="bl">TARGET</div></div>
@@ -2667,6 +2680,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <div class="darkfoot">
               <div class="row"><span class="lab">RUN SCORE</span><span class="proj num"><span class="cur">82/100</span><span class="arrow">→</span><span class="new">86/100</span></span></div>
               <div class="cap"><span>If oscillation holds in band for a full session</span><span class="esttag">ESTIMATE</span></div>
+            </div>
             </div>
           </div>
         </div>
