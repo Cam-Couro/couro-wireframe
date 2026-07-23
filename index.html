@@ -1599,6 +1599,7 @@ body.mobile .tms-heat{ flex-direction:column; align-items:flex-start; }
 .radar{ width:250px; height:230px; flex:none; }
 .radar-legend{ font-size:1.22rem; color:var(--muted); line-height:1.7; }
 .radar-legend b{ color:var(--ink); }
+.runway{ width:100%; height:auto; display:block; margin:.5rem 0 .3rem; }
 body.mobile .radarwrap{ flex-direction:column; }
 body.mobile .ewspark{ display:none; }
 body.mobile .ewrow{ grid-template-columns:auto 1fr auto; }
@@ -3432,33 +3433,25 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
       <!-- Squad membership: teams are groupings, not owners -->
       <!-- ===== EARLY-WARNING TRAJECTORY (risk climbing, steepest first) ===== -->
-      <div class="zone"><span class="zn act"></span><span class="zl">Early warning · risk climbing</span><span class="zr"></span><span class="zc">steepest first · catch it before it's an injury</span></div>
+      <div class="zone"><span class="zn act"></span><span class="zl">Early warning · sliding toward injury</span><span class="zr"></span><span class="zc">closer to the line = act sooner · tap a name</span></div>
       <div class="card triage-hero" style="margin-bottom:1.8rem">
-        <div class="ewrow" onclick="openAthleteByName('Rosa Delgado')">
-          <span class="avx hi">RD</span>
-          <div class="ewinfo"><b>Rosa Delgado</b><small>Arm-path drift · shoulder load · 3 sessions climbing</small></div>
-          <svg class="ewspark" viewBox="0 0 170 54"><rect x="0" y="0" width="170" height="15" fill="#DC4A3F" opacity=".12"/><line x1="0" y1="15" x2="170" y2="15" stroke="#DC4A3F" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><polyline points="6,46 38,44 70,40 102,32 134,24 160,17" fill="none" stroke="#DC4A3F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="160" cy="17" r="3.6" fill="#DC4A3F"/></svg>
-          <div class="ewtag hot">~2 sess<small>to threshold</small></div>
-        </div>
-        <div class="ewrow" onclick="openAthleteByName('Marcus Webb')">
-          <span class="avx hi">MW</span>
-          <div class="ewinfo"><b>Marcus Webb</b><small>Knee load rising while score falls · RTS wk 6</small></div>
-          <svg class="ewspark" viewBox="0 0 170 54"><rect x="0" y="0" width="170" height="15" fill="#DC4A3F" opacity=".12"/><line x1="0" y1="15" x2="170" y2="15" stroke="#DC4A3F" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><polyline points="6,44 38,42 70,38 102,34 134,28 160,22" fill="none" stroke="#E0A400" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="160" cy="22" r="3.6" fill="#E0A400"/></svg>
-          <div class="ewtag watch">~4 sess<small>to threshold</small></div>
-        </div>
-        <div class="ewrow" onclick="openAthleteByName('Dev Osei')">
-          <span class="avx md">DO</span>
-          <div class="ewinfo"><b>Dev Osei</b><small>Crossover landing · knee-valgus · early signal</small></div>
-          <svg class="ewspark" viewBox="0 0 170 54"><rect x="0" y="0" width="170" height="15" fill="#DC4A3F" opacity=".12"/><line x1="0" y1="15" x2="170" y2="15" stroke="#DC4A3F" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><polyline points="6,42 38,41 70,40 102,37 134,34 160,30" fill="none" stroke="#E0A400" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="160" cy="30" r="3.6" fill="#E0A400"/></svg>
-          <div class="ewtag watch">watch<small>trending up</small></div>
-        </div>
-        <div class="ewrow" onclick="openAthleteByName('Montana Carlson')">
-          <span class="avx ok">MC</span>
-          <div class="ewinfo"><b>Montana Carlson</b><small>Holding — spring signature stable</small></div>
-          <svg class="ewspark" viewBox="0 0 170 54"><rect x="0" y="0" width="170" height="15" fill="#DC4A3F" opacity=".12"/><line x1="0" y1="15" x2="170" y2="15" stroke="#DC4A3F" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><polyline points="6,40 38,41 70,39 102,40 134,38 160,39" fill="none" stroke="#00CC00" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="160" cy="39" r="3.6" fill="#00CC00"/></svg>
-          <div class="ewtag ok">stable<small>no drift</small></div>
-        </div>
-        <div class="insight"><span class="ico">💡</span><span><b>Rosa is the one to act on this week</b> — the slope, not the score, is the tell. Two sessions from threshold; a cue now resets it.</span></div>
+        <svg class="runway" viewBox="0 0 600 132" role="img" aria-label="Risk runway: athletes placed by how close they are to the injury threshold, with motion trails showing how fast each is climbing">
+          <defs><linearGradient id="runwayg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E7F6EE"/><stop offset="0.55" stop-color="#FBF3DD"/><stop offset="1" stop-color="#FBE4E1"/></linearGradient></defs>
+          <rect x="20" y="50" width="560" height="46" rx="23" fill="url(#runwayg)"/>
+          <line x1="512" y1="38" x2="512" y2="108" stroke="#DC4A3F" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="512" y="31" text-anchor="middle" font-size="9" font-weight="800" fill="#DC4A3F" font-family="Inter,sans-serif" letter-spacing="1">THRESHOLD</text>
+          <text x="40" y="122" font-size="9" fill="#7FA890" font-family="Inter,sans-serif" font-weight="800" letter-spacing="1.5">CLEAR</text>
+          <text x="470" y="122" font-size="9" fill="#CE8B85" font-family="Inter,sans-serif" font-weight="800" letter-spacing="1.5">AT RISK</text>
+          <!-- Montana: stable, low -->
+          <g onclick="openAthleteByName('Montana Carlson')" style="cursor:pointer"><circle cx="132" cy="73" r="17" fill="#00CC00"/><text x="132" y="77" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="Inter,sans-serif">MC</text></g>
+          <!-- Dev: trending -->
+          <g onclick="openAthleteByName('Dev Osei')" style="cursor:pointer"><line x1="269" y1="73" x2="292" y2="73" stroke="#E0A400" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 5"/><circle cx="311" cy="73" r="17" fill="#E0A400"/><text x="311" y="77" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="Inter,sans-serif">DO</text></g>
+          <!-- Marcus: climbing -->
+          <g onclick="openAthleteByName('Marcus Webb')" style="cursor:pointer"><line x1="332" y1="73" x2="371" y2="73" stroke="#E0A400" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="1 5"/><circle cx="390" cy="73" r="17" fill="#E0A400"/><text x="390" y="77" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="Inter,sans-serif">MW</text></g>
+          <!-- Rosa: fastest, nearest -->
+          <g onclick="openAthleteByName('Rosa Delgado')" style="cursor:pointer"><line x1="406" y1="73" x2="460" y2="73" stroke="#DC4A3F" stroke-width="3.8" stroke-linecap="round" stroke-dasharray="1 5"/><circle cx="479" cy="73" r="18" fill="#DC4A3F"/><text x="479" y="77" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="Inter,sans-serif">RD</text></g>
+        </svg>
+        <div class="insight"><span class="ico">💡</span><span><b>Rosa is nearest the line and moving fastest</b> — the trail length is the tell, not the score. Cue her this week and she slides back to safe.</span></div>
       </div>
 
       <div class="grid2" style="margin-bottom:1.8rem">
