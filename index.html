@@ -1691,6 +1691,31 @@ body.mobile .tmbar .tm-upload{ margin-left:0; width:100%; justify-content:center
 .tt-scope b{ font-size:1.28rem; display:block; } .tt-scope small{ color:var(--muted); font-size:1.15rem; line-height:1.4; display:block; margin-top:.2rem; }
 body.mobile .techsplit{ grid-template-columns:1fr; }
 body.mobile .tt-row{ grid-template-columns:11rem 1fr 8rem; gap:.9rem; }
+/* team-wide comparison heatmap matrix */
+.tmxwrap{ overflow-x:auto; }
+.tmx{ width:100%; border-collapse:separate; border-spacing:0 .3rem; font-variant-numeric:tabular-nums; }
+.tmx thead th{ font-size:1.05rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted-2); font-weight:700; cursor:pointer; white-space:nowrap; padding:.5rem .6rem 1rem; text-align:center; user-select:none; border-bottom:1.5px solid var(--line); }
+.tmx thead th.athcol{ text-align:left; }
+.tmx thead th.on{ color:var(--ink); }
+.tmx thead th:hover{ color:var(--ink); }
+.tmx .caret{ font-size:.9em; }
+.tmx tbody tr{ cursor:pointer; }
+.tmx tbody td{ padding:.25rem .3rem; }
+.tmx tbody tr:hover .athcell{ color:var(--s-good); }
+.tmx .athcell{ text-align:left; font-weight:600; font-size:1.25rem; white-space:nowrap; padding-left:.2rem; }
+.tmx .rdot{ display:inline-block; width:.9rem; height:.9rem; border-radius:50%; margin-right:.6rem; vertical-align:middle; }
+.tmx td.c{ text-align:center; }
+.tmx .cell{ display:inline-block; min-width:3.2rem; padding:.5rem .3rem; font-size:1.25rem; font-weight:700; border-radius:.5rem; }
+.tmx .cell.ovcol{ font-weight:800; box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.06); }
+.tmx .cell.x4{ background:rgba(5,150,105,.20); color:#0a7d54; }
+.tmx .cell.x3{ background:rgba(5,150,105,.10); color:#0a7d54; }
+.tmx .cell.x2{ background:rgba(224,164,0,.18); color:#9a6a00; }
+.tmx .cell.x1{ background:rgba(220,74,63,.18); color:#c0392b; }
+.tmx-foot{ display:flex; flex-wrap:wrap; gap:1.4rem; margin-top:1.2rem; padding-top:1.1rem; border-top:1px solid var(--line); }
+.tmx-key{ display:inline-flex; align-items:center; gap:.5rem; font-size:1.15rem; color:var(--muted); font-weight:500; }
+.tmx-key .k{ width:1.2rem; height:1.2rem; border-radius:.35rem; }
+.tmx-key .k.x4{ background:rgba(5,150,105,.20); } .tmx-key .k.x3{ background:rgba(5,150,105,.10); }
+.tmx-key .k.x2{ background:rgba(224,164,0,.18); } .tmx-key .k.x1{ background:rgba(220,74,63,.18); }
 /* what's working / what to watch */
 .swcols{ display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; }
 .sw-h{ font-size:1.12rem; letter-spacing:.1em; text-transform:uppercase; font-weight:800; margin-bottom:.8rem; }
@@ -3446,7 +3471,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       <div class="sec">Who to act on</div>
       <div class="grid2 chartrow">
         <div class="card">
-          <h3 class="cardh"><span>Where each athlete stands <span class="hsub" id="sm-sub">trend × strength · color = risk · tap a dot</span></span><button class="cmpbtn" id="sm-cmpbtn" onclick="cmpToggle()">⇄ Compare</button></h3>
+          <h3 class="cardh"><span>Where each athlete stands <span class="hsub" id="sm-sub">trend × strength · color = risk · tap a dot</span></span><button class="cmpbtn" id="sm-cmpbtn" onclick="smCmpToggle()">⇄ Compare</button></h3>
         <div class="statusmap-wrap">
           <svg class="statusmap" viewBox="0 0 560 400" role="img" aria-label="Team status map: each athlete plotted by 30-day trend and strength, colored by injury risk">
   <rect x="60" y="30" width="240" height="155" fill="#FBF3DD" opacity=".5"/>
@@ -3510,6 +3535,12 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="sec">Compare the team<span class="sec-r">tap a column to sort · color = strength · tap a row to open</span></div>
+      <div class="card" style="margin-bottom:1.8rem">
+        <div id="tmx"></div>
+        <div class="tmx-foot"><span class="tmx-key"><i class="k x4"></i>elite 82+</span><span class="tmx-key"><i class="k x3"></i>solid 70–81</span><span class="tmx-key"><i class="k x2"></i>watch 60–69</span><span class="tmx-key"><i class="k x1"></i>flag &lt;60</span></div>
       </div>
 
       <details class="techwrap">
@@ -6239,55 +6270,81 @@ go('hub');
 </script><script>
 /* ===== Status-map tap-to-compare ===== */
 var SM_DATA = {
-  'Montana Carlson': {x:454,y:61,  arch:'Spring-loaded · clear', elas:92, sym:90, knee:88, sho:85, note:'the model — elite across the board'},
-  'Aaliyah Brooks':  {x:366,y:86,  arch:'Balanced · clear',      elas:80, sym:82, knee:78, sho:80, note:'steady, no flags'},
-  'Nia Carter':      {x:410,y:123, arch:'Spring-loaded · clear', elas:84, sym:80, knee:82, sho:78, note:'strong plant mechanics'},
-  'Emi Tanaka':      {x:322,y:129, arch:'Balanced · clear',      elas:78, sym:84, knee:80, sho:82, note:'clean symmetry'},
-  'Brooke Ellis':    {x:388,y:170, arch:'Spring-loaded · clear', elas:82, sym:78, knee:79, sho:76, note:'good spring source'},
-  'Jordan Ford':     {x:333,y:142, arch:'Balanced · clear',      elas:79, sym:81, knee:77, sho:80, note:'consistent'},
-  'Kayla Chen':      {x:289,y:154, arch:'Crossover · watch',     elas:74, sym:70, knee:62, sho:72, note:'knee drifting at plant'},
-  'Priya Raman':     {x:410,y:216, arch:'Rebuilding · watch',    elas:70, sym:68, knee:66, sho:64, note:'building back'},
-  'Dev Osei':        {x:245,y:160, arch:'Crossover · watch',     elas:72, sym:66, knee:64, sho:70, note:'plant control slipping'},
-  'Rosa Delgado':    {x:212,y:98,  arch:'Crossover · flagged',   elas:80, sym:62, knee:74, sho:48, note:'shoulder arm-path drift R+18%'},
-  'Marcus Webb':     {x:190,y:232, arch:'Crossover · flagged',   elas:76, sym:58, knee:44, sho:70, note:'knee valgus at plant L+15%'}
+  'Montana Carlson': {x:454,y:61,  arch:'Spring-loaded · clear', risk:'clear',   elas:92, gct:90, sym:90, trunk:88, decel:84, knee:88, note:'the model — elite across the board'},
+  'Aaliyah Brooks':  {x:366,y:86,  arch:'Balanced · clear',      risk:'clear',   elas:80, gct:82, sym:82, trunk:80, decel:76, knee:78, note:'steady, no flags'},
+  'Nia Carter':      {x:410,y:123, arch:'Spring-loaded · clear', risk:'clear',   elas:84, gct:86, sym:80, trunk:82, decel:74, knee:82, note:'strong plant mechanics'},
+  'Emi Tanaka':      {x:322,y:129, arch:'Balanced · clear',      risk:'clear',   elas:78, gct:80, sym:84, trunk:84, decel:78, knee:80, note:'clean symmetry'},
+  'Brooke Ellis':    {x:388,y:170, arch:'Spring-loaded · clear', risk:'clear',   elas:82, gct:84, sym:78, trunk:79, decel:72, knee:79, note:'good spring source'},
+  'Jordan Ford':     {x:333,y:142, arch:'Balanced · clear',      risk:'clear',   elas:79, gct:81, sym:81, trunk:80, decel:75, knee:77, note:'consistent'},
+  'Kayla Chen':      {x:289,y:154, arch:'Crossover · watch',     risk:'watch',   elas:74, gct:78, sym:70, trunk:74, decel:68, knee:62, note:'knee drifting at plant'},
+  'Priya Raman':     {x:410,y:216, arch:'Rebuilding · watch',    risk:'watch',   elas:70, gct:72, sym:68, trunk:70, decel:66, knee:66, note:'building back'},
+  'Dev Osei':        {x:245,y:160, arch:'Crossover · watch',     risk:'watch',   elas:72, gct:74, sym:66, trunk:72, decel:64, knee:64, note:'plant control slipping'},
+  'Rosa Delgado':    {x:212,y:98,  arch:'Crossover · flagged',   risk:'flagged', elas:80, gct:78, sym:62, trunk:70, decel:72, knee:74, note:'arm-path drift R +18%'},
+  'Marcus Webb':     {x:190,y:232, arch:'Crossover · flagged',   risk:'flagged', elas:76, gct:74, sym:58, trunk:68, decel:66, knee:44, note:'knee valgus at plant L +15%'}
 };
-var SM_METRICS = [['elas','Elasticity'],['sym','Symmetry'],['knee','Knee control'],['sho','Shoulder path']];
-var cmpMode = false, cmpSel = [];
+var SM_METRICS = [['elas','Elasticity'],['gct','Ground contact'],['sym','Symmetry'],['trunk','Trunk'],['decel','Deceleration'],['knee','Knee control']];
+var SM_COLS = [['elas','Elas'],['gct','Grnd'],['sym','Sym'],['trunk','Trunk'],['decel','Decel'],['knee','Knee']];
+var tmxSort = 'overall', tmxDir = -1;
+function tmxOverall(d){ return Math.round((d.elas+d.gct+d.sym+d.trunk+d.decel+d.knee)/6); }
+function tmxClass(v){ return v>=82?'x4':v>=70?'x3':v>=60?'x2':'x1'; }
+function tmxSortBy(key){ if(tmxSort===key){ tmxDir*=-1; } else { tmxSort=key; tmxDir=-1; } renderMatrix(); }
+function renderMatrix(){
+  var host=document.getElementById('tmx'); if(!host) return;
+  var rdot={clear:'#00CC00',watch:'#E0A400',flagged:'#DC4A3F'};
+  var names=Object.keys(SM_DATA);
+  names.sort(function(a,b){
+    var av=tmxSort==='overall'?tmxOverall(SM_DATA[a]):SM_DATA[a][tmxSort];
+    var bv=tmxSort==='overall'?tmxOverall(SM_DATA[b]):SM_DATA[b][tmxSort];
+    return (av-bv)*tmxDir;
+  });
+  var caret=function(k){ return tmxSort===k?(' <span class="caret">'+(tmxDir<0?'▾':'▴')+'</span>'):''; };
+  var head='<tr><th class="athcol'+(tmxSort==='name'?' on':'')+'" onclick="tmxSortBy(\'name\')">Athlete</th>'+
+    SM_COLS.map(function(c){ return '<th class="'+(tmxSort===c[0]?'on':'')+'" onclick="tmxSortBy(\''+c[0]+'\')">'+c[1]+caret(c[0])+'</th>'; }).join('')+
+    '<th class="'+(tmxSort==='overall'?'on':'')+'" onclick="tmxSortBy(\'overall\')">Overall'+caret('overall')+'</th></tr>';
+  var body=names.map(function(n){
+    var d=SM_DATA[n], ov=tmxOverall(d);
+    var cells=SM_COLS.map(function(c){ var v=d[c[0]]; return '<td class="c"><div class="cell '+tmxClass(v)+'">'+v+'</div></td>'; }).join('');
+    return '<tr onclick="openAthleteByName(\''+n+'\')"><td class="athcell"><span class="rdot" style="background:'+rdot[d.risk]+'"></span>'+n+'</td>'+
+      cells+'<td class="c"><div class="cell '+tmxClass(ov)+' ovcol">'+ov+'</div></td></tr>';
+  }).join('');
+  host.innerHTML='<div class="tmxwrap"><table class="tmx"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>';
+}
+var smCmpMode = false, smCmpSel = [];
 
-function cmpToggle(){
-  cmpMode = !cmpMode;
+function smCmpToggle(){
+  smCmpMode = !smCmpMode;
   var btn = document.getElementById('sm-cmpbtn');
   var svg = document.querySelector('.statusmap');
   var sub = document.getElementById('sm-sub');
-  btn.classList.toggle('on', cmpMode);
-  if(svg) svg.classList.toggle('picking', cmpMode);
-  if(cmpMode){
+  btn.classList.toggle('on', smCmpMode);
+  if(svg) svg.classList.toggle('picking', smCmpMode);
+  if(smCmpMode){
     btn.textContent = '✕ Done';
     if(sub) sub.textContent = 'tap two athletes to compare';
     document.getElementById('sm-insight').hidden = true;
   } else {
     btn.textContent = '⇄ Compare';
     if(sub) sub.textContent = 'trend × strength · color = risk · tap a dot';
-    cmpClear();
+    smCmpClear();
     document.getElementById('sm-insight').hidden = false;
   }
 }
 
 function smDot(el, name){
-  if(!cmpMode){ openAthleteByName(name); return; }
-  var i = cmpSel.indexOf(name);
-  if(i > -1){ cmpSel.splice(i,1); }
-  else { cmpSel.push(name); if(cmpSel.length > 2) cmpSel.shift(); }
-  drawSel();
-  renderCmp();
+  if(!smCmpMode){ openAthleteByName(name); return; }
+  var i = smCmpSel.indexOf(name);
+  if(i > -1){ smCmpSel.splice(i,1); }
+  else { smCmpSel.push(name); if(smCmpSel.length > 2) smCmpSel.shift(); }
+  smDrawSel();
+  smRenderCmp();
 }
 
-function drawSel(){
+function smDrawSel(){
   var layer = document.getElementById('sm-sel');
   if(!layer) return;
   layer.innerHTML = '';
   var cols = ['#2F6FED','#C0920F'];
-  cmpSel.forEach(function(name, idx){
+  smCmpSel.forEach(function(name, idx){
     var d = SM_DATA[name]; if(!d) return;
     var ns = 'http://www.w3.org/2000/svg';
     var c = document.createElementNS(ns,'circle');
@@ -6297,22 +6354,22 @@ function drawSel(){
   });
 }
 
-function cmpClear(){
-  cmpSel = [];
-  drawSel();
+function smCmpClear(){
+  smCmpSel = [];
+  smDrawSel();
   var p = document.getElementById('tm-cmp');
   p.hidden = true; p.innerHTML = '';
 }
 
-function renderCmp(){
+function smRenderCmp(){
   var p = document.getElementById('tm-cmp');
-  if(cmpSel.length === 0){ p.hidden = true; p.innerHTML=''; return; }
+  if(smCmpSel.length === 0){ p.hidden = true; p.innerHTML=''; return; }
   p.hidden = false;
-  if(cmpSel.length === 1){
-    p.innerHTML = '<div class="cmphint">Tap one more athlete to compare with <b>'+cmpSel[0]+'</b>.</div>';
+  if(smCmpSel.length === 1){
+    p.innerHTML = '<div class="cmphint">Tap one more athlete to compare with <b>'+smCmpSel[0]+'</b>.</div>';
     return;
   }
-  var an = cmpSel[0], bn = cmpSel[1], A = SM_DATA[an], B = SM_DATA[bn];
+  var an = smCmpSel[0], bn = smCmpSel[1], A = SM_DATA[an], B = SM_DATA[bn];
   // biggest gap metric
   var big = SM_METRICS[0], bigGap = -1;
   SM_METRICS.forEach(function(m){ var g = Math.abs(A[m[0]]-B[m[0]]); if(g>bigGap){bigGap=g; big=m;} });
@@ -6336,9 +6393,11 @@ function renderCmp(){
       '<span class="cmpchip a">'+an+' <small>'+A.arch+'</small></span>'+
       '<span class="cmpvs">vs</span>'+
       '<span class="cmpchip b">'+bn+' <small>'+B.arch+'</small></span>'+
-      '<button class="cmpclear" onclick="cmpClear()">Clear</button>'+
+      '<button class="cmpclear" onclick="smCmpClear()">Clear</button>'+
     '</div>'+
     '<div class="vsbars">'+rows+'</div>'+
     '<div class="cmp-take"><span>💡</span><span>'+take+'</span></div>';
 }
+
+renderMatrix();
 </script>
