@@ -1765,6 +1765,12 @@ body.mobile .tcmp-grid{ grid-template-columns:1fr; }
 .sd-chip em{ font-style:normal; font-weight:600; color:var(--muted); font-size:1.05rem; }
 .sd-chip.sgood{ border-color:#B8E0C8; } .sd-chip.swarn{ border-color:#F0DDA8; } .sd-chip.sbad{ border-color:#F2C4BE; }
 .sd-chip.d{ border-color:#E7DFC9; }
+.sd-chip.sgood{ background:rgba(5,150,105,.09); } .sd-chip.swarn{ background:rgba(224,164,0,.10); } .sd-chip.sbad{ background:rgba(220,74,63,.10); }
+.sd-chip b{ color:var(--ink); }
+.sd-chip .v{ font-weight:800; }
+.sd-chip .arr{ color:var(--muted-2); margin:0 .1rem; }
+.sd-chip .dgap{ font-size:.98rem; font-weight:800; color:var(--muted); background:var(--fill); border-radius:1rem; padding:.08rem .55rem; margin-left:.2rem; }
+.sd-wrap{ display:flex; flex-wrap:wrap; }
 .tcmp-two{ display:grid; grid-template-columns:1.05fr .95fr; gap:1.8rem; align-items:start; margin-bottom:1.3rem; }
 .tcmp-two .tcmp-cell{ align-items:stretch; }
 .tcmp-two .cmpradar{ max-width:22rem; width:100%; display:block; margin:0 auto; }
@@ -6445,18 +6451,23 @@ function cmpSynth(sel){
   return {ds:ds,shared:shared,div:div,divGap:divGap,model:model,teamModel:teamModel,pri:pri};
 }
 function posePlant(d){
-  var voff=Math.max(0,Math.min(13,(80-d.knee)/2)), tilt=Math.max(0,Math.min(7,(82-d.sym)/3));
-  var hipLx=27, hipRx=53, hipLy=20+tilt/2, hipRy=20-tilt/2;
-  var kY=62, kLx=hipLx+voff, kRx=hipRx-voff, aY=100, aLx=29, aRx=51, kc=heatFill(d.knee);
-  function seg(x1,y1,x2,y2){ return '<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="#9AA6B4" stroke-width="4.5" stroke-linecap="round"/>'; }
-  return '<svg viewBox="0 0 80 118" class="posesvg" role="img">'
-    +'<line x1="40" y1="8" x2="40" y2="112" stroke="#E4E0D4" stroke-width="1" stroke-dasharray="3 3"/>'
-    +'<line x1="'+hipLx+'" y1="'+hipLy.toFixed(1)+'" x2="'+hipRx+'" y2="'+hipRy.toFixed(1)+'" stroke="#9AA6B4" stroke-width="5.5" stroke-linecap="round"/>'
-    +seg(hipLx,hipLy,kLx,kY)+seg(kLx,kY,aLx,aY)+seg(hipRx,hipRy,kRx,kY)+seg(kRx,kY,aRx,aY)
-    +'<circle cx="'+kLx.toFixed(1)+'" cy="'+kY+'" r="5.2" fill="'+kc+'"/><circle cx="'+kRx.toFixed(1)+'" cy="'+kY+'" r="5.2" fill="'+kc+'"/>'
-    +'<circle cx="'+hipLx+'" cy="'+hipLy.toFixed(1)+'" r="3.2" fill="#7B828C"/><circle cx="'+hipRx+'" cy="'+hipRy.toFixed(1)+'" r="3.2" fill="#7B828C"/>'
-    +'<rect x="'+(aLx-4.5)+'" y="'+aY+'" width="9" height="4" rx="2" fill="#7B828C"/><rect x="'+(aRx-4.5)+'" y="'+aY+'" width="9" height="4" rx="2" fill="#7B828C"/></svg>';
+  var voff=Math.max(0,Math.min(13,(80-d.knee)/2)), tilt=Math.max(0,Math.min(5,(82-d.sym)/4));
+  var hL=33, hR=57, hLy=30+tilt, hRy=30-tilt, kY=76, kL=hL+voff, kR=hR-voff, aY=112, aL=34, aR=56, kc=heatFill(d.knee);
+  function limb(x1,y1,w1,x2,y2,w2){ return '<path d="M'+(x1-w1).toFixed(1)+' '+y1.toFixed(1)+' L'+(x1+w1).toFixed(1)+' '+y1.toFixed(1)+' L'+(x2+w2).toFixed(1)+' '+y2+' L'+(x2-w2).toFixed(1)+' '+y2+' Z" fill="#C6CCD5" stroke="#9AA6B4" stroke-width="0.7" stroke-linejoin="round"/>'; }
+  return '<svg viewBox="0 0 90 128" class="posesvg" role="img">'
+    +'<line x1="45" y1="4" x2="45" y2="118" stroke="#E7E3D6" stroke-width="1" stroke-dasharray="3 3"/>'
+    +'<line x1="12" y1="118" x2="78" y2="118" stroke="#E2DECF" stroke-width="1.5"/>'
+    +'<rect x="37" y="6" width="16" height="18" rx="6" fill="#CDD3DB"/>'
+    +'<rect x="30" y="24" width="30" height="12" rx="6" fill="#B8BFC9"/>'
+    +limb(hL,hLy,4.6,kL,kY,3.4)+limb(kL,kY,3.2,aL,aY,2.5)
+    +limb(hR,hRy,4.6,kR,kY,3.4)+limb(kR,kY,3.2,aR,aY,2.5)
+    +'<ellipse cx="'+(aL-1)+'" cy="115.5" rx="5.5" ry="2.6" fill="#8A93A0"/><ellipse cx="'+(aR+1)+'" cy="115.5" rx="5.5" ry="2.6" fill="#8A93A0"/>'
+    +'<circle cx="'+kL.toFixed(1)+'" cy="'+kY+'" r="5.5" fill="'+kc+'" stroke="#fff" stroke-width="1.6"/>'
+    +'<circle cx="'+kR.toFixed(1)+'" cy="'+kY+'" r="5.5" fill="'+kc+'" stroke="#fff" stroke-width="1.6"/></svg>';
 }
+function bandCol(v){ return v>=82?'#0a7d54':v>=70?'#3f9a57':v>=60?'#B8860B':'#C0392B'; }
+function scls(a){ return a>=75?'sgood':a>=60?'swarn':'sbad'; }
+function radarDots(d,R,col){ var cx=115,cy=115,out=''; SM_COLS.forEach(function(c,i){ var a=-Math.PI/2+i*Math.PI/3, r=d[c[0]]/100*R; out+='<circle cx="'+(cx+r*Math.cos(a)).toFixed(1)+'" cy="'+(cy+r*Math.sin(a)).toFixed(1)+'" r="2.6" fill="'+col+'"/>'; }); return out; }
 function renderTeamCompare(){
   var p=document.getElementById('tcmp'); if(!p) return;
   if(CMP2.length===0){ p.hidden=true; p.innerHTML=''; return; }
@@ -6464,16 +6475,17 @@ function renderTeamCompare(){
   if(CMP2.length===1){ p.innerHTML='<div class="cmphint">Tap one or two more athletes to compare with <b>'+CMP2[0]+'</b>.</div>'; return; }
   var s=cmpSynth(CMP2), R=82, nW=CMP2.length>2?'all':'both';
   var chips=CMP2.map(function(n,i){ var d=SM_DATA[n], t=d.trend||0, tw=t<0?'↓'+(-t):t>0?'↑'+t:'→'; return '<span class="cmpchip '+CMP_CN[i]+'">'+n+' <small>ov '+tmxOverall(d)+' · '+tw+'</small></span>'; }).join('<span class="cmpvs">vs</span>');
-  var polys=CMP2.map(function(n,i){ return '<polygon points="'+radarPoly(SM_DATA[n],R)+'" fill="'+cmpHexA(CMP_COLORS[i],.13)+'" stroke="'+CMP_COLORS[i]+'" stroke-width="2" stroke-linejoin="round"/>'; }).join('');
-  var radar='<svg viewBox="0 0 230 245" class="cmpradar" role="img">'+radarGrid(R)+polys+radarLabels(R)+'</svg>';
+  var polys=CMP2.map(function(n,i){ return '<polygon points="'+radarPoly(SM_DATA[n],R)+'" fill="'+cmpHexA(CMP_COLORS[i],.07)+'" stroke="'+CMP_COLORS[i]+'" stroke-width="2.4" stroke-linejoin="round"/>'; }).join('');
+  var dots=CMP2.map(function(n,i){ return radarDots(SM_DATA[n],R,CMP_COLORS[i]); }).join('');
+  var radar='<svg viewBox="0 0 230 245" class="cmpradar" role="img">'+radarGrid(R)+polys+dots+radarLabels(R)+'</svg>';
   var moves=CMP2.map(function(n,i){ var d=SM_DATA[n]; return '<div class="movecard"><span class="bcap '+CMP_CN[i]+'">'+nmFirst(n)+'</span>'+posePlant(d)+'<div class="movepat">'+d.pat+'</div><div class="movemech">'+d.mech+'</div></div>'; }).join('');
-  // core similarities / differences
   var stats=SM_COLS.map(function(c){ var vs=CMP2.map(function(n){return SM_DATA[n][c[0]];}); var mn=Math.min.apply(null,vs), mx=Math.max.apply(null,vs), avg=vs.reduce(function(a,b){return a+b;},0)/vs.length; return {c:c,mn:mn,mx:mx,spread:mx-mn,avg:avg}; });
-  var sims=stats.slice().sort(function(a,b){return a.spread-b.spread;}).slice(0,2);
-  var diffs=stats.slice().sort(function(a,b){return b.spread-a.spread;}); diffs=(diffs.filter(function(o){return o.spread>=10;}).slice(0,2)); if(!diffs.length) diffs=[stats.slice().sort(function(a,b){return b.spread-a.spread;})[0]];
-  function scls(a){ return a>=75?'sgood':a>=60?'swarn':'sbad'; }
-  var simHTML=sims.map(function(o){ var lvl=o.avg>=82?nW+' elite':o.avg<70?nW+' low':nW+' solid'; return '<span class="sd-chip '+scls(o.avg)+'">'+o.c[1]+' <em>'+lvl+' ~'+Math.round(o.avg)+'</em></span>'; }).join('');
-  var diffHTML=diffs.map(function(o){ return '<span class="sd-chip d">'+o.c[1]+' <em>'+o.mn+' → '+o.mx+'</em></span>'; }).join('');
+  var sims=stats.filter(function(o){return o.spread<12;}).sort(function(a,b){return a.spread-b.spread;});
+  var diffs=stats.filter(function(o){return o.spread>=12;}).sort(function(a,b){return b.spread-a.spread;});
+  if(!sims.length) sims=[stats.slice().sort(function(a,b){return a.spread-b.spread;})[0]];
+  if(!diffs.length) diffs=[stats.slice().sort(function(a,b){return b.spread-a.spread;})[0]];
+  var simHTML=sims.map(function(o){ var lvl=o.avg>=82?nW+' elite':o.avg>=70?nW+' solid':o.avg>=60?nW+' watch':nW+' low'; return '<span class="sd-chip '+scls(o.avg)+'"><b>'+o.c[1]+'</b> <em>'+lvl+' ~'+Math.round(o.avg)+'</em></span>'; }).join('');
+  var diffHTML=diffs.map(function(o){ return '<span class="sd-chip d"><b>'+o.c[1]+'</b> <span class="v" style="color:'+bandCol(o.mn)+'">'+o.mn+'</span><span class="arr">→</span><span class="v" style="color:'+bandCol(o.mx)+'">'+o.mx+'</span> <span class="dgap">Δ'+o.spread+'</span></span>'; }).join('');
   var verdict, moveLine;
   if(s.shared){
     var worst=s.ds.slice().sort(function(a,b){return a.d[s.shared[0]]-b.d[s.shared[0]];})[0];
@@ -6496,7 +6508,7 @@ function renderTeamCompare(){
   p.innerHTML=
     '<div class="tcmp-head">'+chips+'<button class="cmpclear" onclick="tmxClearCmp()">Clear</button></div>'
     +'<div class="airead"><div class="ai-k">✦ Couro read</div><p class="ai-verdict">'+verdict+'</p><p class="ai-line">'+patternLine+'</p><p class="ai-line">'+moveLine+'</p>'+addChip+'</div>'
-    +'<div class="simdiff"><div class="sd-col"><div class="sd-h share">✓ Core similarities</div>'+simHTML+'</div><div class="sd-col"><div class="sd-h diff">▲ Core differences</div>'+diffHTML+'</div></div>'
+    +'<div class="simdiff"><div class="sd-col"><div class="sd-h share">✓ Core similarities</div><div class="sd-wrap">'+simHTML+'</div></div><div class="sd-col"><div class="sd-h diff">▲ Core differences</div><div class="sd-wrap">'+diffHTML+'</div></div></div>'
     +'<div class="tcmp-two">'
       +'<div class="tcmp-cell"><div class="tcmp-lbl">How they move · plant signature</div><div class="movegrid">'+moves+'</div></div>'
       +'<div class="tcmp-cell"><div class="tcmp-lbl">Movement fingerprint</div>'+radar+'</div>'
