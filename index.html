@@ -1167,12 +1167,12 @@ body.mobile .blsplit{ grid-template-columns:1fr; }
 
 /* ---------- outcome thread + headlines (v14) ---------- */
 .otag{ display:inline-block; font-size:.95rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; border-radius:var(--r-pill); padding:.25rem .8rem; margin-left:.6rem; vertical-align:2px; }
-.otag.spd{ background:rgba(255,199,0,.20); color:#FFC700; }
-.otag.eff{ background:rgba(34,202,90,.13); color:#00CC00; }
-.otag.dur{ background:rgba(220,74,63,.10); color:#FFC700; }
+.otag.spd{ background:rgba(224,164,0,.16); color:#B8860B; }
+.otag.eff{ background:rgba(22,163,74,.14); color:#0a7d54; }
+.otag.dur{ background:rgba(220,74,63,.13); color:#C0392B; }
 .fixtag{ display:inline-block; font-size:1rem; font-weight:600; border-radius:var(--r-pill); padding:.25rem .9rem; background:#FFF3C4; color:#FFC700; border:1px dashed #FFC700; margin-left:.6rem; vertical-align:2px; white-space:nowrap; }
 .odot{ display:inline-block; width:.9rem; height:.9rem; border-radius:.25rem; margin-right:.5rem; vertical-align:-1px; }
-.odot.spd{ background:#FFC700; } .odot.eff{ background:#00CC00; } .odot.dur{ background:#FFC700; }
+.odot.spd{ background:#E0A400; } .odot.eff{ background:#16A34A; } .odot.dur{ background:#DC4A3F; }
 .headline{ font-size:1.5rem; font-weight:400; line-height:1.5; padding:1.4rem 1.8rem; background:#fff; border:1.5px solid var(--line); border-left:4px solid var(--yellow); border-radius:1rem; margin-bottom:.4rem; color:var(--muted); }
 .headline b{ color:var(--ink); font-weight:700; }
 
@@ -2472,7 +2472,6 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <p style="font-size:1.2rem;color:var(--muted);font-weight:400;margin:.2rem 0 .9rem">Your movement across five attributes. <b style="color:var(--ink)">Tap any point</b> to see what it means and why it's where it is.</p>
           <div class="overlaybtns" id="olbtns">
             <button class="on" onclick="spiderOverlay(this,'none')">None</button>
-            <button onclick="toast('Opens the benchmark table with exact numbers per band')">View numbers</button>
             <button onclick="spiderOverlay(this,'olympian')">Olympian</button>
             <button onclick="spiderOverlay(this,'elite')">Elite</button>
             <button onclick="spiderOverlay(this,'collegiate')">Collegiate</button>
