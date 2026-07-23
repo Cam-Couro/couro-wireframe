@@ -1562,6 +1562,47 @@ body.mobile .tms-heat{ flex-direction:column; align-items:flex-start; }
 .teampick-lbl{ font-size:1.05rem; letter-spacing:.14em; text-transform:uppercase; font-weight:800; color:var(--muted); }
 .teampick-sel{ font-size:1.5rem; font-weight:700; color:var(--ink); border:1.5px solid var(--line); border-radius:.7rem; padding:.5rem .9rem; background:#fff; cursor:pointer; }
 .teampick-hint{ font-size:1.15rem; color:var(--muted-2); }
+/* cohort tags (sub-groups within a team, by tagging) */
+.cohorts{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin:0 0 1.6rem; }
+.cohort-lbl{ font-size:1.05rem; letter-spacing:.14em; text-transform:uppercase; font-weight:800; color:var(--muted); margin-right:.2rem; }
+.cochip{ font-size:1.18rem; font-weight:600; color:var(--ink); background:#fff; border:1.5px solid var(--line); border-radius:2rem; padding:.4rem .95rem; cursor:pointer; }
+.cochip.on{ background:var(--ink); color:#fff; border-color:var(--ink); }
+.cochip.watch.on{ background:#B8860B; border-color:#B8860B; color:#fff; }
+.cochip.add{ color:var(--muted); border-style:dashed; }
+/* early-warning trajectory */
+.ewrow{ display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:1rem; padding:.9rem .2rem; border-bottom:1px solid var(--line); cursor:pointer; }
+.ewrow:hover{ background:#FFFDF3; }
+.ewinfo b{ font-size:1.4rem; display:block; } .ewinfo small{ color:var(--muted); font-size:1.15rem; }
+.ewspark{ width:170px; height:54px; flex:none; }
+.ewtag{ text-align:center; font-weight:800; font-size:1.3rem; line-height:1.15; white-space:nowrap; min-width:6rem; }
+.ewtag small{ display:block; font-weight:600; font-size:1rem; color:var(--muted); }
+.ewtag.hot{ color:#DC4A3F; } .ewtag.watch{ color:#B8860B; } .ewtag.ok{ color:var(--s-good); }
+/* asymmetry map */
+.asymhead{ display:grid; grid-template-columns:10rem 1fr 7rem; gap:1rem; font-size:1.02rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted-2); font-weight:700; padding:.4rem .2rem; }
+.asymhead .lr{ display:flex; justify-content:space-between; }
+.asymrow{ display:grid; grid-template-columns:10rem 1fr 7rem; align-items:center; gap:1rem; padding:.75rem .2rem; border-bottom:1px solid var(--line); }
+.asymrow:last-of-type{ border-bottom:none; }
+.asymname{ font-weight:700; font-size:1.3rem; }
+.asymbar{ display:grid; grid-template-columns:1fr 2px 1fr; align-items:center; height:1.5rem; }
+.asym-side{ display:flex; height:100%; }
+.asym-side.l{ justify-content:flex-end; }
+.asym-side .seg{ height:100%; background:var(--muted-2); }
+.asym-side.l .seg{ border-radius:.4rem 0 0 .4rem; }
+.asym-side.r .seg{ border-radius:0 .4rem .4rem 0; }
+.asym-side .seg.hot{ background:#E0A400; }
+.asym-mid{ width:2px; height:2rem; background:var(--ink); }
+.asymtag{ text-align:right; font-weight:800; font-size:1.25rem; line-height:1.15; }
+.asymtag small{ display:block; font-weight:600; font-size:1rem; color:var(--muted); }
+.asymtag.hot{ color:#B8860B; } .asymtag.ok{ color:var(--s-good); }
+/* team fingerprint radar */
+.radarwrap{ display:flex; gap:1.4rem; align-items:center; flex-wrap:wrap; }
+.radar{ width:250px; height:230px; flex:none; }
+.radar-legend{ font-size:1.22rem; color:var(--muted); line-height:1.7; }
+.radar-legend b{ color:var(--ink); }
+body.mobile .radarwrap{ flex-direction:column; }
+body.mobile .ewspark{ display:none; }
+body.mobile .ewrow{ grid-template-columns:auto 1fr auto; }
+body.mobile .asymhead, body.mobile .asymrow{ grid-template-columns:8rem 1fr 6rem; }
 .pat-cap{ font-size:1.15rem; color:var(--muted); font-weight:500; line-height:1.4; margin:0 0 1rem; }
 .pat-cap b{ color:var(--ink); font-weight:650; }
 .pat-foot{ display:flex; align-items:center; justify-content:space-between; gap:.8rem; }
@@ -3329,6 +3370,14 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         </select>
         <span class="teampick-hint">one team at a time · Overview compares them all</span>
       </div>
+      <div class="cohorts">
+        <span class="cohort-lbl">Cohorts</span>
+        <button class="cochip on" onclick="cohortPick(this)">All · 16</button>
+        <button class="cochip" onclick="cohortPick(this)">Starters · 8</button>
+        <button class="cochip" onclick="cohortPick(this)">Freshmen · 5</button>
+        <button class="cochip watch" onclick="cohortPick(this)">Watch-list · 4</button>
+        <button class="cochip add" onclick="toast('Tag athletes to make a cohort \u2014 no new team, just a filter inside this one')">＋ tag</button>
+      </div>
       <!-- ===== TEAM MOVEMENT-STRATEGY SYNTHESIS =====
            Not scores — HOW the squad moves. The mix of strategies, where load
            concentrates across the roster, the read, and the one coaching move. -->
@@ -3382,6 +3431,78 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
 
       <!-- Squad membership: teams are groupings, not owners -->
+      <!-- ===== EARLY-WARNING TRAJECTORY (risk climbing, steepest first) ===== -->
+      <div class="zone"><span class="zn act"></span><span class="zl">Early warning · risk climbing</span><span class="zr"></span><span class="zc">steepest first · catch it before it's an injury</span></div>
+      <div class="card triage-hero" style="margin-bottom:1.8rem">
+        <div class="ewrow" onclick="openAthleteByName('Rosa Delgado')">
+          <span class="avx hi">RD</span>
+          <div class="ewinfo"><b>Rosa Delgado</b><small>Arm-path drift · shoulder load · 3 sessions climbing</small></div>
+          <svg class="ewspark" viewBox="0 0 170 54"><rect x="0" y="0" width="170" height="15" fill="#DC4A3F" opacity=".12"/><line x1="0" y1="15" x2="170" y2="15" stroke="#DC4A3F" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><polyline points="6,46 38,44 70,40 102,32 134,24 160,17" fill="none" stroke="#DC4A3F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="160" cy="17" r="3.6" fill="#DC4A3F"/></svg>
+          <div class="ewtag hot">~2 sess<small>to threshold</small></div>
+        </div>
+        <div class="ewrow" onclick="openAthleteByName('Marcus Webb')">
+          <span class="avx hi">MW</span>
+          <div class="ewinfo"><b>Marcus Webb</b><small>Knee load rising while score falls · RTS wk 6</small></div>
+          <svg class="ewspark" viewBox="0 0 170 54"><rect x="0" y="0" width="170" height="15" fill="#DC4A3F" opacity=".12"/><line x1="0" y1="15" x2="170" y2="15" stroke="#DC4A3F" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><polyline points="6,44 38,42 70,38 102,34 134,28 160,22" fill="none" stroke="#E0A400" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="160" cy="22" r="3.6" fill="#E0A400"/></svg>
+          <div class="ewtag watch">~4 sess<small>to threshold</small></div>
+        </div>
+        <div class="ewrow" onclick="openAthleteByName('Dev Osei')">
+          <span class="avx md">DO</span>
+          <div class="ewinfo"><b>Dev Osei</b><small>Crossover landing · knee-valgus · early signal</small></div>
+          <svg class="ewspark" viewBox="0 0 170 54"><rect x="0" y="0" width="170" height="15" fill="#DC4A3F" opacity=".12"/><line x1="0" y1="15" x2="170" y2="15" stroke="#DC4A3F" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><polyline points="6,42 38,41 70,40 102,37 134,34 160,30" fill="none" stroke="#E0A400" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="160" cy="30" r="3.6" fill="#E0A400"/></svg>
+          <div class="ewtag watch">watch<small>trending up</small></div>
+        </div>
+        <div class="ewrow" onclick="openAthleteByName('Montana Carlson')">
+          <span class="avx ok">MC</span>
+          <div class="ewinfo"><b>Montana Carlson</b><small>Holding — spring signature stable</small></div>
+          <svg class="ewspark" viewBox="0 0 170 54"><rect x="0" y="0" width="170" height="15" fill="#DC4A3F" opacity=".12"/><line x1="0" y1="15" x2="170" y2="15" stroke="#DC4A3F" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><polyline points="6,40 38,41 70,39 102,40 134,38 160,39" fill="none" stroke="#00CC00" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="160" cy="39" r="3.6" fill="#00CC00"/></svg>
+          <div class="ewtag ok">stable<small>no drift</small></div>
+        </div>
+        <div class="insight"><span class="ico">💡</span><span><b>Rosa is the one to act on this week</b> — the slope, not the score, is the tell. Two sessions from threshold; a cue now resets it.</span></div>
+      </div>
+
+      <div class="grid2" style="margin-bottom:1.8rem">
+        <div class="card">
+          <h3>Left–right asymmetry <span style="font-size:1.15rem;color:var(--muted-2);font-weight:400">· who's compensating</span></h3>
+          <div class="asymhead"><span>Athlete</span><span class="lr"><span>◂ Left</span><span>Right ▸</span></span><span style="text-align:right">Imbalance</span></div>
+          <div class="asymrow"><span class="asymname">Rosa Delgado</span><div class="asymbar"><div class="asym-side l"><i class="seg" style="width:64%"></i></div><div class="asym-mid"></div><div class="asym-side r"><i class="seg hot" style="width:100%"></i></div></div><span class="asymtag hot">R +18%<small>shoulder</small></span></div>
+          <div class="asymrow"><span class="asymname">Marcus Webb</span><div class="asymbar"><div class="asym-side l"><i class="seg hot" style="width:100%"></i></div><div class="asym-mid"></div><div class="asym-side r"><i class="seg" style="width:70%"></i></div></div><span class="asymtag hot">L +15%<small>knee load</small></span></div>
+          <div class="asymrow"><span class="asymname">Kayla Chen</span><div class="asymbar"><div class="asym-side l"><i class="seg" style="width:88%"></i></div><div class="asym-mid"></div><div class="asym-side r"><i class="seg" style="width:96%"></i></div></div><span class="asymtag">R +4%<small>even-ish</small></span></div>
+          <div class="asymrow"><span class="asymname">Montana Carlson</span><div class="asymbar"><div class="asym-side l"><i class="seg" style="width:98%"></i></div><div class="asym-mid"></div><div class="asym-side r"><i class="seg" style="width:100%"></i></div></div><span class="asymtag ok">±2%<small>balanced</small></span></div>
+          <div class="insight"><span class="ico">💡</span><span>Two athletes carry <b>&gt;15% side-to-side imbalance</b> — the quiet driver under Rosa's shoulder and Marcus's knee.</span></div>
+        </div>
+        <div class="card">
+          <h3>Team movement fingerprint <span style="font-size:1.15rem;color:var(--muted-2);font-weight:400">· vs elite band</span></h3>
+          <div class="radarwrap">
+            <svg class="radar" viewBox="0 0 200 210" role="img" aria-label="Radar of the team's movement qualities versus the elite threshold; knee control is the gap">
+              <g fill="none" stroke="#EAE6D8" stroke-width="1">
+                <polygon points="100,60 134.6,80 134.6,120 100,140 65.4,120 65.4,80"/>
+                <polygon points="100,40 152,70 152,130 100,160 48,130 48,70"/>
+                <polygon points="100,20 169.3,60 169.3,140 100,180 30.7,140 30.7,60"/>
+                <line x1="100" y1="100" x2="100" y2="20"/><line x1="100" y1="100" x2="169.3" y2="60"/><line x1="100" y1="100" x2="169.3" y2="140"/><line x1="100" y1="100" x2="100" y2="180"/><line x1="100" y1="100" x2="30.7" y2="140"/><line x1="100" y1="100" x2="30.7" y2="60"/>
+              </g>
+              <polygon points="100,36 155.4,68 155.4,132 100,164 44.6,132 44.6,68" fill="none" stroke="#3f9a57" stroke-width="1.4" stroke-dasharray="4 3"/>
+              <polygon points="100,26.4 154,68.8 138.1,122 100,165.6 41.8,133.6 51.5,72" fill="rgba(224,164,0,.16)" stroke="#E0A400" stroke-width="2.5" stroke-linejoin="round"/>
+              <g fill="#E0A400"><circle cx="100" cy="26.4" r="3"/><circle cx="154" cy="68.8" r="3"/><circle cx="100" cy="165.6" r="3"/><circle cx="41.8" cy="133.6" r="3"/><circle cx="51.5" cy="72" r="3"/></g>
+              <circle cx="138.1" cy="122" r="5" fill="#fff" stroke="#DC4A3F" stroke-width="2.5"/>
+              <g font-size="8" font-family="Inter,sans-serif" fill="#6F7480" font-weight="700">
+                <text x="100" y="13" text-anchor="middle">Elasticity</text>
+                <text x="174" y="58" text-anchor="start">Symmetry</text>
+                <text x="176" y="147" text-anchor="start">Knee ctrl</text>
+                <text x="100" y="197" text-anchor="middle">Trunk</text>
+                <text x="24" y="147" text-anchor="end">Grnd contact</text>
+                <text x="24" y="58" text-anchor="end">Decel</text>
+              </g>
+            </svg>
+            <div class="radar-legend">
+              <div><span style="color:#E0A400;font-weight:800">▬</span> <b>Your team</b></div>
+              <div><span style="color:#3f9a57;font-weight:800">▭</span> Elite threshold</div>
+              <div style="margin-top:.6rem"><span style="color:#DC4A3F;font-weight:800">◯</span> <b>Knee control</b> is the gap —<br>elite on everything else.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="zone"><span class="zn calm"></span><span class="zl">Who is on a team</span><span class="zr"></span><span class="zc">an athlete can be on more than one</span></div>
       <div class="card">
         <div class="squadhead">
@@ -4206,6 +4327,11 @@ function stepAthlete(d){
   openAthleteByName(ROSTER_ORDER[i]);
 }
 function backToOrg(tab){ go('org'); if (tab) orgTabByKey(tab); }
+function cohortPick(btn){
+  btn.parentElement.querySelectorAll('.cochip').forEach(b => { if(!b.classList.contains('add')) b.classList.remove('on'); });
+  btn.classList.add('on');
+  toast('Filtered to <b>' + btn.textContent.split('·')[0].trim() + '</b> — synthesis and lists follow this cohort');
+}
 /* ---- movement-pattern drill-down: org pattern -> the athlete who shows it clearest ---- */
 function patternDrill(key){
   const map = {
