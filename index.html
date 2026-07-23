@@ -1610,6 +1610,9 @@ body.mobile .tms-heat{ flex-direction:column; align-items:flex-start; }
 .tmbar{ display:flex; align-items:baseline; gap:1.1rem; flex-wrap:wrap; margin:.2rem 0 .9rem; }
 .tmbar .teampick-sel{ font-size:1.75rem; font-weight:700; border:1.5px solid var(--line); border-radius:.7rem; background:#fff; padding:.4rem 1rem; cursor:pointer; }
 .tmcount{ font-size:1.2rem; color:var(--muted-2); font-weight:500; }
+.tmbar .tm-upload{ margin-left:auto; align-self:center; font-size:1.25rem; padding:.75rem 1.5rem; }
+.tmu-plus{ font-weight:800; margin-right:.15rem; }
+body.mobile .tmbar .tm-upload{ margin-left:0; width:100%; justify-content:center; margin-top:.4rem; }
 .sec{ display:flex; align-items:baseline; gap:1rem; font-size:1.12rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--muted-2); margin:2rem 0 1rem; }
 .sec .sec-r{ margin-left:auto; font-size:1.12rem; letter-spacing:.01em; text-transform:none; color:var(--muted-2); font-weight:500; }
 .hsub{ font-size:1.15rem; color:var(--muted-2); font-weight:400; letter-spacing:0; }
@@ -1758,7 +1761,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
   <button data-nav="settings" onclick="demoNav('settings')">Settings</button>
   <button data-nav="plans" onclick="demoNav('plans')">Plans</button>
   <button data-nav="org" onclick="demoNav('org')">Organization</button>
-  <button data-nav="roster" onclick="demoNav('roster')">Team view</button>
+  <button data-nav="roster" onclick="openTeamView()">Team view</button>
   <button data-nav="reveals" onclick="demoNav('reveals')">Reveals ✨</button>
 </div>
 
@@ -3298,22 +3301,22 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <table class="orgtbl">
           <thead><tr><th>Team</th><th>Avg score</th><th></th><th>Δ 30 days</th><th>Athletes</th><th>Assessed 7d</th><th>Alerts</th><th>8-wk trend</th></tr></thead>
           <tbody>
-            <tr onclick="go('roster')"><td><b>Track &amp; Field</b></td><td class="num" style="color:var(--s-good);font-weight:700">78</td>
+            <tr onclick="openTeamView()"><td><b>Track &amp; Field</b></td><td class="num" style="color:var(--s-good);font-weight:700">78</td>
               <td><div class="hbar"><i style="width:78%;background:var(--s-good)"></i></div></td>
               <td class="d-up">↑ 3</td><td class="num">85</td><td class="num">34</td><td><span class="alertchip warn">4</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,16 14,14 26,12 38,10 50,7 62,5" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round"/><circle cx="62" cy="5" r="2.5" fill="#FFC700"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Football</b></td><td class="num" style="color:var(--s-ok);font-weight:700">72</td>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); openTeamView()"><td><b>Football</b></td><td class="num" style="color:var(--s-ok);font-weight:700">72</td>
               <td><div class="hbar"><i style="width:72%;background:var(--s-ok)"></i></div></td>
               <td class="d-up">↑ 1</td><td class="num">112</td><td class="num">61</td><td><span class="alertchip warn">7</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,12 14,13 26,11 38,12 50,10 62,9" fill="none" stroke="#1B1F1B" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="9" r="2.5" fill="#1B1F1B"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Women's Soccer</b></td><td class="num" style="color:var(--s-good);font-weight:700">76</td>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); openTeamView()"><td><b>Women's Soccer</b></td><td class="num" style="color:var(--s-good);font-weight:700">76</td>
               <td><div class="hbar"><i style="width:76%;background:var(--s-good)"></i></div></td>
               <td class="d-up">↑ 2</td><td class="num">31</td><td class="num">22</td><td><span class="alertchip warn">2</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,14 14,12 26,13 38,10 50,8 62,6" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="6" r="2.5" fill="#FFC700"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Swimming &amp; Diving</b></td><td class="num" style="color:var(--s-good);font-weight:700">75</td>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); openTeamView()"><td><b>Swimming &amp; Diving</b></td><td class="num" style="color:var(--s-good);font-weight:700">75</td>
               <td><div class="hbar"><i style="width:75%;background:var(--s-good)"></i></div></td>
               <td class="d-up">↑ 2</td><td class="num">58</td><td class="num">19</td><td><span class="alertchip ok">0</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,13 14,12 26,11 38,10 50,9 62,7" fill="none" stroke="#00CC00" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="7" r="2.5" fill="#00CC00"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Return-to-Sport</b> <small style="color:var(--muted-2)">cross-team</small></td><td class="num" style="color:var(--s-warn);font-weight:700">68</td>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); openTeamView()"><td><b>Return-to-Sport</b> <small style="color:var(--muted-2)">cross-team</small></td><td class="num" style="color:var(--s-warn);font-weight:700">68</td>
               <td><div class="hbar"><i style="width:68%;background:var(--s-warn)"></i></div></td>
               <td class="d-up">↑ 4</td><td class="num">24</td><td class="num">18</td><td><span class="alertchip info">6 in protocol</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,18 14,16 26,15 38,11 50,8 62,4" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="4" r="2.5" fill="#FFC700"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); go('roster')"><td><b>Softball</b></td><td class="num" style="color:var(--s-ok);font-weight:700">73</td>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); openTeamView()"><td><b>Softball</b></td><td class="num" style="color:var(--s-ok);font-weight:700">73</td>
               <td><div class="hbar"><i style="width:73%;background:var(--s-ok)"></i></div></td>
               <td class="d-up">↑ 3</td><td class="num">22</td><td class="num">14</td><td><span class="alertchip warn">2</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,15 14,13 26,12 38,10 50,8 62,6" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="6" r="2.5" fill="#FFC700"/></svg></td></tr>
             <tr onclick="orgTabByKey('teams')" style="cursor:pointer"><td colspan="8" style="text-align:center;color:var(--muted);padding:.9rem"><b>+ 25 more teams</b> — Baseball, Basketball, Volleyball, Water Polo, Gymnastics, Rugby, Lacrosse, Golf… · open Teams to see all</td></tr>
@@ -3386,6 +3389,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <option>Women's Soccer</option>
         </select>
         <span class="tmcount">16 athletes · one team at a time</span>
+        <button class="btn btn-yellow tm-upload" onclick="demoNav('upload')"><span class="tmu-plus">＋</span> Upload analysis</button>
       </div>
       <div class="cohorts">
         <button class="cochip on" onclick="cohortPick(this)">All</button>
@@ -3399,6 +3403,12 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="tms-k">The read</div>
         <h2 class="tms-headline">Your sprint squad wins on spring — but a 4-athlete knee-valgus cluster is the crack in it.</h2>
         <p class="tms-move"><span class="tms-move-k">🎯 One move</span>Coach the 4 crossover-landers toward your 9 spring-loaded — the same athletes are driving the knee heat. One fix, two wins.</p>
+      </div>
+
+      <div class="card cmpband" style="margin-bottom:1.6rem">
+        <div class="cb-cell"><div class="cb-k">vs. the org</div><div class="cb-v"><span class="n">78</span><span class="d up">+4</span></div><div class="cb-s">org average 74 · a top-3 team</div></div>
+        <div class="cb-cell"><div class="cb-k">vs. elite band</div><div class="cb-v"><span class="n">78</span><span class="d dn">−4</span></div><div class="cb-s">elite starts at 82 · 6 sprinters already there</div></div>
+        <div class="cb-cell"><div class="cb-k">vs. last month</div><div class="cb-v"><span class="n">+3</span><span class="d up">▲</span></div><div class="cb-s">3 straight weeks climbing · 15/16 tested</div></div>
       </div>
 
       <div class="sec">How your team moves</div>
@@ -3501,6 +3511,38 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           </div>
         </div>
       </div>
+
+      <details class="techwrap">
+        <summary><span class="tw-sum">Technical details</span><span class="tw-hint">the metrics behind the read · for your sports-science staff</span></summary>
+        <div class="techbody">
+          <p class="technote">Scores are 0–100 Couro movement-quality indices from a single sprint capture, benchmarked to Couro's collegiate track band (elite ≥ 82). <b>15 of 16</b> sprinters tested this cycle.</p>
+
+          <div class="techtbl">
+            <div class="tt-row tt-head"><span>Movement quality</span><span class="tt-scaleh">55 ————— team ————— elite 82+</span><span>Read</span></div>
+            <div class="tt-row"><span class="tt-q">Elasticity</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot good" style="left:96%"></i></div><span class="tt-chip good">✓ elite · identity</span></div>
+            <div class="tt-row"><span class="tt-q">Ground contact</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot good" style="left:88%"></i></div><span class="tt-chip good">✓ elite · reactive</span></div>
+            <div class="tt-row"><span class="tt-q">L / R symmetry</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot good" style="left:83%"></i></div><span class="tt-chip good">✓ in band</span></div>
+            <div class="tt-row"><span class="tt-q">Trunk stability</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot good" style="left:77%"></i></div><span class="tt-chip good">✓ at band edge</span></div>
+            <div class="tt-row"><span class="tt-q">Deceleration</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot warn" style="left:54%"></i></div><span class="tt-chip warn">↓ the ceiling</span></div>
+            <div class="tt-row"><span class="tt-q">Knee control</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot bad" style="left:20%"></i></div><span class="tt-chip warn">↓ 4 crossover-landers</span></div>
+          </div>
+
+          <div class="techsplit">
+            <div class="techcol">
+              <h5>Flagged for knee control · 4 crossover-landers</h5>
+              <div class="tt-flag"><b>Marcus Webb</b><small>valgus at plant · L +15% knee load</small></div>
+              <div class="tt-flag"><b>Kayla Chen</b><small>knee drift on landing</small></div>
+              <div class="tt-flag"><b>Dev Osei</b><small>plant control slipping</small></div>
+              <div class="tt-flag"><b>Priya Raman</b><small>rebuilding · knee tracking</small></div>
+            </div>
+            <div class="techcol">
+              <h5>Measurement scope</h5>
+              <div class="tt-scope ok"><b>Scored — from a single sprint capture</b><small>elasticity · ground-contact time · cadence · L/R symmetry · frontal knee alignment</small></div>
+              <div class="tt-scope off"><b>Not scored here</b><small>ground-reaction force &amp; joint torque — these need force plates, not video. We show what one camera can measure and label the rest.</small></div>
+            </div>
+          </div>
+        </div>
+      </details>
 
       <details class="manage">
         <summary>Manage roster &amp; coaches</summary>
@@ -4088,7 +4130,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
   <div class="nmsep"></div>
   <button onclick="openAthletes()">Your athletes</button>
   <button onclick="menuGo('org')">Program view · org</button>
-  <button onclick="menuGo('roster')">A team roster</button>
+  <button onclick="openTeamView()">A team view</button>
   <div class="nmsep"></div>
   <button onclick="menuGo('settings')">Settings</button>
   <button onclick="menuGo('plans')">Plans &amp; billing</button>
@@ -4379,6 +4421,8 @@ function go(screen){
   closeNav();
   window.scrollTo(0,0);
 }
+/* one canonical team view: the Org → Teams tab (inline). Every "team" entry point lands here. */
+function openTeamView(){ go('org'); orgTabByKey('teams'); window.scrollTo(0,0); }
 /* ---- global nav (hamburger) ---- */
 function toggleNav(e){ if (e) e.stopPropagation(); const m = document.getElementById('navmenu'); m.hidden = !m.hidden; }
 function closeNav(){ const m = document.getElementById('navmenu'); if (m) m.hidden = true; }
@@ -4924,7 +4968,7 @@ function bulkAnalyze(){
   setTimeout(() => { document.getElementById('bps2').textContent = '✓'; }, 900);
   setTimeout(() => { s3.textContent = '✓'; s3.style.color = 'var(--s-great)'; }, 1700);
   setTimeout(() => { s4.textContent = '✓'; s4.style.color = 'var(--s-great)'; }, 2500);
-  setTimeout(() => { bp.hidden = true; document.getElementById('upload-form').hidden = false; upMode('single'); go('roster'); toast(matched + ' athletes analyzed — on the team board'); }, 3200);
+  setTimeout(() => { bp.hidden = true; document.getElementById('upload-form').hidden = false; upMode('single'); openTeamView(); toast(matched + ' athletes analyzed — on the team board'); }, 3200);
 }
 
 /* ---- toast: honest feedback for wireframe stubs ---- */
