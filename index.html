@@ -1657,6 +1657,37 @@ body.mobile .tms-heat{ flex-direction:column; align-items:flex-start; }
 .manage[open] summary::before{ transform:rotate(90deg); }
 .manage summary:hover{ color:var(--ink); }
 .manage-body{ margin-top:1.5rem; display:flex; flex-direction:column; gap:1.4rem; align-items:flex-start; }
+/* technical-details drawer (team view) — visual metric breakdown */
+.techwrap{ margin-top:2rem; border:1.5px solid var(--line); border-radius:var(--r-card); background:#fff; box-shadow:var(--shadow-soft); }
+.techwrap > summary{ list-style:none; cursor:pointer; padding:1.6rem 2rem; display:flex; align-items:baseline; gap:1rem; }
+.techwrap > summary::-webkit-details-marker{ display:none; }
+.techwrap > summary::before{ content:"\203A"; font-size:1.7rem; line-height:1; color:var(--muted-2); transition:transform .15s; }
+.techwrap[open] > summary::before{ transform:rotate(90deg); }
+.tw-sum{ font-size:1.5rem; font-weight:700; color:var(--ink); }
+.tw-hint{ font-size:1.2rem; color:var(--muted-2); font-weight:500; }
+.techbody{ padding:0 2rem 2rem; }
+.technote{ font-size:1.25rem; color:var(--muted); line-height:1.55; margin:0 0 1.6rem; padding-bottom:1.4rem; border-bottom:1px solid var(--line); }
+.techtbl{ display:flex; flex-direction:column; }
+.tt-row{ display:grid; grid-template-columns:15rem 1fr 11rem; align-items:center; gap:1.4rem; padding:.75rem 0; border-bottom:1px solid var(--line); }
+.tt-row:last-child{ border-bottom:none; }
+.tt-head{ font-size:1.05rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted-2); font-weight:700; padding-bottom:.5rem; }
+.tt-head .tt-scaleh{ text-align:center; }
+.tt-q{ font-size:1.3rem; font-weight:600; color:var(--ink); }
+.tt-bar{ position:relative; height:1.2rem; background:var(--fill); border-radius:.6rem; }
+.tt-band{ position:absolute; left:77%; right:0; top:0; bottom:0; background:rgba(5,150,105,.14); border-left:1.5px dashed #3f9a57; border-radius:0 .6rem .6rem 0; }
+.tt-dot{ position:absolute; top:50%; width:1.5rem; height:1.5rem; border-radius:50%; transform:translate(-50%,-50%); border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.25); }
+.tt-dot.good{ background:var(--s-good); } .tt-dot.warn{ background:#E0A400; } .tt-dot.bad{ background:#DC4A3F; }
+.tt-chip{ font-size:1.18rem; font-weight:700; }
+.tt-chip.good{ color:#0a7d54; } .tt-chip.warn{ color:#B8860B; }
+.techsplit{ display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; margin-top:1.8rem; }
+.techcol h5{ font-size:1.05rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); font-weight:800; margin:0 0 1rem; }
+.tt-flag{ padding:.5rem 0 .5rem .9rem; border-left:3px solid #E0A400; margin-bottom:.7rem; }
+.tt-flag b{ font-size:1.3rem; display:block; } .tt-flag small{ color:var(--muted); font-size:1.15rem; }
+.tt-scope{ padding:.5rem 0 .5rem .9rem; border-left:3px solid var(--line); margin-bottom:.8rem; }
+.tt-scope.ok{ border-left-color:var(--s-good); } .tt-scope.off{ border-left-color:var(--muted-2); }
+.tt-scope b{ font-size:1.28rem; display:block; } .tt-scope small{ color:var(--muted); font-size:1.15rem; line-height:1.4; display:block; margin-top:.2rem; }
+body.mobile .techsplit{ grid-template-columns:1fr; }
+body.mobile .tt-row{ grid-template-columns:11rem 1fr 8rem; gap:.9rem; }
 /* what's working / what to watch */
 .swcols{ display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; }
 .sw-h{ font-size:1.12rem; letter-spacing:.1em; text-transform:uppercase; font-weight:800; margin-bottom:.8rem; }
@@ -3876,6 +3907,37 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       </table>
       </div>
     </div>
+
+    <details class="techwrap">
+      <summary><span class="tw-sum">Technical details</span><span class="tw-hint">the metrics behind the read · for your sports-science staff</span></summary>
+      <div class="techbody">
+        <p class="technote">Scores are 0–100 Couro movement-quality indices from a single rear-view phone capture, benchmarked to Couro's collegiate softball band (elite ≥ 82). <b>12 of 14</b> pitchers tested this cycle.</p>
+
+        <div class="techtbl">
+          <div class="tt-row tt-head"><span>Movement quality</span><span class="tt-scaleh">55 ————— team ————— elite 82+</span><span>Read</span></div>
+          <div class="tt-row"><span class="tt-q">Trunk stability</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot good" style="left:94%"></i></div><span class="tt-chip good">✓ elite · identity</span></div>
+          <div class="tt-row"><span class="tt-q">Hip-lead sequencing</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot warn" style="left:46%"></i></div><span class="tt-chip warn">↓ 3 open early</span></div>
+          <div class="tt-row"><span class="tt-q">Arm-path consistency</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot good" style="left:71%"></i></div><span class="tt-chip good">✓ near band</span></div>
+          <div class="tt-row"><span class="tt-q">Shoulder-load control</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot warn" style="left:37%"></i></div><span class="tt-chip warn">⚠ 3 elevated</span></div>
+          <div class="tt-row"><span class="tt-q">Follow-through decel</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot warn" style="left:46%"></i></div><span class="tt-chip warn">⚠ −9 team-wide</span></div>
+          <div class="tt-row"><span class="tt-q">L / R symmetry</span><div class="tt-bar"><i class="tt-band"></i><i class="tt-dot warn" style="left:54%"></i></div><span class="tt-chip warn">↓ Rosa · Sofia</span></div>
+        </div>
+
+        <div class="techsplit">
+          <div class="techcol">
+            <h5>Flagged for sequencing · 3 pitchers</h5>
+            <div class="tt-flag"><b>Rosa Delgado</b><small>arm-path drift R +18% · trunk opens ~0.04s early</small></div>
+            <div class="tt-flag"><b>Emi Tanaka</b><small>early trunk rotation · signature still forming</small></div>
+            <div class="tt-flag"><b>Brooke Ellis</b><small>follow-through deceleration below 65</small></div>
+          </div>
+          <div class="techcol">
+            <h5>Measurement scope</h5>
+            <div class="tt-scope ok"><b>Scored — validated for rear view</b><small>trunk tilt · arm path · follow-through deceleration · L/R symmetry</small></div>
+            <div class="tt-scope off"><b>Not scored here</b><small>stride length · leg block · landing — these need a side angle. We don't estimate what one camera can't see.</small></div>
+          </div>
+        </div>
+      </div>
+    </details>
   </div>
 </section>
 
