@@ -1716,6 +1716,37 @@ body.mobile .tt-row{ grid-template-columns:11rem 1fr 8rem; gap:.9rem; }
 .tmx-key .k{ width:1.2rem; height:1.2rem; border-radius:.35rem; }
 .tmx-key .k.x4{ background:rgba(5,150,105,.20); } .tmx-key .k.x3{ background:rgba(5,150,105,.10); }
 .tmx-key .k.x2{ background:rgba(224,164,0,.18); } .tmx-key .k.x1{ background:rgba(220,74,63,.18); }
+/* matrix selection + team-wide compare panel */
+.tmx .selbox{ display:inline-block; width:1.5rem; height:1.5rem; border:1.5px solid var(--line); border-radius:.4rem; margin-right:.7rem; vertical-align:middle; position:relative; flex:none; }
+.tmx tr.selA .selbox{ background:#2F6FED; border-color:#2F6FED; } .tmx tr.selB .selbox{ background:#C0920F; border-color:#C0920F; }
+.tmx tr.selA .selbox::after, .tmx tr.selB .selbox::after{ content:"✓"; color:#fff; font-size:1.05rem; font-weight:800; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.tmx tr.selA td, .tmx tr.selB td{ background:var(--fill); }
+.tcmp{ margin-top:1.6rem; border-top:1px solid var(--line); padding-top:1.6rem; }
+.tcmp-head{ display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:1.4rem; }
+.tcmp-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; align-items:start; }
+.tcmp-cell{ display:flex; flex-direction:column; align-items:center; }
+.tcmp-lbl{ font-size:1.1rem; letter-spacing:.1em; text-transform:uppercase; font-weight:800; color:var(--muted-2); margin-bottom:.8rem; align-self:flex-start; }
+.cmpradar{ width:100%; max-width:26rem; height:auto; }
+.tcmp-bodies{ display:flex; gap:2.4rem; justify-content:center; padding-top:.4rem; }
+.tcmp-bodies figure{ margin:0; display:flex; flex-direction:column; align-items:center; gap:.5rem; }
+.bodysvg{ width:7rem; height:auto; }
+.bcap{ font-size:1.2rem; font-weight:700; }
+.bcap.a{ color:#2F6FED; } .bcap.b{ color:#C0920F; }
+.bodykey{ font-size:1.1rem; color:var(--muted-2); text-align:center; margin-top:1rem; }
+.tcmp-open{ display:flex; gap:1.8rem; flex-wrap:wrap; margin-top:1.2rem; }
+.tcmp-open a{ font-size:1.25rem; font-weight:700; color:var(--ink); cursor:pointer; }
+.tcmp-open a:hover{ color:var(--s-good); }
+body.mobile .tcmp-grid{ grid-template-columns:1fr; }
+/* make Technical details obviously expandable */
+.techwrap{ overflow:hidden; }
+.techwrap > summary{ background:var(--fill); padding:1.5rem 2rem; align-items:center; transition:background .14s; }
+.techwrap > summary:hover{ background:#EFF0F2; }
+.techwrap > summary::before{ content:"\203A"; font-size:2rem; }
+.tw-sum{ font-size:1.55rem; }
+.tw-sum::before{ content:"📊 "; }
+.tw-toggle{ margin-left:auto; font-size:1.25rem; font-weight:700; color:var(--s-good); white-space:nowrap; }
+.techwrap[open] .tw-toggle .t-show{ display:none; }
+.techwrap:not([open]) .tw-toggle .t-hide{ display:none; }
 /* what's working / what to watch */
 .swcols{ display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; }
 .sw-h{ font-size:1.12rem; letter-spacing:.1em; text-transform:uppercase; font-weight:800; margin-bottom:.8rem; }
@@ -3537,14 +3568,15 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         </div>
       </div>
 
-      <div class="sec">Compare the team<span class="sec-r">tap a column to sort · color = strength · tap a row to open</span></div>
+      <div class="sec">Compare the team<span class="sec-r">tap two athletes to compare · tap a column to sort</span></div>
       <div class="card" style="margin-bottom:1.8rem">
         <div id="tmx"></div>
         <div class="tmx-foot"><span class="tmx-key"><i class="k x4"></i>elite 82+</span><span class="tmx-key"><i class="k x3"></i>solid 70–81</span><span class="tmx-key"><i class="k x2"></i>watch 60–69</span><span class="tmx-key"><i class="k x1"></i>flag &lt;60</span></div>
+        <div id="tcmp" class="tcmp" hidden></div>
       </div>
 
       <details class="techwrap">
-        <summary><span class="tw-sum">Technical details</span><span class="tw-hint">the metrics behind the read · for your sports-science staff</span></summary>
+        <summary><span class="tw-sum">Technical details</span><span class="tw-hint">the metrics behind the read · for your sports-science staff</span><span class="tw-toggle"><span class="t-show">Show numbers ▸</span><span class="t-hide">Hide ▾</span></span></summary>
         <div class="techbody">
           <p class="technote">Scores are 0–100 Couro movement-quality indices from a single sprint capture, benchmarked to Couro's collegiate track band (elite ≥ 82). <b>15 of 16</b> sprinters tested this cycle.</p>
 
@@ -3982,7 +4014,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
     </div>
 
     <details class="techwrap">
-      <summary><span class="tw-sum">Technical details</span><span class="tw-hint">the metrics behind the read · for your sports-science staff</span></summary>
+      <summary><span class="tw-sum">Technical details</span><span class="tw-hint">the metrics behind the read · for your sports-science staff</span><span class="tw-toggle"><span class="t-show">Show numbers ▸</span><span class="t-hide">Hide ▾</span></span></summary>
       <div class="techbody">
         <p class="technote">Scores are 0–100 Couro movement-quality indices from a single rear-view phone capture, benchmarked to Couro's collegiate softball band (elite ≥ 82). <b>12 of 14</b> pitchers tested this cycle.</p>
 
@@ -6303,11 +6335,84 @@ function renderMatrix(){
     '<th class="'+(tmxSort==='overall'?'on':'')+'" onclick="tmxSortBy(\'overall\')">Overall'+caret('overall')+'</th></tr>';
   var body=names.map(function(n){
     var d=SM_DATA[n], ov=tmxOverall(d);
+    var sel=CMP2.indexOf(n), scl=sel===0?' selA':sel===1?' selB':'';
     var cells=SM_COLS.map(function(c){ var v=d[c[0]]; return '<td class="c"><div class="cell '+tmxClass(v)+'">'+v+'</div></td>'; }).join('');
-    return '<tr onclick="openAthleteByName(\''+n+'\')"><td class="athcell"><span class="rdot" style="background:'+rdot[d.risk]+'"></span>'+n+'</td>'+
+    return '<tr class="tmxr'+scl+'" onclick="tmxPick(\''+n+'\')"><td class="athcell"><span class="selbox"></span><span class="rdot" style="background:'+rdot[d.risk]+'"></span>'+n+'</td>'+
       cells+'<td class="c"><div class="cell '+tmxClass(ov)+' ovcol">'+ov+'</div></td></tr>';
   }).join('');
   host.innerHTML='<div class="tmxwrap"><table class="tmx"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>';
+}
+/* ---- team-wide compare: pick 2 athletes from the matrix, overlay spider + body heat maps ---- */
+var CMP2 = [];
+function heatFill(v){ return v>=82?'#16A34A':v>=70?'#86C99E':v>=60?'#E0A400':'#DC4A3F'; }
+function tmxPick(name){
+  var i=CMP2.indexOf(name);
+  if(i>-1) CMP2.splice(i,1); else { CMP2.push(name); if(CMP2.length>2) CMP2.shift(); }
+  renderMatrix(); renderTeamCompare();
+}
+function tmxClearCmp(){ CMP2=[]; renderMatrix(); renderTeamCompare(); }
+function radarPoly(d, R){
+  var cx=115, cy=115;
+  return SM_COLS.map(function(c,i){
+    var a=-Math.PI/2 + i*Math.PI/3, r=d[c[0]]/100*R;
+    return (cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1);
+  }).join(' ');
+}
+function radarGrid(R){
+  var cx=115, cy=115, out='', ring;
+  [0.4,0.7,1].forEach(function(f){
+    ring=SM_COLS.map(function(c,i){ var a=-Math.PI/2+i*Math.PI/3, r=R*f; return (cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1); }).join(' ');
+    out+='<polygon points="'+ring+'" fill="none" stroke="#EAE6D8" stroke-width="1"/>';
+  });
+  SM_COLS.forEach(function(c,i){ var a=-Math.PI/2+i*Math.PI/3; out+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+R*Math.cos(a)).toFixed(1)+'" y2="'+(cy+R*Math.sin(a)).toFixed(1)+'" stroke="#EAE6D8" stroke-width="1"/>'; });
+  return out;
+}
+function radarLabels(R){
+  var cx=115, cy=115, out='';
+  SM_COLS.forEach(function(c,i){ var a=-Math.PI/2+i*Math.PI/3, r=R+14, x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+    var anc = Math.abs(Math.cos(a))<0.3?'middle':(Math.cos(a)>0?'start':'end');
+    out+='<text x="'+x.toFixed(1)+'" y="'+(y+3).toFixed(1)+'" text-anchor="'+anc+'" font-size="9" font-weight="700" fill="#6F7480" font-family="Inter,sans-serif">'+c[1]+'</text>'; });
+  return out;
+}
+function bodyZone(x,y,w,h,fill,rx){ return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(rx||6)+'" fill="'+fill+'"/>'; }
+function bodySVG(d){
+  return '<svg viewBox="0 0 80 200" class="bodysvg" role="img">'
+    +'<circle cx="40" cy="15" r="11" fill="#C9CED6"/>'
+    +bodyZone(23,29,34,48,heatFill(d.trunk),11)
+    +bodyZone(27,79,26,20,heatFill(d.sym),8)
+    +bodyZone(25,101,30,34,heatFill(d.decel),9)
+    +bodyZone(26,137,28,12,heatFill(d.knee),6)
+    +bodyZone(27,151,26,40,heatFill(Math.round((d.elas+d.gct)/2)),9)
+    +'</svg>';
+}
+function renderTeamCompare(){
+  var p=document.getElementById('tcmp'); if(!p) return;
+  if(CMP2.length===0){ p.hidden=true; p.innerHTML=''; return; }
+  p.hidden=false;
+  if(CMP2.length===1){ p.innerHTML='<div class="cmphint">Tap one more athlete to compare with <b>'+CMP2[0]+'</b>.</div>'; return; }
+  var an=CMP2[0], bn=CMP2[1], A=SM_DATA[an], B=SM_DATA[bn], R=82;
+  var radar='<svg viewBox="0 0 230 245" class="cmpradar" role="img">'+radarGrid(R)
+    +'<polygon points="'+radarPoly(A,R)+'" fill="rgba(47,111,237,.16)" stroke="#2F6FED" stroke-width="2" stroke-linejoin="round"/>'
+    +'<polygon points="'+radarPoly(B,R)+'" fill="rgba(192,146,15,.16)" stroke="#C0920F" stroke-width="2" stroke-linejoin="round"/>'
+    +radarLabels(R)+'</svg>';
+  var big=SM_COLS[0], bigGap=-1;
+  SM_COLS.forEach(function(c){ var g=Math.abs(A[c[0]]-B[c[0]]); if(g>bigGap){bigGap=g; big=c;} });
+  var hi=A[big[0]]>=B[big[0]]?{n:an,v:A[big[0]]}:{n:bn,v:B[big[0]]};
+  var lo=A[big[0]]>=B[big[0]]?{n:bn,v:B[big[0]]}:{n:an,v:A[big[0]]};
+  var take='<b>'+hi.n.split(' ')[0]+'</b> leads on <b>'+big[1].toLowerCase()+'</b> ('+hi.v+' vs '+lo.v+') — the '+bigGap+'-pt gap is where the two most differ.';
+  p.innerHTML=
+    '<div class="tcmp-head"><span class="cmpchip a">'+an+' <small>overall '+tmxOverall(A)+'</small></span>'
+      +'<span class="cmpvs">vs</span><span class="cmpchip b">'+bn+' <small>overall '+tmxOverall(B)+'</small></span>'
+      +'<button class="cmpclear" onclick="tmxClearCmp()">Clear</button></div>'
+    +'<div class="tcmp-grid">'
+      +'<div class="tcmp-cell"><div class="tcmp-lbl">Movement fingerprint</div>'+radar+'</div>'
+      +'<div class="tcmp-cell"><div class="tcmp-lbl">Body heat map</div><div class="tcmp-bodies">'
+        +'<figure><span class="bcap a">'+an.split(' ')[0]+'</span>'+bodySVG(A)+'</figure>'
+        +'<figure><span class="bcap b">'+bn.split(' ')[0]+'</span>'+bodySVG(B)+'</figure>'
+        +'</div><div class="bodykey">top→bottom: trunk · hips · thigh · knee · calf</div></div>'
+    +'</div>'
+    +'<div class="cmp-take"><span>💡</span><span>'+take+'</span></div>'
+    +'<div class="tcmp-open"><a onclick="openAthleteByName(\''+an+'\')">Open '+an.split(' ')[0]+'’s profile ▸</a><a onclick="openAthleteByName(\''+bn+'\')">Open '+bn.split(' ')[0]+'’s profile ▸</a></div>';
 }
 var smCmpMode = false, smCmpSel = [];
 
