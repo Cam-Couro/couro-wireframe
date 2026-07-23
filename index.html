@@ -1737,6 +1737,19 @@ body.mobile .tt-row{ grid-template-columns:11rem 1fr 8rem; gap:.9rem; }
 .tcmp-open a{ font-size:1.25rem; font-weight:700; color:var(--ink); cursor:pointer; }
 .tcmp-open a:hover{ color:var(--s-good); }
 body.mobile .tcmp-grid{ grid-template-columns:1fr; }
+.cmpchip.c::before{ background:#7C3AED; }
+.bcap.c{ color:#7C3AED; }
+.tmx tr.selC .selbox{ background:#7C3AED; border-color:#7C3AED; }
+.tmx tr.selC .selbox::after{ content:"✓"; color:#fff; font-size:1.05rem; font-weight:800; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.tmx tr.selC td{ background:var(--fill); }
+.airead{ background:linear-gradient(180deg,#FBFAF4,#fff); border:1.5px solid #ECE6D5; border-radius:1rem; padding:1.4rem 1.6rem; margin-bottom:1.6rem; }
+.ai-k{ font-size:1.05rem; letter-spacing:.14em; text-transform:uppercase; font-weight:800; color:#B8860B; margin-bottom:.5rem; }
+.ai-verdict{ font-size:1.5rem; font-weight:700; line-height:1.4; margin:0 0 .5rem; color:var(--ink); }
+.ai-line{ font-size:1.3rem; line-height:1.5; color:var(--muted); margin:.35rem 0; }
+.ai-verdict b, .ai-line b{ color:var(--ink); }
+.addmodel{ margin-top:1rem; font-size:1.2rem; font-weight:700; color:#2F6FED; background:#EEF3FE; border:1.5px solid #CBDBFB; border-radius:2rem; padding:.55rem 1.2rem; cursor:pointer; }
+.addmodel:hover{ background:#E0EAFD; }
+.pri-strip{ margin-top:1.4rem; font-size:1.3rem; color:var(--ink); background:var(--fill); border-radius:.8rem; padding:.9rem 1.2rem; }
 /* make Technical details obviously expandable */
 .techwrap{ overflow:hidden; }
 .techwrap > summary{ background:var(--fill); padding:1.5rem 2rem; align-items:center; transition:background .14s; }
@@ -6302,17 +6315,17 @@ go('hub');
 </script><script>
 /* ===== Status-map tap-to-compare ===== */
 var SM_DATA = {
-  'Montana Carlson': {x:454,y:61,  arch:'Spring-loaded · clear', risk:'clear',   elas:92, gct:90, sym:90, trunk:88, decel:84, knee:88, note:'the model — elite across the board'},
-  'Aaliyah Brooks':  {x:366,y:86,  arch:'Balanced · clear',      risk:'clear',   elas:80, gct:82, sym:82, trunk:80, decel:76, knee:78, note:'steady, no flags'},
-  'Nia Carter':      {x:410,y:123, arch:'Spring-loaded · clear', risk:'clear',   elas:84, gct:86, sym:80, trunk:82, decel:74, knee:82, note:'strong plant mechanics'},
-  'Emi Tanaka':      {x:322,y:129, arch:'Balanced · clear',      risk:'clear',   elas:78, gct:80, sym:84, trunk:84, decel:78, knee:80, note:'clean symmetry'},
-  'Brooke Ellis':    {x:388,y:170, arch:'Spring-loaded · clear', risk:'clear',   elas:82, gct:84, sym:78, trunk:79, decel:72, knee:79, note:'good spring source'},
-  'Jordan Ford':     {x:333,y:142, arch:'Balanced · clear',      risk:'clear',   elas:79, gct:81, sym:81, trunk:80, decel:75, knee:77, note:'consistent'},
-  'Kayla Chen':      {x:289,y:154, arch:'Crossover · watch',     risk:'watch',   elas:74, gct:78, sym:70, trunk:74, decel:68, knee:62, note:'knee drifting at plant'},
-  'Priya Raman':     {x:410,y:216, arch:'Rebuilding · watch',    risk:'watch',   elas:70, gct:72, sym:68, trunk:70, decel:66, knee:66, note:'building back'},
-  'Dev Osei':        {x:245,y:160, arch:'Crossover · watch',     risk:'watch',   elas:72, gct:74, sym:66, trunk:72, decel:64, knee:64, note:'plant control slipping'},
-  'Rosa Delgado':    {x:212,y:98,  arch:'Crossover · flagged',   risk:'flagged', elas:80, gct:78, sym:62, trunk:70, decel:72, knee:74, note:'arm-path drift R +18%'},
-  'Marcus Webb':     {x:190,y:232, arch:'Crossover · flagged',   risk:'flagged', elas:76, gct:74, sym:58, trunk:68, decel:66, knee:44, note:'knee valgus at plant L +15%'}
+  'Montana Carlson': {x:454,y:61,  arch:'Spring-loaded · clear', risk:'clear', trend:8,   elas:92, gct:90, sym:90, trunk:88, decel:84, knee:88, note:'the model — elite across the board'},
+  'Aaliyah Brooks':  {x:366,y:86,  arch:'Balanced · clear',      risk:'clear', trend:1,   elas:80, gct:82, sym:82, trunk:80, decel:76, knee:78, note:'steady, no flags'},
+  'Nia Carter':      {x:410,y:123, arch:'Spring-loaded · clear', risk:'clear', trend:3,   elas:84, gct:86, sym:80, trunk:82, decel:74, knee:82, note:'strong plant mechanics'},
+  'Emi Tanaka':      {x:322,y:129, arch:'Balanced · clear',      risk:'clear', trend:5,   elas:78, gct:80, sym:84, trunk:84, decel:78, knee:80, note:'clean symmetry'},
+  'Brooke Ellis':    {x:388,y:170, arch:'Spring-loaded · clear', risk:'clear', trend:1,   elas:82, gct:84, sym:78, trunk:79, decel:72, knee:79, note:'good spring source'},
+  'Jordan Ford':     {x:333,y:142, arch:'Balanced · clear',      risk:'clear', trend:2,   elas:79, gct:81, sym:81, trunk:80, decel:75, knee:77, note:'consistent'},
+  'Kayla Chen':      {x:289,y:154, arch:'Crossover · watch',     risk:'watch', trend:1,   elas:74, gct:78, sym:70, trunk:74, decel:68, knee:62, note:'knee drifting at plant'},
+  'Priya Raman':     {x:410,y:216, arch:'Rebuilding · watch',    risk:'watch', trend:2,   elas:70, gct:72, sym:68, trunk:70, decel:66, knee:66, note:'building back'},
+  'Dev Osei':        {x:245,y:160, arch:'Crossover · watch',     risk:'watch', trend:-1,   elas:72, gct:74, sym:66, trunk:72, decel:64, knee:64, note:'plant control slipping'},
+  'Rosa Delgado':    {x:212,y:98,  arch:'Crossover · flagged',   risk:'flagged', trend:-3, elas:80, gct:78, sym:62, trunk:70, decel:72, knee:74, note:'arm-path drift R +18%'},
+  'Marcus Webb':     {x:190,y:232, arch:'Crossover · flagged',   risk:'flagged', trend:-4, elas:76, gct:74, sym:58, trunk:68, decel:66, knee:44, note:'knee valgus at plant L +15%'}
 };
 var SM_METRICS = [['elas','Elasticity'],['gct','Ground contact'],['sym','Symmetry'],['trunk','Trunk'],['decel','Deceleration'],['knee','Knee control']];
 var SM_COLS = [['elas','Elas'],['gct','Grnd'],['sym','Sym'],['trunk','Trunk'],['decel','Decel'],['knee','Knee']];
@@ -6347,7 +6360,7 @@ var CMP2 = [];
 function heatFill(v){ return v>=82?'#16A34A':v>=70?'#86C99E':v>=60?'#E0A400':'#DC4A3F'; }
 function tmxPick(name){
   var i=CMP2.indexOf(name);
-  if(i>-1) CMP2.splice(i,1); else { CMP2.push(name); if(CMP2.length>2) CMP2.shift(); }
+  if(i>-1) CMP2.splice(i,1); else { CMP2.push(name); if(CMP2.length>3) CMP2.shift(); }
   renderMatrix(); renderTeamCompare();
 }
 function tmxClearCmp(){ CMP2=[]; renderMatrix(); renderTeamCompare(); }
@@ -6385,34 +6398,67 @@ function bodySVG(d){
     +bodyZone(27,151,26,40,heatFill(Math.round((d.elas+d.gct)/2)),9)
     +'</svg>';
 }
+var CMP_COLORS=['#2F6FED','#C0920F','#7C3AED'], CMP_CN=['a','b','c'];
+function nmFirst(n){ return n.split(' ')[0]; }
+function cmpHexA(h,a){ var x=parseInt(h.slice(1),16); return 'rgba('+((x>>16)&255)+','+((x>>8)&255)+','+(x&255)+','+a+')'; }
+function cmpRisk(r){ return r==='flagged'?0:r==='watch'?1:2; }
+function cmpAvg(ds,k){ return ds.reduce(function(s,o){return s+o.d[k];},0)/ds.length; }
+function cmpSynth(sel){
+  var ds=sel.map(function(n){ var d=SM_DATA[n], lo=SM_COLS[0], lov=101, hi=SM_COLS[0], hiv=-1;
+    SM_COLS.forEach(function(c){ if(d[c[0]]<lov){lov=d[c[0]];lo=c;} if(d[c[0]]>hiv){hiv=d[c[0]];hi=c;} });
+    return {n:n,d:d,ov:tmxOverall(d),weak:lo,weakv:lov,strong:hi}; });
+  var shared=null;
+  SM_COLS.forEach(function(c){ if(ds.every(function(o){return o.d[c[0]]<70;})){ if(!shared||cmpAvg(ds,c[0])<cmpAvg(ds,shared[0])) shared=c; } });
+  var div=SM_COLS[0], divGap=-1;
+  SM_COLS.forEach(function(c){ var vs=ds.map(function(o){return o.d[c[0]];}); var g=Math.max.apply(null,vs)-Math.min.apply(null,vs); if(g>divGap){divGap=g;div=c;} });
+  var model=ds.slice().sort(function(a,b){return b.ov-a.ov;})[0];
+  var teamModel=null;
+  if(shared){ teamModel=Object.keys(SM_DATA).map(function(n){return {n:n,v:SM_DATA[n][shared[0]]};}).sort(function(a,b){return b.v-a.v;})[0]; }
+  var pri=ds.slice().sort(function(a,b){ var r=cmpRisk(a.d.risk)-cmpRisk(b.d.risk); if(r)return r; var t=(a.d.trend||0)-(b.d.trend||0); if(t)return t; return a.ov-b.ov; })[0];
+  return {ds:ds,shared:shared,div:div,divGap:divGap,model:model,teamModel:teamModel,pri:pri};
+}
 function renderTeamCompare(){
   var p=document.getElementById('tcmp'); if(!p) return;
   if(CMP2.length===0){ p.hidden=true; p.innerHTML=''; return; }
   p.hidden=false;
-  if(CMP2.length===1){ p.innerHTML='<div class="cmphint">Tap one more athlete to compare with <b>'+CMP2[0]+'</b>.</div>'; return; }
-  var an=CMP2[0], bn=CMP2[1], A=SM_DATA[an], B=SM_DATA[bn], R=82;
-  var radar='<svg viewBox="0 0 230 245" class="cmpradar" role="img">'+radarGrid(R)
-    +'<polygon points="'+radarPoly(A,R)+'" fill="rgba(47,111,237,.16)" stroke="#2F6FED" stroke-width="2" stroke-linejoin="round"/>'
-    +'<polygon points="'+radarPoly(B,R)+'" fill="rgba(192,146,15,.16)" stroke="#C0920F" stroke-width="2" stroke-linejoin="round"/>'
-    +radarLabels(R)+'</svg>';
-  var big=SM_COLS[0], bigGap=-1;
-  SM_COLS.forEach(function(c){ var g=Math.abs(A[c[0]]-B[c[0]]); if(g>bigGap){bigGap=g; big=c;} });
-  var hi=A[big[0]]>=B[big[0]]?{n:an,v:A[big[0]]}:{n:bn,v:B[big[0]]};
-  var lo=A[big[0]]>=B[big[0]]?{n:bn,v:B[big[0]]}:{n:an,v:A[big[0]]};
-  var take='<b>'+hi.n.split(' ')[0]+'</b> leads on <b>'+big[1].toLowerCase()+'</b> ('+hi.v+' vs '+lo.v+') — the '+bigGap+'-pt gap is where the two most differ.';
+  if(CMP2.length===1){ p.innerHTML='<div class="cmphint">Tap one or two more athletes to compare with <b>'+CMP2[0]+'</b>.</div>'; return; }
+  var s=cmpSynth(CMP2), R=82;
+  var chips=CMP2.map(function(n,i){ var d=SM_DATA[n], t=d.trend||0, tw=t<0?'↓'+(-t):t>0?'↑'+t:'→'; return '<span class="cmpchip '+CMP_CN[i]+'">'+n+' <small>ov '+tmxOverall(d)+' · '+tw+'</small></span>'; }).join('<span class="cmpvs">vs</span>');
+  var polys=CMP2.map(function(n,i){ return '<polygon points="'+radarPoly(SM_DATA[n],R)+'" fill="'+cmpHexA(CMP_COLORS[i],.13)+'" stroke="'+CMP_COLORS[i]+'" stroke-width="2" stroke-linejoin="round"/>'; }).join('');
+  var radar='<svg viewBox="0 0 230 245" class="cmpradar" role="img">'+radarGrid(R)+polys+radarLabels(R)+'</svg>';
+  var bodies=CMP2.map(function(n,i){ return '<figure><span class="bcap '+CMP_CN[i]+'">'+nmFirst(n)+'</span>'+bodySVG(SM_DATA[n])+'</figure>'; }).join('');
+  var verdict, shareLine, moveLine;
+  if(s.shared){
+    var worst=s.ds.slice().sort(function(a,b){return a.d[s.shared[0]]-b.d[s.shared[0]];})[0];
+    verdict='Same fault — all '+s.ds.length+' run low on <b>'+s.shared[1].toLowerCase()+'</b>, '+nmFirst(worst.n)+' worst ('+worst.d[s.shared[0]]+').';
+    shareLine='One group cue can move the cluster. They diverge most on '+s.div[1].toLowerCase()+' — a '+s.divGap+'-pt spread.';
+    var inSel=CMP2.indexOf(s.teamModel.n)>=0;
+    moveLine='Coach toward <b>'+nmFirst(s.teamModel.n)+'</b> ('+s.teamModel.v+' on '+s.shared[1].toLowerCase()+') — '+(inSel?'your strongest here; run the others off '+nmFirst(s.teamModel.n)+'’s pattern.':'the team’s model for this. Pull '+nmFirst(s.teamModel.n)+' in as the reference.');
+  } else {
+    var faulted=s.ds.filter(function(o){return o.weakv<70;});
+    var clean=s.ds.filter(function(o){return o.weakv>=70;});
+    if(faulted.length===0){
+      verdict='All '+s.ds.length+' are solid — nothing under 70. This is fine-tuning, not fixing.';
+    } else if(clean.length){
+      verdict=clean.map(function(o){return '<b>'+nmFirst(o.n)+'</b>';}).join(' &amp; ')+' '+(clean.length>1?'are':'is')+' clean; '+faulted.map(function(o){return '<b>'+nmFirst(o.n)+'</b>’s gap is '+o.weak[1].toLowerCase()+' ('+o.weakv+')';}).join(', ')+'.';
+    } else {
+      verdict='Different faults — '+faulted.map(function(o){return '<b>'+nmFirst(o.n)+'</b> on '+o.weak[1].toLowerCase();}).join(', ')+'.';
+    }
+    shareLine='No shared gap — treat these as separate fixes. Biggest split: '+s.div[1].toLowerCase()+' ('+s.divGap+' pts).';
+    moveLine='<b>'+nmFirst(s.model.n)+'</b> is the model here (overall '+s.model.ov+') — the others can borrow '+nmFirst(s.model.n)+'’s '+s.model.strong[1].toLowerCase()+'.';
+  }
+  var addChip='';
+  if(s.teamModel && CMP2.indexOf(s.teamModel.n)<0 && CMP2.length<3){ addChip='<button class="addmodel" onclick="tmxPick(\''+s.teamModel.n+'\')">＋ Add '+nmFirst(s.teamModel.n)+' — the model for this</button>'; }
+  var pt=s.pri.d.trend||0, ptw=pt<0?'falling '+pt:pt>0?'rising +'+pt:'holding';
   p.innerHTML=
-    '<div class="tcmp-head"><span class="cmpchip a">'+an+' <small>overall '+tmxOverall(A)+'</small></span>'
-      +'<span class="cmpvs">vs</span><span class="cmpchip b">'+bn+' <small>overall '+tmxOverall(B)+'</small></span>'
-      +'<button class="cmpclear" onclick="tmxClearCmp()">Clear</button></div>'
+    '<div class="tcmp-head">'+chips+'<button class="cmpclear" onclick="tmxClearCmp()">Clear</button></div>'
+    +'<div class="airead"><div class="ai-k">✦ Couro read</div><p class="ai-verdict">'+verdict+'</p><p class="ai-line">'+shareLine+'</p><p class="ai-line">'+moveLine+'</p>'+addChip+'</div>'
     +'<div class="tcmp-grid">'
       +'<div class="tcmp-cell"><div class="tcmp-lbl">Movement fingerprint</div>'+radar+'</div>'
-      +'<div class="tcmp-cell"><div class="tcmp-lbl">Body heat map</div><div class="tcmp-bodies">'
-        +'<figure><span class="bcap a">'+an.split(' ')[0]+'</span>'+bodySVG(A)+'</figure>'
-        +'<figure><span class="bcap b">'+bn.split(' ')[0]+'</span>'+bodySVG(B)+'</figure>'
-        +'</div><div class="bodykey">top→bottom: trunk · hips · thigh · knee · calf</div></div>'
+      +'<div class="tcmp-cell"><div class="tcmp-lbl">Body heat map</div><div class="tcmp-bodies">'+bodies+'</div><div class="bodykey">top→bottom: trunk · hips · thigh · knee · calf</div></div>'
     +'</div>'
-    +'<div class="cmp-take"><span>💡</span><span>'+take+'</span></div>'
-    +'<div class="tcmp-open"><a onclick="openAthleteByName(\''+an+'\')">Open '+an.split(' ')[0]+'’s profile ▸</a><a onclick="openAthleteByName(\''+bn+'\')">Open '+bn.split(' ')[0]+'’s profile ▸</a></div>';
+    +'<div class="pri-strip"><b>⏱ See '+nmFirst(s.pri.n)+' first</b> — '+s.pri.d.risk+', '+ptw+' (30d)</div>'
+    +'<div class="tcmp-open">'+CMP2.map(function(n){return '<a onclick="openAthleteByName(\''+n+'\')">Open '+nmFirst(n)+'’s profile ▸</a>';}).join('')+'</div>';
 }
 var smCmpMode = false, smCmpSel = [];
 
