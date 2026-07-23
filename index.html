@@ -1603,6 +1603,19 @@ body.mobile .tms-heat{ flex-direction:column; align-items:flex-start; }
 .statusmap{ width:100%; max-width:540px; height:auto; display:block; margin:0 auto; }
 .sm-legend{ display:flex; gap:1.6rem; justify-content:center; font-size:1.25rem; color:var(--muted); font-weight:600; margin-top:.5rem; }
 .sm-legend .sm-dot{ display:inline-block; width:1.05rem; height:1.05rem; border-radius:50%; margin-right:.35rem; vertical-align:middle; }
+.statusmap g[onclick]{ transition:opacity .12s; }
+.statusmap g[onclick]:hover{ opacity:.72; }
+/* what's working / what to watch */
+.swcols{ display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; }
+.sw-h{ font-size:1.12rem; letter-spacing:.1em; text-transform:uppercase; font-weight:800; margin-bottom:.8rem; }
+.swcol.good .sw-h{ color:var(--s-good); }
+.swcol.watch .sw-h{ color:#B8860B; }
+.sw-item{ padding:.55rem 0 .55rem .9rem; border-left:3px solid var(--line); margin-bottom:.6rem; }
+.swcol.good .sw-item{ border-left-color:var(--s-good); }
+.swcol.watch .sw-item{ border-left-color:#E0A400; }
+.sw-item b{ font-size:1.32rem; display:block; }
+.sw-item small{ color:var(--muted); font-size:1.15rem; line-height:1.4; }
+body.mobile .swcols{ grid-template-columns:1fr; }
 body.mobile .radarwrap{ flex-direction:column; }
 body.mobile .ewspark{ display:none; }
 body.mobile .ewrow{ grid-template-columns:auto 1fr auto; }
@@ -3063,13 +3076,6 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <p>Compare performance at every level — organization, team, and athlete</p>
         <!-- Only appears for staff who belong to two orgs — someone who used Couro
              alone and was later added to a department. Hidden for everyone else. -->
-        <div class="orgswitch">
-          <span>Viewing</span>
-          <select onchange="toast('Switched to <b>'+this.value+'</b> — roster, squads and sessions all follow')">
-            <option>Westgate Athletics</option>
-            <option>Ruiz Performance (personal)</option>
-          </select>
-        </div>
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
         <button class="walkbtn" onclick="startOrgTour()">✨ Walk me through Program view</button>
@@ -3395,28 +3401,21 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <div class="insight"><span class="ico">💡</span><span>Load isn't spread — it <b>concentrates at the knee in one specific cluster.</b> That's a target, not a vague team-wide fix.</span></div>
         </div>
         <div class="card">
-          <h3>How the squad moves <span style="font-size:1.15rem;color:var(--muted-2);font-weight:400">· movement strategies</span></h3>
-          <div class="tms-dist">
-            <div class="tms-strat edge">
-              <div class="tms-strat-top"><b>Spring-loaded</b><span class="tms-n">9</span></div>
-              <div class="tms-bar"><i class="edge" style="width:56%"></i></div>
-              <div class="tms-ath"><span class="avx ok">MC</span><span class="avx ok">AB</span><span class="avx ok">ET</span><span class="avx ok">JF</span><span class="more">+5</span></div>
-              <small>Your identity — elite ground-contact elasticity.</small>
+          <h3>What's working &amp; what to watch <span style="font-size:1.15rem;color:var(--muted-2);font-weight:400">· the squad's movement</span></h3>
+          <div class="swcols">
+            <div class="swcol good">
+              <div class="sw-h">✓ Working</div>
+              <div class="sw-item"><b>Spring-loaded push-off</b><small>9 athletes · elite ground-contact elasticity — your identity</small></div>
+              <div class="sw-item"><b>Left–right symmetry</b><small>most of the squad loads evenly — durability</small></div>
+              <div class="sw-item"><b>Short ground contact</b><small>reactive and efficient — feeds top speed</small></div>
             </div>
-            <div class="tms-strat risk">
-              <div class="tms-strat-top"><b>Crossover-lander</b><span class="tms-n">4</span></div>
-              <div class="tms-bar"><i class="risk" style="width:25%"></i></div>
-              <div class="tms-ath"><span class="avx hi">RD</span><span class="avx">DO</span><span class="avx">KC</span><span class="avx">JR</span></div>
-              <small>Shared risk — knee caves in at plant, driving the heat above.</small>
-            </div>
-            <div class="tms-strat neutral">
-              <div class="tms-strat-top"><b>Balanced</b><span class="tms-n">3</span></div>
-              <div class="tms-bar"><i class="neutral" style="width:19%"></i></div>
-              <div class="tms-ath"><span class="avx">SW</span><span class="avx">NC</span><span class="avx">+1</span></div>
-              <small>Even and durable — no dominant signature yet.</small>
+            <div class="swcol watch">
+              <div class="sw-h">⚠ Watch</div>
+              <div class="sw-item"><b>Knee control</b><small>4 crossover-landers · valgus at plant</small></div>
+              <div class="sw-item"><b>Rosa's shoulder</b><small>arm-path drift, climbing 3 sessions</small></div>
+              <div class="sw-item"><b>Deceleration</b><small>the squad's ceiling — see the fingerprint gap</small></div>
             </div>
           </div>
-          <div class="insight"><span class="ico">💡</span><span><b>3 in 4 already share your spring signature.</b> The risk cluster is small and nameable — 4 athletes, not a mystery.</span></div>
         </div>
       </div>
 
@@ -3491,7 +3490,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
     <text x="50" y="40" text-anchor="end" transform="rotate(-90 50 40)">◂ needs work</text>
     <text x="50" y="335" text-anchor="end" transform="rotate(-90 50 335)">strong ▸</text>
   </g>
-  <g onclick="openAthleteByName('Montana Carlson')" style="cursor:pointer"><circle cx="454" cy="61" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/><text x="466" y="65" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Montana</text></g><g onclick="openAthleteByName('Aaliyah Brooks')" style="cursor:pointer"><circle cx="366" cy="86" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Nia Carter')" style="cursor:pointer"><circle cx="410" cy="123" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Emi Tanaka')" style="cursor:pointer"><circle cx="322" cy="129" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Brooke Ellis')" style="cursor:pointer"><circle cx="388" cy="170" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Jordan Ford')" style="cursor:pointer"><circle cx="333" cy="142" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Kayla Chen')" style="cursor:pointer"><circle cx="289" cy="154" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Priya Raman')" style="cursor:pointer"><circle cx="410" cy="216" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Dev Osei')" style="cursor:pointer"><circle cx="245" cy="160" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Rosa Delgado')" style="cursor:pointer"><circle cx="212" cy="98" r="14" fill="none" stroke="#DC4A3F" stroke-width="1.5" opacity=".4"/><circle cx="212" cy="98" r="9" fill="#DC4A3F" stroke="#fff" stroke-width="1.5"/><text x="225" y="102" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Rosa</text></g><g onclick="openAthleteByName('Marcus Webb')" style="cursor:pointer"><circle cx="190" cy="232" r="14" fill="none" stroke="#DC4A3F" stroke-width="1.5" opacity=".4"/><circle cx="190" cy="232" r="9" fill="#DC4A3F" stroke="#fff" stroke-width="1.5"/><text x="203" y="236" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Marcus</text></g>
+  <g onclick="openAthleteByName('Montana Carlson')" style="cursor:pointer"><title>Montana Carlson — tap to open</title><circle cx="454" cy="61" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/><text x="466" y="65" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Montana</text></g><g onclick="openAthleteByName('Aaliyah Brooks')" style="cursor:pointer"><title>Aaliyah Brooks — tap to open</title><circle cx="366" cy="86" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Nia Carter')" style="cursor:pointer"><title>Nia Carter — tap to open</title><circle cx="410" cy="123" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Emi Tanaka')" style="cursor:pointer"><title>Emi Tanaka — tap to open</title><circle cx="322" cy="129" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Brooke Ellis')" style="cursor:pointer"><title>Brooke Ellis — tap to open</title><circle cx="388" cy="170" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Jordan Ford')" style="cursor:pointer"><title>Jordan Ford — tap to open</title><circle cx="333" cy="142" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Kayla Chen')" style="cursor:pointer"><title>Kayla Chen — tap to open</title><circle cx="289" cy="154" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Priya Raman')" style="cursor:pointer"><title>Priya Raman — tap to open</title><circle cx="410" cy="216" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Dev Osei')" style="cursor:pointer"><title>Dev Osei — tap to open</title><circle cx="245" cy="160" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="openAthleteByName('Rosa Delgado')" style="cursor:pointer"><title>Rosa Delgado — tap to open</title><circle cx="212" cy="98" r="14" fill="none" stroke="#DC4A3F" stroke-width="1.5" opacity=".4"/><circle cx="212" cy="98" r="9" fill="#DC4A3F" stroke="#fff" stroke-width="1.5"/><text x="225" y="102" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Rosa</text></g><g onclick="openAthleteByName('Marcus Webb')" style="cursor:pointer"><title>Marcus Webb — tap to open</title><circle cx="190" cy="232" r="14" fill="none" stroke="#DC4A3F" stroke-width="1.5" opacity=".4"/><circle cx="190" cy="232" r="9" fill="#DC4A3F" stroke="#fff" stroke-width="1.5"/><text x="203" y="236" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Marcus</text></g>
 </svg>
           <div class="sm-legend">
             <div><span class="sm-dot" style="background:#00CC00"></span> Clear</div>
@@ -5146,6 +5145,7 @@ function orgTab(btn, key){
   btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   ['today','overview','teams','athletes','access'].forEach(k => document.getElementById('ot-'+k).hidden = k !== key);
+  const ss = document.querySelector('#scr-org .structstrip'); if (ss) ss.style.display = (key === 'overview') ? '' : 'none';
   window.scrollTo(0,0);
 }
 
