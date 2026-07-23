@@ -1609,7 +1609,25 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 .tms-move-k{ font-weight:800; color:#0a7d54; margin-right:.4rem; white-space:nowrap; }
 /* unified team hero — big score + read, replaces read-card + 3-cell band (v28) */
 .teamhero{ display:grid; grid-template-columns:auto 1fr; gap:.4rem 2.4rem; align-items:center; padding:2rem 2.2rem; }
-.teamhero .th-score{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding-right:2.4rem; border-right:1.5px solid #F0E4B8; align-self:stretch; }
+.teamhero .th-score{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1rem; padding:.5rem 2.4rem; margin-right:-0.2rem; border:none; border-right:1.5px solid #F0E4B8; align-self:stretch; background:transparent; font:inherit; cursor:pointer; border-radius:.9rem; transition:background .12s; }
+.teamhero .th-score:hover{ background:rgba(192,146,15,.07); }
+.teamhero .th-more{ font-size:1.05rem; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:#B8860B; margin-top:.6rem; white-space:nowrap; }
+/* team benchmark modal — visual scale + facts (v28) */
+.tctx-scale{ margin:1.4rem 0 .6rem; }
+.tctx-track{ position:relative; height:.9rem; background:var(--fill); border-radius:999px; margin:3.4rem 0 3.8rem; }
+.tctx-elite{ position:absolute; top:0; bottom:0; background:rgba(0,204,0,.16); border-left:2px dashed #00CC00; border-radius:0 999px 999px 0; }
+.tctx-tick{ position:absolute; top:50%; transform:translate(-50%,-50%); }
+.tctx-tick i{ display:block; width:1.4rem; height:1.4rem; border-radius:50%; background:#fff; border:2px solid var(--muted-2); margin:0 auto; }
+.tctx-tick b{ position:absolute; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:1.2rem; font-weight:700; }
+.tctx-tick.org b,.tctx-tick.elite b{ top:-2.8rem; }
+.tctx-tick.org b{ color:var(--muted); } .tctx-tick.elite b{ color:#0a7d54; }
+.tctx-tick.team i{ width:2.1rem; height:2.1rem; border-color:#C0920F; border-width:3px; background:#C0920F; }
+.tctx-tick.team b{ bottom:-2.9rem; color:var(--ink); font-size:1.5rem; }
+.tctx-facts{ display:flex; flex-direction:column; gap:1.1rem; margin-top:.4rem; }
+.tctx-fact{ display:flex; align-items:center; gap:1.2rem; font-size:1.35rem; color:var(--muted); font-weight:400; }
+.tctx-fact .tf-n{ flex:none; min-width:3.4rem; text-align:center; font-family:'Inter',sans-serif; font-weight:800; font-size:1.7rem; color:var(--ink); }
+.tctx-fact .tf-n.up{ color:#0a7d54; } .tctx-fact .tf-n.dn{ color:#C0392B; }
+.tctx-fact b{ color:var(--ink); font-weight:700; }
 .teamhero .th-num{ font-family:'Inter',sans-serif; font-weight:800; font-size:5.6rem; line-height:.82; color:var(--ink); letter-spacing:-.02em; }
 .teamhero .th-trend{ font-size:1.3rem; font-weight:700; color:var(--s-great); margin-top:.7rem; white-space:nowrap; }
 .teamhero .th-trend small{ color:var(--muted); font-weight:500; }
@@ -3579,20 +3597,15 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       </div>
 
       <div class="card tms-hero teamhero" style="margin-bottom:1.8rem">
-        <div class="th-score">
+        <button class="th-score" onclick="teamCtxOpen()" title="See how this team stacks up">
           <span class="th-num">78</span>
           <span class="th-trend">▲ +3 <small>30-day</small></span>
-        </div>
+          <span class="th-more">Benchmarks ›</span>
+        </button>
         <div class="th-read">
           <div class="tms-k">The read</div>
           <h2 class="tms-headline">Your sprint squad wins on spring — but a 4-athlete knee-valgus cluster is the crack in it.</h2>
           <p class="tms-move"><span class="tms-move-k">🎯 One move</span>Coach the 4 crossover-landers toward your 9 spring-loaded — same athletes driving the knee heat. One fix, two wins.</p>
-        </div>
-        <div class="teamhero-ctx">
-          <span><b>+4</b> over org avg (74)</span>
-          <span><b>4</b> under the elite band (82)</span>
-          <span><b>6</b> sprinters already elite</span>
-          <span>climbing <b>3 weeks</b> · 15/16 tested</span>
         </div>
       </div>
 
@@ -5769,6 +5782,26 @@ function xpOpen(k){
   document.getElementById('xp').hidden = false;
 }
 function xpClose(){ document.getElementById('xp').hidden = true; }
+
+/* team benchmark window — opened from the hero score, keeps the opening skimmable (v28) */
+function teamCtxOpen(){
+  document.getElementById('xp-title').textContent = 'Track & Field — Sprints · 78';
+  document.getElementById('xp-badges').innerHTML = '<span class="tms-k">Where this team stands</span>';
+  document.getElementById('xp-body').innerHTML =
+    '<div class="tctx-scale"><div class="tctx-track">' +
+      '<span class="tctx-elite" style="left:75%;right:0"></span>' +
+      '<span class="tctx-tick org" style="left:25%"><b>org avg 74</b><i></i></span>' +
+      '<span class="tctx-tick elite" style="left:75%"><b>elite 82</b><i></i></span>' +
+      '<span class="tctx-tick team" style="left:50%"><i></i><b>you · 78</b></span>' +
+    '</div></div>' +
+    '<div class="tctx-facts">' +
+      '<div class="tctx-fact"><span class="tf-n up">+4</span><span>over the <b>org average</b> (74) — a top-3 team in the department</span></div>' +
+      '<div class="tctx-fact"><span class="tf-n dn">−4</span><span>under the <b>elite band</b> (82) — the gap is the knee-valgus cluster</span></div>' +
+      '<div class="tctx-fact"><span class="tf-n">6</span><span>of 16 sprinters are <b>already elite</b> — the model to coach toward</span></div>' +
+      '<div class="tctx-fact"><span class="tf-n up">▲</span><span>climbing <b>3 straight weeks</b> · 15 of 16 tested this week</span></div>' +
+    '</div>';
+  document.getElementById('xp').hidden = false;
+}
 
 /* ---- coach settings tree: toggle a permission/alert chip (v27) ---- */
 function permTog(el, label){
