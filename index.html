@@ -5171,7 +5171,7 @@ function capReset(){
   document.getElementById('cap-view').classList.remove('recording');
   document.getElementById('cap-timer').textContent = team ? '0:00 / 1:00' : '0:00';
   const st = document.getElementById('cap-status'); st.textContent = 'Framing looks good ✓'; st.classList.remove('warn');
-  document.getElementById('cap-label').textContent = team ? 'Whole team · film back-to-back' : 'Side view · ' + upAthlete;
+  { const cl=document.getElementById('cap-label'); if(cl) cl.textContent = team ? 'Whole team · film back-to-back' : 'Side view · ' + upAthlete; }
   const hint = document.getElementById('cap-hint');
   hint.innerHTML = team
     ? 'Line the team up and film each rep <b>back-to-back</b>. Keep them side-on and in frame — Couro <b>auto-stops at 1:00</b> and finds each rep.'
@@ -5390,6 +5390,7 @@ const MOMAP = [
   {n:'Jordan Blake',t:'SB',s:64,d:0},{n:'Leo Martin',t:'RTS',s:63,d:2},{n:'Marcus Webb',t:'RTS',s:61,d:-4,f:1,lbl:1}
 ];
 function drawMomap(){
+  if(!document.getElementById('momap')) return; // momentum map replaced by the status map
   const X=s=>50+(s-55)/35*490, Y=d=>20+(9-d)/15*260;
   let g='';
   g+=`<rect x="${X(75)}" y="20" width="${540-X(75)}" height="${(Y(0)-20).toFixed(1)}" fill="#00CC00" opacity=".05" rx="8"/>`;
