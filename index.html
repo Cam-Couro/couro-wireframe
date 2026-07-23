@@ -1756,6 +1756,26 @@ body.mobile .tcmp-grid{ grid-template-columns:1fr; }
 .posesvg{ width:8.5rem; height:auto; margin:.5rem 0 .8rem; }
 .movepat{ font-size:1.32rem; font-weight:800; color:var(--ink); }
 .movemech{ font-size:1.2rem; color:var(--muted); line-height:1.45; margin-top:.4rem; }
+.airead{ margin-bottom:1.2rem; }
+.simdiff{ display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.4rem; }
+.sd-col{ background:var(--fill); border-radius:.9rem; padding:1rem 1.1rem; }
+.sd-h{ font-size:1.05rem; letter-spacing:.08em; text-transform:uppercase; font-weight:800; margin-bottom:.7rem; }
+.sd-h.share{ color:#0a7d54; } .sd-h.diff{ color:#B8860B; }
+.sd-chip{ display:inline-flex; align-items:baseline; gap:.45rem; background:#fff; border:1.5px solid var(--line); border-radius:2rem; padding:.35rem .9rem; margin:0 .45rem .45rem 0; font-size:1.18rem; font-weight:700; }
+.sd-chip em{ font-style:normal; font-weight:600; color:var(--muted); font-size:1.05rem; }
+.sd-chip.sgood{ border-color:#B8E0C8; } .sd-chip.swarn{ border-color:#F0DDA8; } .sd-chip.sbad{ border-color:#F2C4BE; }
+.sd-chip.d{ border-color:#E7DFC9; }
+.tcmp-two{ display:grid; grid-template-columns:1.05fr .95fr; gap:1.8rem; align-items:start; margin-bottom:1.3rem; }
+.tcmp-two .tcmp-cell{ align-items:stretch; }
+.tcmp-two .cmpradar{ max-width:22rem; width:100%; display:block; margin:0 auto; }
+.movegrid{ gap:1.2rem; }
+.posesvg{ width:7rem; }
+.movecard{ max-width:15rem; }
+.tcmp-foot{ display:flex; align-items:center; justify-content:space-between; gap:1.4rem; flex-wrap:wrap; }
+.tcmp-foot .pri-strip{ margin-top:0; flex:1 1 22rem; }
+.tcmp-foot .tcmp-open{ margin-top:0; }
+body.mobile .simdiff{ grid-template-columns:1fr; }
+body.mobile .tcmp-two{ grid-template-columns:1fr; }
 body.mobile .movegrid{ gap:1.2rem; }
 /* make Technical details obviously expandable */
 .techwrap{ overflow:hidden; }
@@ -6442,15 +6462,22 @@ function renderTeamCompare(){
   if(CMP2.length===0){ p.hidden=true; p.innerHTML=''; return; }
   p.hidden=false;
   if(CMP2.length===1){ p.innerHTML='<div class="cmphint">Tap one or two more athletes to compare with <b>'+CMP2[0]+'</b>.</div>'; return; }
-  var s=cmpSynth(CMP2), R=82;
+  var s=cmpSynth(CMP2), R=82, nW=CMP2.length>2?'all':'both';
   var chips=CMP2.map(function(n,i){ var d=SM_DATA[n], t=d.trend||0, tw=t<0?'↓'+(-t):t>0?'↑'+t:'→'; return '<span class="cmpchip '+CMP_CN[i]+'">'+n+' <small>ov '+tmxOverall(d)+' · '+tw+'</small></span>'; }).join('<span class="cmpvs">vs</span>');
   var polys=CMP2.map(function(n,i){ return '<polygon points="'+radarPoly(SM_DATA[n],R)+'" fill="'+cmpHexA(CMP_COLORS[i],.13)+'" stroke="'+CMP_COLORS[i]+'" stroke-width="2" stroke-linejoin="round"/>'; }).join('');
   var radar='<svg viewBox="0 0 230 245" class="cmpradar" role="img">'+radarGrid(R)+polys+radarLabels(R)+'</svg>';
   var moves=CMP2.map(function(n,i){ var d=SM_DATA[n]; return '<div class="movecard"><span class="bcap '+CMP_CN[i]+'">'+nmFirst(n)+'</span>'+posePlant(d)+'<div class="movepat">'+d.pat+'</div><div class="movemech">'+d.mech+'</div></div>'; }).join('');
+  // core similarities / differences
+  var stats=SM_COLS.map(function(c){ var vs=CMP2.map(function(n){return SM_DATA[n][c[0]];}); var mn=Math.min.apply(null,vs), mx=Math.max.apply(null,vs), avg=vs.reduce(function(a,b){return a+b;},0)/vs.length; return {c:c,mn:mn,mx:mx,spread:mx-mn,avg:avg}; });
+  var sims=stats.slice().sort(function(a,b){return a.spread-b.spread;}).slice(0,2);
+  var diffs=stats.slice().sort(function(a,b){return b.spread-a.spread;}); diffs=(diffs.filter(function(o){return o.spread>=10;}).slice(0,2)); if(!diffs.length) diffs=[stats.slice().sort(function(a,b){return b.spread-a.spread;})[0]];
+  function scls(a){ return a>=75?'sgood':a>=60?'swarn':'sbad'; }
+  var simHTML=sims.map(function(o){ var lvl=o.avg>=82?nW+' elite':o.avg<70?nW+' low':nW+' solid'; return '<span class="sd-chip '+scls(o.avg)+'">'+o.c[1]+' <em>'+lvl+' ~'+Math.round(o.avg)+'</em></span>'; }).join('');
+  var diffHTML=diffs.map(function(o){ return '<span class="sd-chip d">'+o.c[1]+' <em>'+o.mn+' → '+o.mx+'</em></span>'; }).join('');
   var verdict, moveLine;
   if(s.shared){
     var worst=s.ds.slice().sort(function(a,b){return a.d[s.shared[0]]-b.d[s.shared[0]];})[0];
-    verdict='Same fault — all '+s.ds.length+' run low on <b>'+s.shared[1].toLowerCase()+'</b>, '+nmFirst(worst.n)+' worst ('+worst.d[s.shared[0]]+'). They split most on '+s.div[1].toLowerCase()+' ('+s.divGap+' pts).';
+    verdict='Same fault — all '+s.ds.length+' run low on <b>'+s.shared[1].toLowerCase()+'</b>, '+nmFirst(worst.n)+' worst ('+worst.d[s.shared[0]]+').';
     var inSel=CMP2.indexOf(s.teamModel.n)>=0;
     moveLine='Coach toward <b>'+nmFirst(s.teamModel.n)+'</b> ('+s.teamModel.v+' on '+s.shared[1].toLowerCase()+') — '+(inSel?'your strongest here; run the others off '+nmFirst(s.teamModel.n)+'’s pattern.':'the team’s model for this. Pull '+nmFirst(s.teamModel.n)+' in as the reference.');
   } else {
@@ -6461,20 +6488,21 @@ function renderTeamCompare(){
     moveLine='<b>'+nmFirst(s.model.n)+'</b> is the model here (overall '+s.model.ov+') — the others can borrow '+nmFirst(s.model.n)+'’s '+s.model.strong[1].toLowerCase()+'.';
   }
   var pats=CMP2.map(function(n){return SM_DATA[n].pat;}), uniq=pats.filter(function(v,i){return pats.indexOf(v)===i;}), patternLine;
-  if(uniq.length===1){ patternLine='All '+CMP2.length+' share one movement pattern — <b>'+uniq[0].toLowerCase()+'</b>. Same root, so one cue transfers.'; }
-  else { patternLine='Different patterns — '+CMP2.map(function(n){return '<b>'+nmFirst(n)+'</b> a '+SM_DATA[n].pat.toLowerCase();}).join(', ')+'. The same drill won’t land for all.'; }
+  if(uniq.length===1){ patternLine='All '+CMP2.length+' share one movement pattern — <b>'+uniq[0].toLowerCase()+'</b>. Same root, one cue transfers.'; }
+  else { patternLine='Different patterns — '+CMP2.map(function(n){return '<b>'+nmFirst(n)+'</b> a '+SM_DATA[n].pat.toLowerCase();}).join(', ')+'.'; }
   var addChip='';
   if(s.teamModel && CMP2.indexOf(s.teamModel.n)<0 && CMP2.length<3){ addChip='<button class="addmodel" onclick="tmxPick(\''+s.teamModel.n+'\')">＋ Add '+nmFirst(s.teamModel.n)+' — the model for this</button>'; }
   var pt=s.pri.d.trend||0, ptw=pt<0?'falling '+pt:pt>0?'rising +'+pt:'holding';
   p.innerHTML=
     '<div class="tcmp-head">'+chips+'<button class="cmpclear" onclick="tmxClearCmp()">Clear</button></div>'
     +'<div class="airead"><div class="ai-k">✦ Couro read</div><p class="ai-verdict">'+verdict+'</p><p class="ai-line">'+patternLine+'</p><p class="ai-line">'+moveLine+'</p>'+addChip+'</div>'
-    +'<div class="tcmp-stack">'
+    +'<div class="simdiff"><div class="sd-col"><div class="sd-h share">✓ Core similarities</div>'+simHTML+'</div><div class="sd-col"><div class="sd-h diff">▲ Core differences</div>'+diffHTML+'</div></div>'
+    +'<div class="tcmp-two">'
       +'<div class="tcmp-cell"><div class="tcmp-lbl">How they move · plant signature</div><div class="movegrid">'+moves+'</div></div>'
       +'<div class="tcmp-cell"><div class="tcmp-lbl">Movement fingerprint</div>'+radar+'</div>'
     +'</div>'
-    +'<div class="pri-strip"><b>⏱ See '+nmFirst(s.pri.n)+' first</b> — '+s.pri.d.risk+', '+ptw+' (30d)</div>'
-    +'<div class="tcmp-open">'+CMP2.map(function(n){return '<a onclick="openAthleteByName(\''+n+'\')">Open '+nmFirst(n)+'’s profile ▸</a>';}).join('')+'</div>';
+    +'<div class="tcmp-foot"><div class="pri-strip"><b>⏱ See '+nmFirst(s.pri.n)+' first</b> — '+s.pri.d.risk+', '+ptw+' (30d)</div>'
+      +'<div class="tcmp-open">'+CMP2.map(function(n){return '<a onclick="openAthleteByName(\''+n+'\')">Open '+nmFirst(n)+' ▸</a>';}).join('')+'</div></div>';
 }
 var smCmpMode = false, smCmpSel = [];
 
