@@ -1724,13 +1724,51 @@ body.mobile .tmbar .tm-upload{ margin-left:0; width:100%; justify-content:center
 .chartrow .radar{ width:100%; max-width:30rem; height:auto; }
 .chartrow .radar-legend{ text-align:center; }
 @media (max-width:900px){ .chartrow .radar{ max-width:26rem; } }
-.manage{ margin-top:2.6rem; border-top:1px solid var(--line); padding-top:1.5rem; }
-.manage summary{ list-style:none; cursor:pointer; font-size:1.3rem; font-weight:600; color:var(--muted); display:flex; align-items:center; gap:.6rem; }
-.manage summary::-webkit-details-marker{ display:none; }
-.manage summary::before{ content:"\203A"; font-size:1.6rem; line-height:1; color:var(--muted-2); transition:transform .15s; }
-.manage[open] summary::before{ transform:rotate(90deg); }
-.manage summary:hover{ color:var(--ink); }
-.manage-body{ margin-top:1.5rem; display:flex; flex-direction:column; gap:1.4rem; align-items:flex-start; }
+/* reframed manage panel — matches techwrap, no longer an orphaned footnote (v27) */
+.manage{ margin-top:2rem; border:1.5px solid var(--line); border-radius:var(--r-card); background:#fff; box-shadow:var(--shadow-soft); overflow:hidden; }
+.manage > summary{ list-style:none; cursor:pointer; padding:1.5rem 2rem; display:flex; align-items:center; gap:1rem; background:var(--fill); transition:background .14s; }
+.manage > summary::-webkit-details-marker{ display:none; }
+.manage > summary::before{ content:"\2699\FE0F"; font-size:1.5rem; line-height:1; }
+.manage > summary::after{ content:"\203A"; margin-left:auto; font-size:2rem; line-height:1; color:var(--muted-2); transition:transform .15s; }
+.manage[open] > summary::after{ transform:rotate(90deg); }
+.manage > summary:hover{ background:#EFF0F2; }
+.mg-sum{ font-size:1.55rem; font-weight:700; color:var(--ink); }
+.mg-hint{ flex:1; font-size:1.2rem; font-weight:500; color:var(--muted-2); }
+.mg-count{ font-size:1.1rem; font-weight:600; color:var(--muted); background:#fff; border:1.5px solid var(--line); border-radius:var(--r-pill); padding:.35rem 1rem; white-space:nowrap; }
+.manage-body{ padding:1.6rem 2rem 2rem; display:flex; flex-direction:column; gap:1.6rem; align-items:stretch; }
+@media (max-width:640px){ .mg-hint{ display:none; } }
+
+/* coach settings tree — role → teams → permissions → notifications (v27) */
+.ctree-head{ display:flex; align-items:center; gap:1rem; margin-bottom:1.1rem; }
+.ctree-head .ct-t{ font-size:1.4rem; font-weight:700; }
+.ctree-head .ct-sub{ font-size:1.15rem; color:var(--muted-2); }
+.ctree-head .ct-add{ margin-left:auto; font-size:1.2rem; padding:.6rem 1.2rem; }
+.ctree{ position:relative; margin-left:.7rem; padding-left:1.9rem; border-left:2px solid var(--line); display:flex; flex-direction:column; gap:.5rem; }
+.ctree-node{ position:relative; border:1.5px solid var(--line); border-radius:1.1rem; background:#fff; transition:border-color .14s,box-shadow .14s; }
+.ctree-node::before{ content:""; position:absolute; left:-1.9rem; top:2.6rem; width:1.6rem; height:2px; background:var(--line); }
+.ctree-node > summary{ list-style:none; cursor:pointer; display:flex; align-items:center; gap:1rem; padding:1.2rem 1.4rem; }
+.ctree-node > summary::-webkit-details-marker{ display:none; }
+.ctree-node > summary::after{ content:"\203A"; margin-left:auto; font-size:1.8rem; color:var(--muted-2); transition:transform .15s; }
+.ctree-node[open]{ border-color:#D8D2C4; box-shadow:var(--shadow-soft); }
+.ctree-node[open] > summary::after{ transform:rotate(90deg); }
+.ctree-node[open] > summary{ border-bottom:1px solid var(--line); }
+.ctn-id{ display:flex; flex-direction:column; gap:.15rem; }
+.ctn-name{ font-size:1.35rem; font-weight:700; line-height:1.1; }
+.ctn-scope{ font-size:1.15rem; color:var(--muted); }
+.ctn-body{ padding:1.2rem 1.4rem 1.4rem; display:flex; flex-direction:column; gap:1.2rem; }
+.ctn-branch{ position:relative; padding-left:1.6rem; }
+.ctn-branch::before{ content:""; position:absolute; left:.2rem; top:.2rem; bottom:.4rem; width:2px; background:var(--line); border-radius:2px; }
+.ctn-branch .bl{ font-size:1.05rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); margin-bottom:.55rem; }
+.ctn-chips{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.permchip{ display:inline-flex; align-items:center; gap:.4rem; font-size:1.15rem; font-weight:600; padding:.45rem 1rem; border-radius:var(--r-pill); border:1.5px solid; cursor:pointer; user-select:none; transition:background .12s,border-color .12s; }
+.permchip.on{ background:#ECFDF3; border-color:#00CC00; color:#0a7d54; }
+.permchip.off{ background:#fff; border-color:var(--line); color:var(--muted-2); }
+.permchip.on::before{ content:"\2713"; font-weight:800; }
+.permchip.off::before{ content:"\00D7"; font-weight:800; font-size:1.3rem; line-height:1; }
+.permchip.lock{ cursor:default; opacity:.85; }
+.teamchip{ display:inline-flex; align-items:center; gap:.4rem; font-size:1.2rem; font-weight:600; padding:.45rem 1rem; border-radius:var(--r-pill); background:#FFFDF3; border:1.5px solid var(--yellow); color:#8a6d00; }
+.teamchip.add{ background:#fff; border:1.5px dashed var(--line); color:var(--muted); cursor:pointer; }
+.ctn-rolesel{ font-size:1.15rem; font-weight:600; border:1.5px solid var(--line); border-radius:var(--r-pill); background:#fff; padding:.4rem .8rem; cursor:pointer; }
 /* technical-details drawer (team view) — visual metric breakdown */
 .techwrap{ margin-top:2rem; border:1.5px solid var(--line); border-radius:var(--r-card); background:#fff; box-shadow:var(--shadow-soft); }
 .techwrap > summary{ list-style:none; cursor:pointer; padding:1.6rem 2rem; display:flex; align-items:baseline; gap:1rem; }
@@ -3689,7 +3727,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       </details>
 
       <details class="manage">
-        <summary>Manage roster &amp; coaches</summary>
+        <summary><span class="mg-sum">Manage roster &amp; coaches</span><span class="mg-hint">add or remove athletes · coach access &amp; permissions</span><span class="mg-count">18 athletes · 3 coaches</span></summary>
         <div class="manage-body">
           <div class="card" style="width:100%">
             <div class="squadhead">
@@ -3713,11 +3751,88 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         </p>
           </div>
           <div class="card" style="width:100%">
-            <div class="trow"><span class="avx">DR</span><span class="tinfo"><b>Dana Ruiz</b><small>dana@bayelite.com</small></span><span class="alertchip info">Westgate Softball — Pitchers</span></div>
-      <div class="trow"><span class="avx">ML</span><span class="tinfo"><b>Marcus Lee</b><small>marcus@bayelite.com</small></span><span class="alertchip info">Track &amp; Field — Sprints</span></div>
-      <div class="trow"><span class="avx">PS</span><span class="tinfo"><b>Priya Shah</b><small>priya@bayelite.com</small></span><span class="alertchip info">Return-to-Sport Group</span></div>
+            <div class="ctree-head">
+              <span class="ct-t">Coach access</span>
+              <span class="ct-sub">tap a coach to set their teams, permissions &amp; alerts</span>
+              <button class="btn btn-yellow ct-add" onclick="toast('Sends a coach invite — they get their own login, and land here scoped to the teams you pick')">＋ Invite coach</button>
+            </div>
+            <div class="ctree">
+
+              <details class="ctree-node" open>
+                <summary>
+                  <span class="avx">DR</span>
+                  <span class="ctn-id"><span class="ctn-name">Dana Ruiz <span class="rolepill owner">Head coach</span></span><span class="ctn-scope">2 teams · full access · dana@bayelite.com</span></span>
+                </summary>
+                <div class="ctn-body">
+                  <div class="ctn-branch"><div class="bl">Teams</div><div class="ctn-chips">
+                    <span class="teamchip">Track — Sprints</span><span class="teamchip">Softball — Pitchers</span>
+                    <span class="teamchip add" onclick="toast('Pick any team in the org to add to Dana\'s access')">＋ team</span>
+                  </div></div>
+                  <div class="ctn-branch"><div class="bl">Can do <span style="font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted-2)">· tap to toggle</span></div><div class="ctn-chips">
+                    <span class="permchip on" onclick="permTog(this,'Upload')">Upload</span>
+                    <span class="permchip on" onclick="permTog(this,'Assess')">Assess</span>
+                    <span class="permchip on" onclick="permTog(this,'Edit roster')">Edit roster</span>
+                    <span class="permchip on lock" title="Head coaches always manage staff">Manage staff</span>
+                    <span class="permchip on" onclick="permTog(this,'Billing')">Billing</span>
+                  </div></div>
+                  <div class="ctn-branch"><div class="bl">Alerts</div><div class="ctn-chips">
+                    <span class="permchip on" onclick="permTog(this,'Injury flags')">Injury flags</span>
+                    <span class="permchip on" onclick="permTog(this,'Weekly digest')">Weekly digest</span>
+                    <span class="permchip on" onclick="permTog(this,'New uploads')">New uploads</span>
+                  </div></div>
+                </div>
+              </details>
+
+              <details class="ctree-node">
+                <summary>
+                  <span class="avx">ML</span>
+                  <span class="ctn-id"><span class="ctn-name">Marcus Lee <span class="rolepill">Position coach</span></span><span class="ctn-scope">Sprints · upload + assess · marcus@bayelite.com</span></span>
+                </summary>
+                <div class="ctn-body">
+                  <div class="ctn-branch"><div class="bl">Teams</div><div class="ctn-chips">
+                    <span class="teamchip">Track — Sprints</span>
+                    <span class="teamchip add" onclick="toast('Give Marcus another team')">＋ team</span>
+                  </div></div>
+                  <div class="ctn-branch"><div class="bl">Can do <span style="font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted-2)">· tap to toggle</span></div><div class="ctn-chips">
+                    <span class="permchip on" onclick="permTog(this,'Upload')">Upload</span>
+                    <span class="permchip on" onclick="permTog(this,'Assess')">Assess</span>
+                    <span class="permchip off" onclick="permTog(this,'Edit roster')">Edit roster</span>
+                    <span class="permchip off" onclick="permTog(this,'Manage staff')">Manage staff</span>
+                  </div></div>
+                  <div class="ctn-branch"><div class="bl">Alerts</div><div class="ctn-chips">
+                    <span class="permchip on" onclick="permTog(this,'Injury flags')">Injury flags</span>
+                    <span class="permchip off" onclick="permTog(this,'Weekly digest')">Weekly digest</span>
+                    <span class="permchip on" onclick="permTog(this,'New uploads')">New uploads</span>
+                  </div></div>
+                </div>
+              </details>
+
+              <details class="ctree-node">
+                <summary>
+                  <span class="avx">PS</span>
+                  <span class="ctn-id"><span class="ctn-name">Priya Shah <span class="rolepill">Sports PT</span></span><span class="ctn-scope">Return-to-Sport · view + assess · priya@bayelite.com</span></span>
+                </summary>
+                <div class="ctn-body">
+                  <div class="ctn-branch"><div class="bl">Teams</div><div class="ctn-chips">
+                    <span class="teamchip">Return-to-Sport Group</span>
+                    <span class="teamchip add" onclick="toast('Give Priya another team')">＋ team</span>
+                  </div></div>
+                  <div class="ctn-branch"><div class="bl">Can do <span style="font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted-2)">· tap to toggle</span></div><div class="ctn-chips">
+                    <span class="permchip off" onclick="permTog(this,'Upload')">Upload</span>
+                    <span class="permchip on" onclick="permTog(this,'Assess')">Assess</span>
+                    <span class="permchip off" onclick="permTog(this,'Edit roster')">Edit roster</span>
+                    <span class="permchip off" onclick="permTog(this,'Manage staff')">Manage staff</span>
+                  </div></div>
+                  <div class="ctn-branch"><div class="bl">Alerts</div><div class="ctn-chips">
+                    <span class="permchip on" onclick="permTog(this,'Injury flags')">Injury flags · priority</span>
+                    <span class="permchip off" onclick="permTog(this,'Weekly digest')">Weekly digest</span>
+                  </div></div>
+                </div>
+              </details>
+
+            </div>
+            <p class="accessnote">Access is scoped per team — a coach only sees the athletes on the teams you grant. Changing a role preset (head coach / position coach / PT) sets these toggles for you; tweak any of them by hand.</p>
           </div>
-          <button class="btn btn-ghost" onclick="toast('Sends a coach invite — they get their own login scoped to their rosters')">＋ &nbsp;Invite Coach</button>
         </div>
       </details>
     </div><!-- /ot-teams -->
@@ -5635,6 +5750,14 @@ function xpOpen(k){
   document.getElementById('xp').hidden = false;
 }
 function xpClose(){ document.getElementById('xp').hidden = true; }
+
+/* ---- coach settings tree: toggle a permission/alert chip (v27) ---- */
+function permTog(el, label){
+  if (el.classList.contains('lock')) return;
+  const on = el.classList.toggle('on');
+  el.classList.toggle('off', !on);
+  toast('<b>' + label + '</b> ' + (on ? 'granted' : 'removed') + ' for this coach — saved to their access');
+}
 
 /* ---- mission checklist (v17) ---- */
 function miToggle(el){
