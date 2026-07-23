@@ -130,7 +130,7 @@ button.btn-pop{ animation:btnpop .24s cubic-bezier(.16,1,.3,1); }
 .empty .illus{ width:280px; height:280px; display:flex; align-items:center; justify-content:center; }
 
 /* ============ Page scaffolding ============ */
-.page{ padding:2.4rem; max-width:110rem; margin:0 auto; }
+.page{ padding:2.4rem; max-width:124rem; margin:0 auto; }
 .tabs{ display:flex; gap:.8rem; flex-wrap:wrap; }
 .tabs button{ background:#fff; border:1.5px solid var(--line); color:var(--muted); border-radius:var(--r-pill);
   padding:.9rem 1.8rem; font-size:1.35rem; font-weight:500; }
@@ -508,7 +508,7 @@ button.btn-pop{ animation:btnpop .24s cubic-bezier(.16,1,.3,1); }
 /* ============ Organization (CONCEPT) ============ */
 .concept-badge{ display:inline-block; background:var(--ink-dark); color:var(--yellow); font-size:1.05rem; font-weight:700;
   letter-spacing:.1em; border-radius:var(--r-pill); padding:.4rem 1.2rem; vertical-align:middle; }
-.org-wrap{ max-width:110rem; margin:0 auto; padding:2.4rem; }
+.org-wrap{ max-width:124rem; margin:0 auto; padding:2.4rem; }
 .org-hero{ display:flex; justify-content:space-between; align-items:flex-start; gap:1.6rem; flex-wrap:wrap; margin:1.2rem 0 2.4rem; }
 .org-hero h1{ font-size:2.8rem; font-weight:700; }
 .org-hero p{ color:var(--muted); font-size:1.4rem; font-weight:400; margin-top:.4rem; }
@@ -724,6 +724,20 @@ body.mobile .bltile::after{ content:"Tap ›"; display:block; margin-top:.5rem; 
 .radar-legend .rlrow{ border-radius:8px; padding-left:.6rem; padding-right:.6rem; margin:0 -.6rem; transition:background .12s; }
 .radar-legend .rlrow:hover{ background:var(--fill); }
 .radar-legend .rlrow .rlgo{ color:var(--muted-2); font-weight:700; margin-left:.8rem; }
+.ma-grid{ display:grid; grid-template-columns:1fr .82fr; gap:2.4rem; align-items:center; margin-top:.6rem; }
+.ma-radar{ min-width:0; }
+.ma-r-h{ font-size:1.15rem; letter-spacing:.14em; text-transform:uppercase; font-weight:800; color:var(--muted-2); margin-bottom:.8rem; }
+.ma-read > p{ font-size:1.45rem; line-height:1.5; color:var(--ink); font-weight:400; margin:0 0 1.4rem; }
+.ma-read > p b{ font-weight:700; }
+.ma-chips{ display:flex; flex-direction:column; gap:.7rem; margin-bottom:1.4rem; }
+.ma-chip{ text-align:left; font-size:1.3rem; font-weight:700; padding:.75rem 1.1rem; border-radius:.9rem; border:none; cursor:pointer; }
+.ma-chip.strong{ background:rgba(5,150,105,.12); color:#0a7d54; }
+.ma-chip.gap{ background:rgba(224,164,0,.15); color:#B8860B; }
+.ma-chip:hover{ filter:brightness(.97); }
+.ma-vs{ font-size:1.25rem; color:var(--muted); line-height:1.5; }
+.ma-vs b{ color:var(--ink); }
+body.mobile .ma-grid{ grid-template-columns:1fr; gap:1.4rem; }
+@media (max-width:900px){ .ma-grid{ grid-template-columns:1fr; gap:1.4rem; } }
 .hitg text, svg text[onclick]{ paint-order:stroke; }
 svg text[onclick]:hover{ fill:var(--gold); }
 .dot10{ width:1rem; height:1rem; border-radius:50%; display:inline-block; }
@@ -2478,7 +2492,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <button onclick="spiderOverlay(this,'average')">Average</button>
             <button onclick="spiderOverlay(this,'novice')">Novice</button>
           </div>
-          <svg viewBox="0 -14 300 306" style="width:100%;max-width:44rem;display:block;margin:0 auto">
+          <div class="ma-grid"><div class="ma-radar"><svg viewBox="0 -14 300 306" style="width:100%;max-width:42rem;display:block;margin:0 auto">
             <g stroke="#ECE5D3" fill="none">
               <polygon points="150,40 254.6,116 214.7,239 85.3,239 45.4,116"/>
               <polygon points="150,62 233.7,122.8 201.8,221.2 98.2,221.2 66.3,122.8"/>
@@ -2496,7 +2510,15 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
               <g style="cursor:pointer" onclick="xpOpen('cadence')"><text x="72" y="262" font-size="11" fill="#4A504A">Cadence</text><text x="72" y="279" font-size="15" font-weight="800" fill="#3f9a57" font-family="Inter,sans-serif">78</text></g>
               <g style="cursor:pointer" onclick="xpOpen('symmetry')"><text x="30" y="104" font-size="11" fill="#4A504A">Symmetry</text><text x="30" y="121" font-size="15" font-weight="800" fill="#3f9a57" font-family="Inter,sans-serif">74</text></g>
             </g>
-          </svg>
+          </svg></div><div class="ma-read">
+            <div class="ma-r-h">The shape</div>
+            <p>Even across all five — <b>no single weak axis</b>. <b>Elasticity (83)</b> leads; <b>Symmetry (74)</b> is the one to nudge.</p>
+            <div class="ma-chips">
+              <button class="ma-chip strong" onclick="xpOpen('elasticity')">Strength · Elasticity 83 ›</button>
+              <button class="ma-chip gap" onclick="xpOpen('symmetry')">Watch · Symmetry 74 ›</button>
+            </div>
+            <div class="ma-vs">Tap <b>Elite</b> above to overlay the benchmark band — she's within reach on 4 of 5 axes.</div>
+          </div></div>
         </div>
 
         <div class="card" id="tg-bl" style="border-color:var(--yellow)">
