@@ -1130,6 +1130,28 @@ body.mobile .blgrid{ grid-template-columns:1fr; }
 .projstat .ps-now{ color:var(--ink); } .projstat .ps-proj{ color:#E0A400; }
 .projstat .ps-arrow{ font-size:1.7rem; color:var(--muted-2); }
 .projstat .ps-note{ font-size:1.15rem; color:var(--muted); font-weight:500; }
+.onefix{ display:flex; align-items:center; gap:.9rem; width:100%; margin-top:1.6rem; background:var(--fill); border:1px solid var(--line); border-left:3px solid var(--yellow); border-radius:.9rem; padding:.9rem 1.2rem; cursor:pointer; text-align:left; font-size:1.32rem; font-weight:400; color:var(--ink); line-height:1.4; transition:background .14s; }
+.onefix:hover{ background:#F3F1EA; }
+.onefix b{ font-weight:700; }
+.onefix .ico{ font-size:1.5rem; }
+.onefix .ofx-arrow{ margin-left:auto; font-weight:800; color:#B8860B; white-space:nowrap; }
+.fatcard{ background:#fff; border:1.5px solid var(--line); border-radius:var(--r-card); box-shadow:var(--shadow-soft); overflow:hidden; }
+.fatcard > summary{ list-style:none; cursor:pointer; padding:1.7rem 2rem; display:flex; align-items:center; gap:1rem; }
+.fatcard > summary::-webkit-details-marker{ display:none; }
+.fatcard > summary:hover{ background:var(--fill); }
+.fatcard .fat-t{ font-size:1.8rem; font-weight:700; color:var(--ink); }
+.fatcard .fat-sub{ font-size:1.2rem; color:var(--muted-2); font-weight:400; }
+.fatcard .fat-toggle{ margin-left:auto; font-size:1.2rem; font-weight:700; color:var(--muted); white-space:nowrap; }
+.fatcard[open] .fat-toggle .t-show{ display:none; }
+.fatcard:not([open]) .fat-toggle .t-hide{ display:none; }
+.fatcard .fat-body{ padding:0 2rem 2rem; }
+.fat-why{ font-size:1.3rem; color:var(--muted); font-weight:400; line-height:1.55; margin:.2rem 0 1.4rem; }
+.fat-why b{ color:var(--ink); }
+.fat-how{ background:var(--fill); border-radius:1rem; padding:1.4rem 1.6rem; }
+.fat-how-h{ font-size:1.45rem; font-weight:700; margin-bottom:.5rem; }
+.fat-how p{ font-size:1.25rem; color:var(--muted); font-weight:400; line-height:1.55; margin:0 0 1.2rem; }
+.fat-how p b{ color:var(--ink); }
+.fat-cta{ display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; }
 body.mobile .blhook, body.mobile .blwhy{ display:block; }
 .blsplit{ display:grid; grid-template-columns:1fr 1fr; gap:1.6rem; margin-top:1.6rem; }
 body.mobile .blsplit{ grid-template-columns:1fr; }
@@ -2537,7 +2559,6 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
                   <text x="109" y="238" text-anchor="middle" font-size="10.5" font-weight="600" fill="#8A908A" font-family="Lexend,sans-serif">Cadence drift</text>
                 </g>
               </svg>
-              <div class="blcallout">▶ Start with the <b>foot crossover</b> — a quick win that also frees knee drive. Everything else is already working.</div>
             </div>
             <div class="blbox tap" onclick="xpOpen('projection')">
               <h4>Where this is headed</h4>
@@ -2561,26 +2582,27 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             </div>
           </div>
 
-          <div class="insight tap" onclick="xpOpen('onefix')"><span class="ico">💡</span><span><b>One fix — the left-foot crossover — sits behind both the speed cap and the durability flag.</b> That's the week-one priority; everything else is already working. <b style="white-space:nowrap">Why? ›</b></span></div>
+          <button class="onefix" onclick="xpOpen('onefix')"><span class="ico">💡</span><span><b>One fix — the foot crossover</b> — sits behind both flags. The week-one priority.</span><span class="ofx-arrow">Why ›</span></button>
         </div>
 
-        <div class="card" id="tg-fatigue">
-          <h3>Fresh vs Fatigued <span style="font-size:1.15rem;color:var(--muted-2);font-weight:400">· not measured for this session — here's why</span><span class="otag dur">Durability</span></h3>
-          <p style="font-size:1.3rem;color:var(--muted);font-weight:400;margin:.4rem 0 1.2rem">This was one short clip — a few seconds of running. That shows per-stride drift, but it <b style="color:var(--ink)">can't separate fatigue from pacing</b> — so Couro doesn't pretend it can. The read comes from a <b style="color:var(--ink)">comparison</b>:</p>
-          <div class="blsplit" style="margin-top:0">
-            <div class="blbox">
-              <h4>📼 Paired capture <span style="font-weight:400;color:var(--muted);font-size:1.15rem">· works for any sport</span></h4>
-              <p style="font-size:1.25rem;color:var(--muted);font-weight:400;line-height:1.55;margin:.5rem 0 1rem">Upload one rep fresh and one at the end of practice — same angle, same effort. Both a few seconds. Couro compares the two clips side by side and shows what faded.</p>
-              <button class="btn btn-yellow" onclick="toast('Reminds you to film the last rep of Thursday\'s practice — same angle as today')">Set a fatigued-rep reminder</button>
-            </div>
-            <div class="blbox">
-              <h4>✨ Set it up at upload <span style="font-weight:400;color:var(--muted);font-size:1.15rem">· one step earlier</span></h4>
-              <p style="font-size:1.25rem;color:var(--muted);font-weight:400;line-height:1.55;margin:.5rem 0 1rem">Couro suggests the right comparison for every session type — fresh vs fatigued, left vs right, two angles — and pairs the clips for you before it even analyzes.</p>
-              <button class="btn btn-ghost" onclick="show('upload')">See upload suggestions ›</button>
+        <details class="fatcard" id="tg-fatigue">
+          <summary>
+            <span class="fat-t">Fresh vs Fatigued <span class="fat-sub">· not measured this session</span></span>
+            <span class="otag dur">Durability</span>
+            <span class="fat-toggle"><span class="t-show">Show ▾</span><span class="t-hide">Hide ▴</span></span>
+          </summary>
+          <div class="fat-body">
+            <p class="fat-why">One short clip shows per-stride drift but <b>can't separate fatigue from pacing</b> — so Couro doesn't guess. This read needs a <b>comparison</b>.</p>
+            <div class="fat-how">
+              <div class="fat-how-h">📼 Get it next time — paired capture</div>
+              <p>Upload one rep <b>fresh</b> and one at the <b>end of practice</b>, same angle. Couro pairs the clips, shows what faded, and suggests the pairing right at upload.</p>
+              <div class="fat-cta">
+                <button class="btn btn-yellow" onclick="toast('Reminds you to film the last rep of practice — same angle as today')">Set a fatigued-rep reminder</button>
+                <button class="xplink" onclick="xpOpen('fatiguehow')">How can we know? ›</button>
+              </div>
             </div>
           </div>
-          <button class="xplink" style="margin-top:1.4rem" onclick="xpOpen('fatiguehow')">How can we know? ›</button>
-        </div>
+        </details>
 
 
 
