@@ -2469,7 +2469,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <h3 style="margin:0">Motion Attributes<span class="otag spd">Speed</span><span class="otag eff">Efficiency</span><span class="otag dur">Durability</span></h3>
             <button onclick="toast('Legend: <b>Good</b> = match or exceed the polygon · <b>Okay</b> = within ~10 points · <b>Needs work</b> = 10+ below on 2+ axes')" style="width:2.6rem;height:2.6rem;border-radius:50%;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-weight:700">?</button>
           </div>
-          <p style="font-size:1.2rem;color:var(--muted);font-weight:400;margin:.2rem 0 .9rem">Your movement across five attributes. <b style="color:var(--ink)">Tap any point or metric</b> to see what it means and why it's where it is.</p>
+          <p style="font-size:1.2rem;color:var(--muted);font-weight:400;margin:.2rem 0 .9rem">Your movement across five attributes. <b style="color:var(--ink)">Tap any point</b> to see what it means and why it's where it is.</p>
           <div class="overlaybtns" id="olbtns">
             <button class="on" onclick="spiderOverlay(this,'none')">None</button>
             <button onclick="toast('Opens the benchmark table with exact numbers per band')">View numbers</button>
@@ -2479,7 +2479,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <button onclick="spiderOverlay(this,'average')">Average</button>
             <button onclick="spiderOverlay(this,'novice')">Novice</button>
           </div>
-          <svg viewBox="0 0 300 290" style="width:100%;max-width:44rem;display:block;margin:0 auto">
+          <svg viewBox="0 -14 300 306" style="width:100%;max-width:44rem;display:block;margin:0 auto">
             <g stroke="#ECE5D3" fill="none">
               <polygon points="150,40 254.6,116 214.7,239 85.3,239 45.4,116"/>
               <polygon points="150,62 233.7,122.8 201.8,221.2 98.2,221.2 66.3,122.8"/>
@@ -2490,13 +2490,14 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <polygon id="olpoly" points="150,48.8 244.1,119.4 206.9,228.3 94.4,226.5 55.9,119.4" fill="rgba(99,102,241,.15)" stroke="#6366f1" stroke-width="2" visibility="hidden"/>
             <polygon points="150,66.4 236.8,121.8 201.7,221.2 99.6,219.4 72.6,124.8" fill="rgba(255,215,0,.45)" stroke="#FFC700" stroke-width="2"/>
             <g class="hitg" style="cursor:pointer" onclick="xpOpen('propulsion')"><circle cx="150" cy="66.4" r="13" fill="transparent"/><circle cx="150" cy="66.4" r="4" fill="#FFC700"/></g><g class="hitg" style="cursor:pointer" onclick="xpOpen('elasticity')"><circle cx="236.8" cy="121.8" r="13" fill="transparent"/><circle cx="236.8" cy="121.8" r="4" fill="#FFC700"/></g><g class="hitg" style="cursor:pointer" onclick="xpOpen('rhythm')"><circle cx="201.7" cy="221.2" r="13" fill="transparent"/><circle cx="201.7" cy="221.2" r="4" fill="#FFC700"/></g><g class="hitg" style="cursor:pointer" onclick="xpOpen('cadence')"><circle cx="99.6" cy="219.4" r="13" fill="transparent"/><circle cx="99.6" cy="219.4" r="4" fill="#FFC700"/></g><g class="hitg" style="cursor:pointer" onclick="xpOpen('symmetry')"><circle cx="72.6" cy="124.8" r="13" fill="transparent"/><circle cx="72.6" cy="124.8" r="4" fill="#FFC700"/></g>
-            <g font-size="11" fill="#4A504A" font-family="Lexend,sans-serif" text-anchor="middle">
-              <text x="150" y="26" style="cursor:pointer" onclick="xpOpen('propulsion')">Propulsion</text><text x="270" y="110" style="cursor:pointer" onclick="xpOpen('elasticity')">Elasticity</text><text x="228" y="258" style="cursor:pointer" onclick="xpOpen('rhythm')">Rhythm</text><text x="72" y="258" style="cursor:pointer" onclick="xpOpen('cadence')">Cadence</text><text x="30" y="110" style="cursor:pointer" onclick="xpOpen('symmetry')">Symmetry</text>
+            <g text-anchor="middle" font-family="Lexend,sans-serif">
+              <g style="cursor:pointer" onclick="xpOpen('propulsion')"><text x="150" y="20" font-size="11" fill="#4A504A">Propulsion</text><text x="150" y="37" font-size="15" font-weight="800" fill="#3f9a57" font-family="Inter,sans-serif">76</text></g>
+              <g style="cursor:pointer" onclick="xpOpen('elasticity')"><text x="270" y="104" font-size="11" fill="#4A504A">Elasticity</text><text x="270" y="121" font-size="15" font-weight="800" fill="#0a7d54" font-family="Inter,sans-serif">83</text></g>
+              <g style="cursor:pointer" onclick="xpOpen('rhythm')"><text x="228" y="262" font-size="11" fill="#4A504A">Rhythm</text><text x="228" y="279" font-size="15" font-weight="800" fill="#0a7d54" font-family="Inter,sans-serif">80</text></g>
+              <g style="cursor:pointer" onclick="xpOpen('cadence')"><text x="72" y="262" font-size="11" fill="#4A504A">Cadence</text><text x="72" y="279" font-size="15" font-weight="800" fill="#3f9a57" font-family="Inter,sans-serif">78</text></g>
+              <g style="cursor:pointer" onclick="xpOpen('symmetry')"><text x="30" y="104" font-size="11" fill="#4A504A">Symmetry</text><text x="30" y="121" font-size="15" font-weight="800" fill="#3f9a57" font-family="Inter,sans-serif">74</text></g>
             </g>
           </svg>
-          <div class="radar-legend">
-            <div class="metric-row rlrow" style="cursor:pointer" onclick="xpOpen('propulsion')"><span><i class="dot10" style="background:var(--s-good)"></i>Propulsion:</span><b class="num" style="color:var(--s-good)">76</b><span class="rlgo">›</span></div><div class="metric-row rlrow" style="cursor:pointer" onclick="xpOpen('elasticity')"><span><i class="dot10" style="background:var(--s-good)"></i>Elasticity:</span><b class="num" style="color:var(--s-good)">83</b><span class="rlgo">›</span></div><div class="metric-row rlrow" style="cursor:pointer" onclick="xpOpen('rhythm')"><span><i class="dot10" style="background:var(--s-good)"></i>Rhythm:</span><b class="num" style="color:var(--s-good)">80</b><span class="rlgo">›</span></div><div class="metric-row rlrow" style="cursor:pointer" onclick="xpOpen('cadence')"><span><i class="dot10" style="background:var(--s-good)"></i>Cadence:</span><b class="num" style="color:var(--s-good)">78</b><span class="rlgo">›</span></div><div class="metric-row rlrow" style="cursor:pointer" onclick="xpOpen('symmetry')"><span><i class="dot10" style="background:var(--s-ok)"></i>Symmetry:</span><b class="num" style="color:var(--s-ok)">74</b><span class="rlgo">›</span></div>
-          </div>
         </div>
 
         <div class="card" id="tg-bl" style="border-color:var(--yellow)">
