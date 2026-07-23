@@ -1611,11 +1611,12 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 .teamhero{ display:grid; grid-template-columns:auto 1fr; gap:.4rem 2.4rem; align-items:center; padding:2rem 2.2rem; }
 .teamhero .th-score{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1rem; padding:.5rem 2.4rem; margin-right:-0.2rem; border:none; border-right:1.5px solid #F0E4B8; align-self:stretch; background:transparent; font:inherit; cursor:pointer; border-radius:.9rem; transition:background .12s; }
 .teamhero .th-score:hover{ background:rgba(192,146,15,.07); }
-.teamhero .th-more{ font-size:1.05rem; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:#B8860B; margin-top:.6rem; white-space:nowrap; }
+.teamhero .th-meta{ display:flex; flex-direction:column; align-items:center; gap:.35rem; margin-top:.7rem; }
+.teamhero .th-more{ font-size:1.05rem; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:#B8860B; white-space:nowrap; }
 /* score ring — turns the number into a visual gauge (v29) */
 .teamhero .th-ring{ width:11rem; height:11rem; }
 .teamhero .th-ring svg{ width:100%; height:100%; display:block; }
-.th-ringnum{ font-family:'Inter',sans-serif; font-weight:800; font-size:3.7rem; fill:var(--ink); letter-spacing:-.02em; }
+.th-ringnum{ font-family:'Inter',sans-serif; font-weight:800; fill:var(--ink); letter-spacing:-.02em; }
 /* color the read's win/crack so the tension reads at a glance, not as flat text */
 .tms-headline .rd-win{ color:#0a7d54; }
 .tms-headline .rd-crack{ color:#C0392B; }
@@ -1650,15 +1651,22 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 .tctx-fact .tf-n.up{ color:#0a7d54; } .tctx-fact .tf-n.dn{ color:#C0392B; }
 .tctx-fact b{ color:var(--ink); font-weight:700; }
 .teamhero .th-num{ font-family:'Inter',sans-serif; font-weight:800; font-size:5.6rem; line-height:.82; color:var(--ink); letter-spacing:-.02em; }
-.teamhero .th-trend{ font-size:1.3rem; font-weight:700; color:var(--s-great); margin-top:.7rem; white-space:nowrap; }
+.teamhero .th-trend{ font-size:1.3rem; font-weight:700; color:var(--s-great); white-space:nowrap; }
 .teamhero .th-trend small{ color:var(--muted); font-weight:500; }
 .teamhero .tms-headline{ margin:.3rem 0 .8rem; }
 .teamhero-ctx{ grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:.8rem 1.9rem; margin-top:1.5rem; padding-top:1.3rem; border-top:1px solid #F0E4B8; font-size:1.25rem; color:var(--muted); font-weight:500; }
 .teamhero-ctx b{ color:var(--ink); font-weight:700; }
-@media (max-width:640px){ .teamhero{ grid-template-columns:1fr; gap:0; }
-  .teamhero .th-score{ flex-direction:row; align-items:baseline; gap:.9rem; border-right:none; border-bottom:1.5px solid #F0E4B8; padding:0 0 1rem; margin-bottom:1rem; } }
-body.mobile .teamhero{ grid-template-columns:1fr; gap:0; }
-body.mobile .teamhero .th-score{ flex-direction:row; align-items:baseline; gap:.9rem; border-right:none; border-bottom:1.5px solid #F0E4B8; padding:0 0 1rem; margin-bottom:1rem; justify-content:flex-start; }
+/* collapse: score becomes a tidy horizontal bar (ring + meta beside it), read below */
+@media (max-width:860px){
+  .teamhero{ grid-template-columns:1fr; gap:0; padding:1.8rem; }
+  .teamhero .th-score{ flex-direction:row; align-items:center; justify-content:flex-start; gap:1.4rem; padding:0 0 1.4rem; margin:0 0 1.4rem; border-right:none; border-bottom:1.5px solid #F0E4B8; border-radius:0; }
+  .teamhero .th-ring{ width:7.4rem; height:7.4rem; flex:none; }
+  .teamhero .th-meta{ align-items:flex-start; margin-top:0; }
+}
+body.mobile .teamhero{ grid-template-columns:1fr; gap:0; padding:1.6rem; }
+body.mobile .teamhero .th-score{ flex-direction:row; align-items:center; justify-content:flex-start; gap:1.4rem; padding:0 0 1.4rem; margin:0 0 1.4rem; border-right:none; border-bottom:1.5px solid #F0E4B8; border-radius:0; }
+body.mobile .teamhero .th-ring{ width:7.4rem; height:7.4rem; flex:none; }
+body.mobile .teamhero .th-meta{ align-items:flex-start; margin-top:0; }
 .tms-grid{ margin-bottom:1.6rem; align-items:stretch; }
 .tms-grid > .card{ display:flex; flex-direction:column; }
 .tms-heat{ display:flex; gap:1.4rem; align-items:center; flex:1; }
@@ -3625,11 +3633,13 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <svg viewBox="0 0 120 120" role="img" aria-label="Team score 78 of 100">
               <circle cx="60" cy="60" r="52" fill="none" stroke="#EFE7CE" stroke-width="9"/>
               <circle cx="60" cy="60" r="52" fill="none" stroke="#C0920F" stroke-width="9" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="71.9" transform="rotate(-90 60 60)"/>
-              <text x="60" y="61" text-anchor="middle" dominant-baseline="central" class="th-ringnum">78</text>
+              <text x="60" y="61" text-anchor="middle" dominant-baseline="central" class="th-ringnum" font-size="42">78</text>
             </svg>
           </div>
-          <span class="th-trend">▲ +3 <small>30-day</small></span>
-          <span class="th-more">Benchmarks ›</span>
+          <div class="th-meta">
+            <span class="th-trend">▲ +3 <small>30-day</small></span>
+            <span class="th-more">Benchmarks ›</span>
+          </div>
         </button>
         <div class="th-read">
           <div class="tms-k">The read</div>
