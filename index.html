@@ -105,7 +105,8 @@ button.btn-pop{ animation:btnpop .24s cubic-bezier(.16,1,.3,1); }
 .athlete-card.active{ box-shadow:var(--glow); }
 .athlete-card .date{ position:absolute; top:1rem; right:1rem; background:var(--yellow); color:var(--ink); font-size:1.1rem;
   font-weight:600; border-radius:var(--r-pill); padding:.3rem 1rem; }
-.athlete-card img{ width:80px; height:65px; object-fit:contain; }
+.athlete-card .rav{ width:6.4rem; height:6.4rem; border-radius:50%; object-fit:cover; flex:none; }
+.athlete-card .avx{ width:6.4rem; height:6.4rem; font-size:2.2rem; }
 .athlete-card .nm{ font-size:1.4rem; font-weight:500; }
 .main{ flex:1; overflow-y:auto; background:#fff; min-width:0; }
 
@@ -3450,12 +3451,12 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <span><h4>Billing &amp; Plans</h4><p>Manage your subscription and payment details</p></span>
           <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
-        <button class="action-card" onclick="toast('Opens the invite form — sends the athlete an email link')">
+        <button class="action-card" onclick="openInvite()">
           <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c1-3.5 4-5 7-5"/><path d="M19 8v6M22 11h-6"/></svg></span>
           <span><h4>Invite Athlete</h4><p>Send an invite link to a new athlete</p></span>
           <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
-        <button class="action-card" onclick="toast('Lists pending athlete connection requests — approve or decline')">
+        <button class="action-card" onclick="openRequests()">
           <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/></svg></span>
           <span><h4>View Athlete Requests</h4><p>Approve or decline pending athlete connections</p></span>
           <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
@@ -3535,6 +3536,30 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         #v-squadupload .sq-step.done{ color:var(--ink); }
         #v-squadupload .sq-step.done .n{ background:var(--s-great); color:#fff; border-color:var(--s-great); }
         #v-squadupload .sq-clickable{ cursor:pointer; }
+        /* Movement-type picker — squad-scoped clone of the single-athlete #v-upload .up-type* picker.
+           Same compact "current selection + chevron" trigger opening a menu of the 5 session types.
+           Distinct sq-type* classes so both wizards' markup can coexist in the DOM without collision. */
+        #v-squadupload .sq-typefield{ margin:.4rem 0 1.6rem; }
+        #v-squadupload .sq-typelbl{ font-size:1.25rem; font-weight:700; color:var(--muted); letter-spacing:.02em; margin-bottom:.7rem; }
+        #v-squadupload .sq-typepick{ position:relative; display:inline-block; }
+        #v-squadupload .sq-typetrigger{ display:inline-flex; align-items:center; gap:.7rem; background:#fff; border:1.5px solid var(--line); border-radius:var(--r-pill); padding:1rem 1.5rem; font-size:1.5rem; font-weight:700; color:var(--ink); cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+        #v-squadupload .sq-typetrigger .tt-ic{ display:inline-flex; align-items:center; justify-content:center; line-height:1; color:var(--ink); }
+        #v-squadupload .sq-typetrigger .tt-ic svg{ width:2rem; height:2rem; display:block; }
+        #v-squadupload .sq-typetrigger .tt-chev{ margin-left:.4rem; color:var(--muted); font-size:1.1rem; transition:transform .2s ease; }
+        #v-squadupload .sq-typepick.open .sq-typetrigger{ border-color:var(--yellow); box-shadow:0 2px 10px rgba(255,199,0,.22); }
+        #v-squadupload .sq-typepick.open .sq-typetrigger .tt-chev{ transform:rotate(180deg); }
+        #v-squadupload .sq-typemenu{ position:absolute; top:calc(100% + .6rem); left:0; z-index:40; background:#fff; border:1px solid var(--line); border-radius:var(--r-card); box-shadow:0 10px 30px rgba(0,0,0,.15); padding:.5rem; min-width:23rem; max-width:min(30rem,86vw); display:flex; flex-direction:column; gap:.15rem; }
+        #v-squadupload .sq-typemenu[hidden]{ display:none; }
+        #v-squadupload .sq-typemenu button{ display:flex; align-items:center; gap:1rem; width:100%; text-align:left; background:none; border:none; border-radius:var(--r-btn); padding:1.1rem 1.2rem; font-size:1.45rem; font-weight:500; color:var(--ink); cursor:pointer; }
+        #v-squadupload .sq-typemenu button .tm-ic{ width:2.2rem; display:inline-flex; align-items:center; justify-content:center; flex:none; color:var(--ink); }
+        #v-squadupload .sq-typemenu button .tm-ic svg{ width:2rem; height:2rem; display:block; }
+        #v-squadupload .sq-typemenu button:hover{ background:var(--fill); }
+        #v-squadupload .sq-typemenu button.on{ background:var(--fill); font-weight:700; }
+        #v-squadupload .sq-typemenu button.on::after{ content:'✓'; margin-left:auto; color:var(--gold); font-weight:800; font-size:1.5rem; }
+        /* read-only session-type confirmation on the Review step */
+        #v-squadupload .sq-typeconfirm{ display:inline-flex; align-items:center; gap:.7rem; padding:1.3rem 1.5rem; background:var(--fill); border:1.5px solid var(--line); border-radius:12px; font-size:1.45rem; font-weight:700; color:var(--ink); }
+        #v-squadupload .sq-typeconfirm .tt-ic{ display:inline-flex; align-items:center; justify-content:center; color:var(--ink); }
+        #v-squadupload .sq-typeconfirm .tt-ic svg{ width:1.9rem; height:1.9rem; display:block; }
         #v-squadupload .sq-filerow{ display:flex; align-items:center; gap:1.1rem; padding:1.2rem 1.3rem; }
         #v-squadupload .sq-filerow + .sq-filerow{ border-top:1px solid var(--line); }
         #v-squadupload .sq-thumb{ width:4.6rem; height:3.4rem; border-radius:.7rem; flex:none; background:linear-gradient(135deg,#DCE3E8,#B9C3CC); }
@@ -3697,6 +3722,19 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
   const name = id => (ROSTER.find(a=>a.id===id)||{}).name || '';
   const inits = id => (ROSTER.find(a=>a.id===id)||{}).initials || '?';
 
+  /* Session-type picker config — one value for the WHOLE batch (st.mode). The monochrome
+     line-icons are copied verbatim from the single-athlete UPTYPEICONS set so this squad
+     picker looks and feels identical to the up-type picker (no new icons, no emoji). Keyed
+     by the squad's own full-word mode values. */
+  const SQTYPES = [
+    { val:'track',      label:'Track',      icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="2.2"/><path d="M11 9l-3 4 3 2-1 5M11 9l4 1 2 3M11 9l-4 1"/></svg>' },
+    { val:'treadmill',  label:'Treadmill',  icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 10.5h9l-2 6h-9z"/><circle cx="4.5" cy="18" r="1.3"/><circle cx="12" cy="18" r="1.3"/><path d="M14.5 10.5l2.5-4.5H21"/></svg>' },
+    { val:'freeflow',   label:'FreeFlow',   icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a8 8 0 0 1 14-4"/><path d="M20 14a8 8 0 0 1-14 4"/><path d="M18 2v4h-4"/><path d="M6 22v-4h4"/></svg>' },
+    { val:'basketball', label:'Basketball', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M3 12h18"/><path d="M5.6 5.6Q12 12 5.6 18.4"/><path d="M18.4 5.6Q12 12 18.4 18.4"/></svg>' },
+    { val:'softball',   label:'Softball',   icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M6.8 5Q3.5 12 6.8 19"/><path d="M17.2 5Q20.5 12 17.2 19"/><path d="M5.4 8.6l1.6.4M5 11.6l1.7.2M5.1 14.6l1.6-.3M18.6 8.6l-1.6.4M19 11.6l-1.7.2M18.9 14.6l-1.6-.3"/></svg>' },
+  ];
+  const sqType = v => SQTYPES.find(t=>t.val===v) || SQTYPES[0];
+
   function loadSample(){
     /* confidence:'high' clips are auto-confirmed silently; 'low' single clips get a one-at-a-time
        confirm; shared clips route to the dedicated tagging screen. */
@@ -3739,8 +3777,24 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
   /* STEP 1 — Add clips. Nothing on screen but the drop action and one obvious button. */
   function entryHtml(){
+    const cur = sqType(st.mode);
     return `
       <div class="upsec" style="margin-top:1rem">
+        <!-- Session type for the WHOLE squad — set up front so it's obvious other sports are
+             supported, not buried on the Review step. Same picker pattern as the single-athlete wizard. -->
+        <div class="sq-typefield">
+          <div class="sq-typelbl">Session type · applies to the whole squad</div>
+          <div class="sq-typepick" id="sq-typepick">
+            <button type="button" class="sq-typetrigger" id="sq-typetrigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="tt-ic" id="sq-typetrigger-ic">${cur.icon}</span>
+              <span class="tt-lbl" id="sq-typetrigger-lbl">${cur.label}</span>
+              <span class="tt-chev">▾</span>
+            </button>
+            <div class="sq-typemenu" id="sq-typemenu" role="listbox" hidden>
+              ${SQTYPES.map(t=>`<button type="button" role="option" class="${t.val===st.mode?'on':''}" data-sqtype="${t.val}"><span class="tm-ic">${t.icon}</span>${t.label}</button>`).join('')}
+            </div>
+          </div>
+        </div>
         <div class="dropzones">
           <div class="dz" id="sq-dz" style="padding:3.6rem 1.6rem">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#4A504A" stroke-width="1.7"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
@@ -3808,7 +3862,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <p style="text-align:center;color:var(--s-great);font-weight:700;font-size:1.4rem;margin-top:.4rem">Everyone's matched — ready to analyze.</p>
         </div>
         <div class="frow" style="margin:1.4rem 0 .4rem">
-          <div class="fld"><label>Session type</label><select id="sq-mode">${['track','treadmill','freeflow','basketball','softball'].map(m=>`<option value="${m}" ${st.mode===m?'selected':''}>${m[0].toUpperCase()+m.slice(1)}</option>`).join('')}</select></div>
+          <div class="fld"><label>Session type</label><div class="sq-typeconfirm"><span class="tt-ic">${sqType(st.mode).icon}</span>${sqType(st.mode).label} session</div></div>
           <div class="fld"><label>Session date</label><input type="date" id="sq-date" value="${st.date}"></div>
         </div>
         <button class="btn btn-yellow btn-block" id="sq-submit" style="margin-top:1.4rem;padding:1.7rem;font-size:1.6rem">Analyze squad (${clips}) →</button>
@@ -4067,6 +4121,28 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
     wire();
   }
 
+  /* session-type dropdown open/close — toggles the existing DOM (no re-render) so the menu
+     can animate open; selecting a type re-renders via draw(). */
+  function sqTypeToggleMenu(){
+    const pick=document.getElementById('sq-typepick'), menu=document.getElementById('sq-typemenu'), trig=document.getElementById('sq-typetrigger');
+    if(!pick||!menu) return;
+    const willOpen = menu.hidden;
+    menu.hidden = !willOpen;
+    pick.classList.toggle('open', willOpen);
+    if(trig) trig.setAttribute('aria-expanded', String(willOpen));
+  }
+  function sqTypeCloseMenu(){
+    const pick=document.getElementById('sq-typepick'), menu=document.getElementById('sq-typemenu'), trig=document.getElementById('sq-typetrigger');
+    if(menu) menu.hidden = true;
+    if(pick) pick.classList.remove('open');
+    if(trig) trig.setAttribute('aria-expanded', 'false');
+  }
+  /* one-time: close the type menu on any outside click (registered once, not per draw) */
+  document.addEventListener('click', function(e){
+    const pick = document.getElementById('sq-typepick');
+    if(pick && !pick.contains(e.target)) sqTypeCloseMenu();
+  });
+
   function wire(){
     const el = document.getElementById('sq-screen');
     el.querySelectorAll('[data-goto]').forEach(n=>n.addEventListener('click', ()=>goto(n.getAttribute('data-goto'))));
@@ -4081,8 +4157,12 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
     const dz = document.getElementById('sq-dz'); if(dz) dz.addEventListener('click', loadSample);
     const sample = document.getElementById('sq-sample'); if(sample) sample.addEventListener('click', loadSample);
 
-    /* review-screen session basics */
-    const mode = document.getElementById('sq-mode'); if(mode) mode.addEventListener('change', e=>{ st.mode = e.target.value; });
+    /* entry-screen session-type picker (squad-scoped clone of the up-type picker) */
+    const tTrig = document.getElementById('sq-typetrigger');
+    if(tTrig) tTrig.addEventListener('click', e=>{ e.stopPropagation(); sqTypeToggleMenu(); });
+    el.querySelectorAll('[data-sqtype]').forEach(b=>b.addEventListener('click', ()=>{ st.mode = b.getAttribute('data-sqtype'); draw(); }));
+
+    /* review-screen session basics — session type is confirmed read-only (set on step 1) */
     const date = document.getElementById('sq-date'); if(date) date.addEventListener('change', e=>{ st.date = e.target.value; });
 
     /* confirm — one at a time */
@@ -5275,6 +5355,82 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
   </div>
 </div>
 
+<!-- ===== INVITE ATHLETE + ATHLETE REQUESTS (Settings account actions) ===== -->
+<style>
+  /* reuses .share-wrap overlay shell, .field inputs, .overlaybtns pills, .share-dests
+     action grid, and the .trow/.avx/.tinfo/.acts triage-row language from the dashboard */
+  .inv-linkrow{ display:flex; align-items:center; gap:.8rem; background:var(--fill); border:1.5px solid var(--line); border-radius:1.2rem; padding:1.1rem 1.4rem; margin:1.4rem 0 0; }
+  .inv-link{ flex:1; min-width:0; font-family:'Inter',sans-serif; font-size:1.3rem; font-weight:600; color:var(--ink); word-break:break-all; }
+  .inv-linknote{ font-size:1.2rem; color:var(--muted); margin:.9rem 0 0; }
+  .inv-qr{ margin:1.6rem auto .2rem; width:15rem; height:15rem; background:#fff; border:1.5px solid var(--line); border-radius:1.4rem; padding:1.2rem; }
+  .inv-qr svg{ width:100%; height:100%; display:block; }
+  .inv-lbl{ font-size:1.15rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-2); margin:1.6rem 0 .7rem; }
+  .reqlist{ margin-top:1.8rem; }
+  #reqs .trow.resolving{ opacity:0; transform:translateX(1.4rem); transition:opacity .24s ease, transform .24s ease; }
+  .reqempty{ text-align:center; color:var(--muted); padding:2.6rem 0 1.2rem; font-size:1.35rem; }
+</style>
+
+<div id="invite" class="ev-overlay" hidden onclick="if(event.target===this)closeInvite()">
+  <div class="share-wrap">
+    <button class="share-x" onclick="closeInvite()" aria-label="Close">✕</button>
+    <div class="share-title">Invite an athlete</div>
+    <div class="share-sub">Create their profile, then share a <b>claim link</b>. They claim it to link their own account and see their reports — coach-created, athlete-owned.</div>
+
+    <div class="inv-lbl">Athlete name</div>
+    <div class="field">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+      <input id="inv-name" type="text" placeholder="e.g. Jordan Reyes" oninput="document.getElementById('inv-linkwrap').hidden=true">
+    </div>
+
+    <div class="inv-lbl">Team / group</div>
+    <div class="overlaybtns" id="inv-team">
+      <button class="on" onclick="inviteTeam(this)">Westgate — Sprints</button>
+      <button onclick="inviteTeam(this)">Westgate — Distance</button>
+      <button onclick="inviteTeam(this)">Unassigned</button>
+    </div>
+
+    <button class="btn btn-yellow btn-block" style="margin-top:1.6rem;padding:1.4rem" onclick="genInviteLink()">Generate claim link →</button>
+
+    <div id="inv-linkwrap" hidden>
+      <div class="inv-linkrow">
+        <span class="inv-link" id="inv-link">couro.io/claim/…</span>
+      </div>
+      <p class="inv-linknote">Share by text, QR, or your team app. Claiming links the athlete's account so they see their own reports and can fill in anything you left blank.</p>
+      <div class="share-dests" style="grid-template-columns:repeat(3,1fr)">
+        <button onclick="inviteCopy()"><span class="sd-ic link"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></span>Copy link</button>
+        <button onclick="inviteQR()"><span class="sd-ic" style="background:var(--ink)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M20 14v0M17 20h4M21 17v4"/></svg></span>QR code</button>
+        <button onclick="inviteText()"><span class="sd-ic msg"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5.3A8 8 0 1 1 21 12z"/></svg></span>Text invite</button>
+      </div>
+      <div class="inv-qr" id="inv-qr" hidden>
+        <svg viewBox="0 0 29 29" shape-rendering="crispEdges" fill="#1B1F1B">
+          <path d="M0 0h7v7h-7zM1 1v5h5v-5zM2 2h3v3h-3zM22 0h7v7h-7zM23 1v5h5v-5zM24 2h3v3h-3zM0 22h7v7h-7zM1 23v5h5v-5zM2 24h3v3h-3z"/>
+          <path d="M9 0h1v1h-1zM11 0h2v1h-2zM14 1h1v2h-1zM16 0h1v3h-1zM19 0h1v1h-1zM9 2h2v1h-2zM12 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1z"/>
+          <path d="M8 9h1v1h-1zM10 9h3v1h-3zM15 9h1v1h-1zM17 9h2v1h-2zM20 9h1v1h-1zM23 9h1v2h-1zM26 9h1v1h-1zM28 9h1v2h-1z"/>
+          <path d="M9 11h1v2h-1zM13 11h2v1h-2zM16 11h1v1h-1zM19 11h1v2h-1zM21 11h1v1h-1zM25 12h1v1h-1zM27 11h1v1h-1z"/>
+          <path d="M8 13h1v1h-1zM11 13h1v2h-1zM14 13h2v1h-2zM17 13h1v2h-1zM20 13h1v1h-1zM22 13h1v3h-1zM24 13h1v1h-1zM26 13h2v1h-2z"/>
+          <path d="M9 15h2v1h-2zM13 15h1v2h-1zM15 15h1v1h-1zM19 15h1v1h-1zM25 15h1v2h-1zM28 15h1v2h-1z"/>
+          <path d="M8 17h1v2h-1zM10 17h1v1h-1zM12 17h3v1h-3zM16 17h1v1h-1zM18 17h2v1h-2zM21 17h1v2h-1zM23 17h2v1h-2zM27 17h1v2h-1z"/>
+          <path d="M9 19h1v1h-1zM11 19h1v2h-1zM14 19h1v1h-1zM16 19h2v1h-2zM19 19h1v2h-1zM24 19h1v2h-1zM26 19h1v1h-1z"/>
+          <path d="M9 22h1v1h-1zM11 22h3v1h-3zM15 22h1v3h-1zM17 22h1v1h-1zM20 22h2v1h-2zM23 22h1v2h-1zM25 22h3v1h-3zM28 22h1v1h-1z"/>
+          <path d="M9 24h2v1h-2zM12 24h2v1h-2zM18 24h1v3h-1zM21 24h1v1h-1zM26 24h1v2h-1zM28 24h1v3h-1z"/>
+          <path d="M8 26h1v3h-1zM10 26h3v1h-3zM14 26h1v1h-1zM16 26h1v3h-1zM19 26h2v1h-2zM22 26h2v1h-2zM24 27h2v1h-2z"/>
+          <path d="M11 28h2v1h-2zM19 28h1v1h-1zM21 28h2v1h-2z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="reqs" class="ev-overlay" hidden onclick="if(event.target===this)closeRequests()">
+  <div class="share-wrap">
+    <button class="share-x" onclick="closeRequests()" aria-label="Close">✕</button>
+    <div class="share-title">Athlete requests <span id="reqcount" style="color:var(--muted-2);font-weight:600"></span></div>
+    <div class="share-sub">Athletes who asked to connect to <b>you</b> — an invite code, a search, or a pending claim. Approve to link them to your roster.</div>
+    <div id="reqlist" class="reqlist"></div>
+    <div id="reqempty" class="reqempty" hidden>All caught up — no pending requests.</div>
+  </div>
+</div>
+
 <!-- ===== IN-APP CAPTURE (Tier 1 mockup: framing guide + record) ===== -->
 <div id="capture" class="cap-overlay" hidden>
   <div class="cap-view" id="cap-view">
@@ -5410,10 +5566,10 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
 <script>
 const ATHLETES = [
-  { id:1, name:"Montana Carlson", bd:"14 Mar" },
-  { id:2, name:"Jordan Reyes",    bd:"02 Sep" },
-  { id:3, name:"Aaliyah Brooks",  bd:"27 Jan" },
-  { id:4, name:"Sam Whitfield",   bd:"09 Jun" },
+  { id:1, name:"Montana Carlson", bd:"14 Mar", photo:null },
+  { id:2, name:"Jordan Reyes",    bd:"02 Sep", photo:null },
+  { id:3, name:"Aaliyah Brooks",  bd:"27 Jan", photo:null },
+  { id:4, name:"Sam Whitfield",   bd:"09 Jun", photo:null },
 ];
 const LOGO = document.querySelector('.auth-card img.logo').src;
 
@@ -5423,7 +5579,9 @@ function renderRoster(filter=""){
   box.innerHTML = list.length ? list.map(a => `
     <div class="athlete-card" data-id="${a.id}" onclick="openAthlete(${a.id}, this)">
       <span class="date">${a.bd}</span>
-      <img src="${LOGO}" alt="">
+      ${a.photo
+        ? `<img class="rav" src="${a.photo}" alt="${a.name}">`
+        : `<span class="avx">${initials(a.name)}</span>`}
       <span class="nm">${a.name}</span>
     </div>`).join("")
     : `<p style="color:var(--muted);font-size:1.35rem;text-align:center;padding:2rem 0">No athletes found matching "${filter}"</p>`;
@@ -5693,7 +5851,10 @@ function toggleNav(e){ if (e) e.stopPropagation(); const m = document.getElement
 function closeNav(){ const m = document.getElementById('navmenu'); if (m) m.hidden = true; }
 function menuGo(dest){
   closeNav();
-  if (dest === 'org' || dest === 'roster' || dest === 'hub' || dest === 'login'){ go(dest); return; }
+  /* "Program view" must deterministically land on the org-level overview tab, not
+     whatever tab #scr-org was last left on (e.g. Teams, from openTeamView() elsewhere) */
+  if (dest === 'org'){ go('org'); orgTabByKey('overview'); return; }
+  if (dest === 'roster' || dest === 'hub' || dest === 'login'){ go(dest); return; }
   ['scr-login','scr-hub','scr-org','scr-roster','scr-reveals'].forEach(id => { const el=document.getElementById(id); if (el) el.hidden = true; });
   document.getElementById('scr-app').hidden = false;
   show(dest);
@@ -5967,6 +6128,68 @@ function shareTo(kind){
 }
 
 function initials(n){ return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+
+/* ---- Invite Athlete: same claim-link model as previewInvites(), built out ---- */
+function openInvite(){
+  document.getElementById('inv-name').value = '';
+  document.getElementById('inv-linkwrap').hidden = true;
+  document.getElementById('inv-qr').hidden = true;
+  document.getElementById('invite').hidden = false;
+}
+function closeInvite(){ document.getElementById('invite').hidden = true; }
+function inviteTeam(btn){ btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on')); btn.classList.add('on'); }
+function genInviteLink(){
+  const name = (document.getElementById('inv-name').value || '').trim();
+  if (!name){ toast('Enter the athlete’s name first'); document.getElementById('inv-name').focus(); return; }
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'athlete';
+  const code = Math.random().toString(36).slice(2,6);
+  document.getElementById('inv-link').textContent = 'couro.io/claim/' + slug + '-' + code;
+  document.getElementById('inv-qr').hidden = true;
+  document.getElementById('inv-linkwrap').hidden = false;
+  toast('Claim link ready for <b>' + name + '</b> — share by text, QR, or your team app');
+}
+function inviteCopy(){ toast('Link copied — text it or drop it in your team app'); }
+function inviteQR(){ const q = document.getElementById('inv-qr'); q.hidden = !q.hidden; }
+function inviteText(){ toast('Opening Messages — claim link attached'); }
+
+/* ---- View Athlete Requests: pending connect requests awaiting approval ---- */
+const PENDING_REQUESTS = [
+  { id:'r1', name:'Tyler Nguyen',  ctx:'Requested via invite code · Westgate — Sprints' },
+  { id:'r2', name:'Bri Sanchez',   ctx:'Wants to join Westgate — Sprints' },
+  { id:'r3', name:'Marcus Okafor', ctx:'Searched for you · claim pending your review' },
+  { id:'r4', name:'Zoe Patel',     ctx:'Requested via invite code · Westgate — Distance' },
+];
+let requestActiveIds = PENDING_REQUESTS.map(r => r.id);
+function openRequests(){ renderRequests(); document.getElementById('reqs').hidden = false; }
+function closeRequests(){ document.getElementById('reqs').hidden = true; }
+function renderRequests(){
+  const active = PENDING_REQUESTS.filter(r => requestActiveIds.includes(r.id));
+  document.getElementById('reqcount').textContent = active.length ? '· ' + active.length + ' pending' : '';
+  document.getElementById('reqlist').innerHTML = active.map(r =>
+    '<div class="trow" id="req-' + r.id + '">'
+    + '<span class="avx">' + initials(r.name) + '</span>'
+    + '<span class="tinfo"><b>' + r.name + '</b><small>' + r.ctx + '</small></span>'
+    + '<span class="acts"><button onclick="declineReq(\'' + r.id + '\')">Decline</button>'
+    + '<button class="pri" onclick="approveReq(\'' + r.id + '\')">Approve</button></span>'
+    + '</div>').join('');
+  document.getElementById('reqempty').hidden = active.length > 0;
+}
+function resolveRequest(id){
+  const row = document.getElementById('req-' + id);
+  if (row) row.classList.add('resolving');
+  requestActiveIds = requestActiveIds.filter(x => x !== id); // immutable: new array
+  setTimeout(renderRequests, 260);
+}
+function approveReq(id){
+  const r = PENDING_REQUESTS.find(x => x.id === id);
+  resolveRequest(id);
+  toast('<b>' + (r ? r.name : 'Athlete') + '</b> approved — added to your roster');
+}
+function declineReq(id){
+  const r = PENDING_REQUESTS.find(x => x.id === id);
+  resolveRequest(id);
+  toast('Declined ' + (r ? r.name : 'request'));
+}
 
 /* ---- roster creation: paste names -> one profile each ---- */
 const SAMPLE_ROSTER = ['Marcus Webb','Chloe Tan','Devon Hart','Sam Brooks','Priya Nguyen','Leo Kim','Nia Foster','Andre Cole','Jordan Ellis','Elena Diaz','Maya Reyes','Tariq Park'];
