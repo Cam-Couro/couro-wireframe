@@ -3456,11 +3456,6 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <span><h4>Invite Athlete</h4><p>Send an invite link to a new athlete</p></span>
           <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
-        <button class="action-card" onclick="openRequests()">
-          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/></svg></span>
-          <span><h4>View Athlete Requests</h4><p>Approve or decline pending athlete connections</p></span>
-          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
         <button class="action-card danger" onclick="toast('Double-confirmation modal, then <b>permanent</b> account deletion')">
           <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--down)" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></span>
           <span><h4>Delete Account</h4><p>Permanently remove your account and data</p></span>
@@ -5365,9 +5360,6 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
   .inv-qr{ margin:1.6rem auto .2rem; width:15rem; height:15rem; background:#fff; border:1.5px solid var(--line); border-radius:1.4rem; padding:1.2rem; }
   .inv-qr svg{ width:100%; height:100%; display:block; }
   .inv-lbl{ font-size:1.15rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-2); margin:1.6rem 0 .7rem; }
-  .reqlist{ margin-top:1.8rem; }
-  #reqs .trow.resolving{ opacity:0; transform:translateX(1.4rem); transition:opacity .24s ease, transform .24s ease; }
-  .reqempty{ text-align:center; color:var(--muted); padding:2.6rem 0 1.2rem; font-size:1.35rem; }
 </style>
 
 <div id="invite" class="ev-overlay" hidden onclick="if(event.target===this)closeInvite()">
@@ -5418,16 +5410,6 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         </svg>
       </div>
     </div>
-  </div>
-</div>
-
-<div id="reqs" class="ev-overlay" hidden onclick="if(event.target===this)closeRequests()">
-  <div class="share-wrap">
-    <button class="share-x" onclick="closeRequests()" aria-label="Close">✕</button>
-    <div class="share-title">Athlete requests <span id="reqcount" style="color:var(--muted-2);font-weight:600"></span></div>
-    <div class="share-sub">Athletes who asked to connect to <b>you</b> — an invite code, a search, or a pending claim. Approve to link them to your roster.</div>
-    <div id="reqlist" class="reqlist"></div>
-    <div id="reqempty" class="reqempty" hidden>All caught up — no pending requests.</div>
   </div>
 </div>
 
@@ -6151,45 +6133,6 @@ function genInviteLink(){
 function inviteCopy(){ toast('Link copied — text it or drop it in your team app'); }
 function inviteQR(){ const q = document.getElementById('inv-qr'); q.hidden = !q.hidden; }
 function inviteText(){ toast('Opening Messages — claim link attached'); }
-
-/* ---- View Athlete Requests: pending connect requests awaiting approval ---- */
-const PENDING_REQUESTS = [
-  { id:'r1', name:'Tyler Nguyen',  ctx:'Requested via invite code · Westgate — Sprints' },
-  { id:'r2', name:'Bri Sanchez',   ctx:'Wants to join Westgate — Sprints' },
-  { id:'r3', name:'Marcus Okafor', ctx:'Searched for you · claim pending your review' },
-  { id:'r4', name:'Zoe Patel',     ctx:'Requested via invite code · Westgate — Distance' },
-];
-let requestActiveIds = PENDING_REQUESTS.map(r => r.id);
-function openRequests(){ renderRequests(); document.getElementById('reqs').hidden = false; }
-function closeRequests(){ document.getElementById('reqs').hidden = true; }
-function renderRequests(){
-  const active = PENDING_REQUESTS.filter(r => requestActiveIds.includes(r.id));
-  document.getElementById('reqcount').textContent = active.length ? '· ' + active.length + ' pending' : '';
-  document.getElementById('reqlist').innerHTML = active.map(r =>
-    '<div class="trow" id="req-' + r.id + '">'
-    + '<span class="avx">' + initials(r.name) + '</span>'
-    + '<span class="tinfo"><b>' + r.name + '</b><small>' + r.ctx + '</small></span>'
-    + '<span class="acts"><button onclick="declineReq(\'' + r.id + '\')">Decline</button>'
-    + '<button class="pri" onclick="approveReq(\'' + r.id + '\')">Approve</button></span>'
-    + '</div>').join('');
-  document.getElementById('reqempty').hidden = active.length > 0;
-}
-function resolveRequest(id){
-  const row = document.getElementById('req-' + id);
-  if (row) row.classList.add('resolving');
-  requestActiveIds = requestActiveIds.filter(x => x !== id); // immutable: new array
-  setTimeout(renderRequests, 260);
-}
-function approveReq(id){
-  const r = PENDING_REQUESTS.find(x => x.id === id);
-  resolveRequest(id);
-  toast('<b>' + (r ? r.name : 'Athlete') + '</b> approved — added to your roster');
-}
-function declineReq(id){
-  const r = PENDING_REQUESTS.find(x => x.id === id);
-  resolveRequest(id);
-  toast('Declined ' + (r ? r.name : 'request'));
-}
 
 /* ---- roster creation: paste names -> one profile each ---- */
 const SAMPLE_ROSTER = ['Marcus Webb','Chloe Tan','Devon Hart','Sam Brooks','Priya Nguyen','Leo Kim','Nia Foster','Andre Cole','Jordan Ellis','Elena Diaz','Maya Reyes','Tariq Park'];
