@@ -2276,6 +2276,22 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         #v-dash .dash-hint{ margin-top:1.4rem; color:var(--muted); font-size:1.3rem; font-weight:400; }
         #v-dash .dash-hint a{ color:var(--ink); font-weight:600; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
         @media (max-width:640px){ #v-dash .dash-scoreboard{ grid-template-columns:1fr; } }
+        /* ---- account-wide status map — a roster-scoped clone of the org quadrant scatter
+           (the .statusmap on the org-overview screen). Distinct dash-statusmap / dash-sm-*
+           prefixes guarantee zero collision with the unscoped global .statusmap / .sm-* and
+           with the squad wizard's .sq-statusmap / .sq-sm-*. Plots EVERY athlete in SM_DATA. ---- */
+        #v-dash .dash-mapcard{ border:1.5px solid var(--line); border-radius:var(--r-card); background:var(--cream); padding:1.3rem 1.2rem 1.4rem; margin:1.6rem 0 2rem; }
+        #v-dash .dash-maphd{ display:flex; align-items:baseline; gap:.7rem; flex-wrap:wrap; margin:0 .2rem .3rem; }
+        #v-dash .dash-mapttl{ font-size:1.5rem; font-weight:700; color:var(--ink); }
+        #v-dash .dash-mapsub{ font-size:1.15rem; color:var(--muted-2); font-weight:500; }
+        #v-dash .dash-statusmap{ width:100%; max-width:560px; height:auto; display:block; margin:.5rem auto 0; }
+        #v-dash .dash-statusmap g[onclick]{ transition:opacity .12s; cursor:pointer; }
+        #v-dash .dash-statusmap g[onclick]:hover{ opacity:.7; }
+        #v-dash .dash-sm-legend{ display:flex; gap:1.6rem; justify-content:center; font-size:1.2rem; color:var(--muted); font-weight:600; margin-top:.6rem; }
+        #v-dash .dash-sm-legend .dash-sm-key{ display:inline-block; width:1.05rem; height:1.05rem; border-radius:50%; margin-right:.35rem; vertical-align:middle; }
+        #v-dash .dash-patgrid{ margin:.4rem 0 .6rem; }
+        #v-dash .dash-patviz svg{ width:100%; height:118px; display:block; }
+        @media (max-width:640px){ #v-dash .dash-mapcard{ padding:1.1rem .8rem 1.2rem; } }
       </style>
       <div class="dash-land" id="dash-land"><!-- populated by renderDashLanding() --></div>
     </div>
@@ -3268,14 +3284,16 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
              selection + chevron, tapping opens a short menu of the 5 movement types. */
           #v-upload .up-typepick{ position:relative; display:inline-block; }
           #v-upload .up-typetrigger{ display:inline-flex; align-items:center; gap:.7rem; background:#fff; border:1.5px solid var(--line); border-radius:var(--r-pill); padding:1rem 1.5rem; font-size:1.5rem; font-weight:700; color:var(--ink); cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-          #v-upload .up-typetrigger .tt-ic{ font-size:1.7rem; line-height:1; }
+          #v-upload .up-typetrigger .tt-ic{ display:inline-flex; align-items:center; justify-content:center; line-height:1; color:var(--ink); }
+          #v-upload .up-typetrigger .tt-ic svg{ width:2rem; height:2rem; display:block; }
           #v-upload .up-typetrigger .tt-chev{ margin-left:.4rem; color:var(--muted); font-size:1.1rem; transition:transform .2s ease; }
           #v-upload .up-typepick.open .up-typetrigger{ border-color:var(--yellow); box-shadow:0 2px 10px rgba(255,199,0,.22); }
           #v-upload .up-typepick.open .up-typetrigger .tt-chev{ transform:rotate(180deg); }
           #v-upload .up-typemenu{ position:absolute; top:calc(100% + .6rem); left:0; z-index:40; background:#fff; border:1px solid var(--line); border-radius:var(--r-card); box-shadow:0 10px 30px rgba(0,0,0,.15); padding:.5rem; min-width:23rem; max-width:min(30rem,86vw); display:flex; flex-direction:column; gap:.15rem; }
           #v-upload .up-typemenu[hidden]{ display:none; }
           #v-upload .up-typemenu button{ display:flex; align-items:center; gap:1rem; width:100%; text-align:left; background:none; border:none; border-radius:var(--r-btn); padding:1.1rem 1.2rem; font-size:1.45rem; font-weight:500; color:var(--ink); cursor:pointer; }
-          #v-upload .up-typemenu button .tm-ic{ font-size:1.7rem; width:2.2rem; text-align:center; flex:none; }
+          #v-upload .up-typemenu button .tm-ic{ width:2.2rem; display:inline-flex; align-items:center; justify-content:center; flex:none; color:var(--ink); }
+          #v-upload .up-typemenu button .tm-ic svg{ width:2rem; height:2rem; display:block; }
           #v-upload .up-typemenu button:hover{ background:var(--fill); }
           #v-upload .up-typemenu button.on{ background:var(--fill); font-weight:700; }
           #v-upload .up-typemenu button.on::after{ content:'✓'; margin-left:auto; color:var(--gold); font-weight:800; font-size:1.5rem; }
@@ -3318,12 +3336,12 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <div class="lbl">1 · What are they doing?</div>
             <div class="up-typepick" id="up-typepick">
               <button type="button" class="up-typetrigger" id="up-typetrigger" onclick="upTypeToggleMenu(event)" aria-haspopup="listbox" aria-expanded="false">
-                <span class="tt-ic" id="up-typetrigger-ic">⚡</span>
+                <span class="tt-ic" id="up-typetrigger-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="2.2"/><path d="M11 9l-3 4 3 2-1 5M11 9l4 1 2 3M11 9l-4 1"/></svg></span>
                 <span class="tt-lbl" id="up-typetrigger-lbl">Track</span>
                 <span class="tt-chev">▾</span>
               </button>
               <div class="up-typemenu" id="uptypes" role="listbox" hidden>
-                <button class="on" role="option" onclick="upType(this,'track')"><span class="tm-ic">⚡</span>Track</button><button role="option" onclick="upType(this,'tread')"><span class="tm-ic">🎚️</span>Treadmill</button><button role="option" onclick="upType(this,'flow')"><span class="tm-ic">🔄</span>FreeFlow</button><button role="option" onclick="upType(this,'bball')"><span class="tm-ic">↔️</span>Basketball</button><button role="option" onclick="upType(this,'soft')"><span class="tm-ic">🥎</span>Softball</button>
+                <button class="on" role="option" onclick="upType(this,'track')"><span class="tm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="2.2"/><path d="M11 9l-3 4 3 2-1 5M11 9l4 1 2 3M11 9l-4 1"/></svg></span>Track</button><button role="option" onclick="upType(this,'tread')"><span class="tm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 10.5h9l-2 6h-9z"/><circle cx="4.5" cy="18" r="1.3"/><circle cx="12" cy="18" r="1.3"/><path d="M14.5 10.5l2.5-4.5H21"/></svg></span>Treadmill</button><button role="option" onclick="upType(this,'flow')"><span class="tm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a8 8 0 0 1 14-4"/><path d="M20 14a8 8 0 0 1-14 4"/><path d="M18 2v4h-4"/><path d="M6 22v-4h4"/></svg></span>FreeFlow</button><button role="option" onclick="upType(this,'bball')"><span class="tm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M3 12h18"/><path d="M5.6 5.6Q12 12 5.6 18.4"/><path d="M18.4 5.6Q12 12 18.4 18.4"/></svg></span>Basketball</button><button role="option" onclick="upType(this,'soft')"><span class="tm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M6.8 5Q3.5 12 6.8 19"/><path d="M17.2 5Q20.5 12 17.2 19"/><path d="M5.4 8.6l1.6.4M5 11.6l1.7.2M5.1 14.6l1.6-.3M18.6 8.6l-1.6.4M19 11.6l-1.7.2M18.9 14.6l-1.6-.3"/></svg></span>Softball</button>
               </div>
             </div>
             <div class="upfast" style="margin-top:1.6rem">
@@ -3603,11 +3621,19 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
            Distinct sq-statusmap / sq-sm-* prefixes guarantee zero collision with the unscoped global
            .statusmap / .sm-* used by the org-overview screen. Only two tones exist in this data
            (clear / watch), so the legend is deliberately two entries, not three. ---- */
-        #v-squadupload .sq-mapcard{ border:1.5px solid var(--line); border-radius:var(--r-card); background:var(--cream); padding:1.2rem 1rem 1.3rem; margin-top:1.2rem; }
+        #v-squadupload .sq-mapcard{ border:1.5px solid var(--line); border-radius:var(--r-card); background:var(--cream); padding:1.2rem 1rem 1.3rem; margin-top:1.2rem; box-shadow:0 1px 2px rgba(20,20,19,.04), 0 6px 18px rgba(20,20,19,.06); }
         #v-squadupload .sq-mapttl{ font-size:1.05rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-2); text-align:center; }
         #v-squadupload .sq-statusmap{ width:100%; max-width:460px; height:auto; display:block; margin:.4rem auto 0; }
-        #v-squadupload .sq-statusmap g[onclick]{ transition:opacity .12s; cursor:pointer; }
-        #v-squadupload .sq-statusmap g[onclick]:hover{ opacity:.72; }
+        /* dots: default depth + an unmistakable tap/hover affordance (scale-up + glow, not just a dim) */
+        #v-squadupload .sq-statusmap g[onclick]{ cursor:pointer; transform-box:fill-box; transform-origin:center; filter:drop-shadow(0 1px 1.5px rgba(20,20,19,.18)); transition:transform .18s cubic-bezier(.34,1.56,.64,1), filter .18s ease, opacity .15s ease; }
+        #v-squadupload .sq-statusmap g[onclick]:hover,
+        #v-squadupload .sq-statusmap g[onclick]:active,
+        #v-squadupload .sq-statusmap g[onclick]:focus-visible{ transform:scale(1.22); filter:drop-shadow(0 2px 6px rgba(20,20,19,.4)); outline:none; }
+        /* staggered entrance — dots land into position; gated to motion-OK + the .sq-animating trigger */
+        @media (prefers-reduced-motion: no-preference){
+          #v-squadupload .sq-statusmap.sq-animating g[onclick]{ opacity:0; animation:sqDotIn .5s cubic-bezier(.34,1.56,.64,1) both; animation-delay:calc(var(--i,0) * 55ms); }
+        }
+        @keyframes sqDotIn{ 0%{ opacity:0; transform:scale(.35); } 55%{ opacity:1; } 100%{ opacity:1; transform:scale(1); } }
         #v-squadupload .sq-sm-legend{ display:flex; gap:1.6rem; justify-content:center; font-size:1.2rem; color:var(--muted); font-weight:600; margin-top:.5rem; }
         #v-squadupload .sq-sm-legend .sq-sm-key{ display:inline-block; width:1.05rem; height:1.05rem; border-radius:50%; margin-right:.35rem; vertical-align:middle; }
         #v-squadupload .sq-sm-insight{ font-size:1.25rem; color:var(--muted); font-weight:500; text-align:center; margin-top:.5rem; line-height:1.4; }
@@ -3900,7 +3926,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       const ySpan = yHi > yLo ? yHi - yLo : 1;
       const mapY = s => PY1 - YPAD - ((s - yLo)/ySpan) * (PY1-PY0-2*YPAD);
 
-      const dots = done.map(r=>{
+      const dots = done.map((r,i)=>{
         const cx = mapX(magOf(r)).toFixed(1);
         const cy = mapY(r.score).toFixed(1);
         const warn = r.tone==='warn';
@@ -3910,7 +3936,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         const nearRight = +cx > PX1 - 70;
         const lx = (nearRight ? +cx - 15 : +cx + 15).toFixed(1);
         const anchor = nearRight ? 'end' : 'start';
-        return `<g onclick="openAthleteByName('${esc}')" style="cursor:pointer"><title>${name(r.id)} — tap to open</title>${halo}<circle cx="${cx}" cy="${cy}" r="11" fill="${hue}" stroke="#fff" stroke-width="1.5"/><text x="${lx}" y="${(+cy+4).toFixed(1)}" text-anchor="${anchor}" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">${first(r.id)}</text></g>`;
+        return `<g onclick="openAthleteByName('${esc}')" tabindex="0" style="cursor:pointer;--i:${i}"><title>${name(r.id)} — tap to open</title>${halo}<circle cx="${cx}" cy="${cy}" r="11" fill="${hue}" stroke="#fff" stroke-width="1.5"/><text x="${lx}" y="${(+cy+4).toFixed(1)}" text-anchor="${anchor}" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">${first(r.id)}</text></g>`;
       }).join('');
 
       const thriving = done.filter(r=>r.tone!=='warn' && dir(r.delta) > 0).length;
@@ -3921,7 +3947,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
       return `<div class="sq-mapcard">
           <div class="sq-mapttl">Where the squad sits</div>
-          <svg class="sq-statusmap" viewBox="0 0 460 320" role="img" aria-label="Squad map: each athlete plotted by session trend and strength, colored by whether they're clear or one to watch">
+          <svg class="sq-statusmap sq-animating" viewBox="0 0 460 320" role="img" aria-label="Squad map: each athlete plotted by session trend and strength, colored by whether they're clear or one to watch">
             <rect x="58" y="26" width="186" height="122" fill="#FBF3DD" opacity=".5"/>
             <rect x="244" y="26" width="186" height="122" fill="#E7F6EE" opacity=".6"/>
             <rect x="58" y="148" width="186" height="122" fill="#FBE4E1" opacity=".5"/>
@@ -4044,6 +4070,14 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
   function wire(){
     const el = document.getElementById('sq-screen');
     el.querySelectorAll('[data-goto]').forEach(n=>n.addEventListener('click', ()=>goto(n.getAttribute('data-goto'))));
+    /* squad map entrance — dots stagger in via the .sq-animating CSS trigger, then drop the class
+       so the animation's fill state stops pinning transform and hover scale/glow works freely.
+       (Under prefers-reduced-motion the CSS animation is a no-op; removing the class is harmless.) */
+    const smap = el.querySelector('.sq-statusmap.sq-animating');
+    if(smap){
+      const dotCount = smap.querySelectorAll('g[onclick]').length;
+      setTimeout(()=>smap.classList.remove('sq-animating'), 500 + dotCount*55 + 80);
+    }
     const dz = document.getElementById('sq-dz'); if(dz) dz.addEventListener('click', loadSample);
     const sample = document.getElementById('sq-sample'); if(sample) sample.addEventListener('click', loadSample);
 
@@ -5418,10 +5452,14 @@ function openAthleteByName(name){
   window.scrollTo(0,0);
   toast('Opening <b>' + name + '</b>’s profile');
 }
-/* ---- account landing (#v-dash): triage of who needs your eyes ----
-   Everything is derived from SM_DATA (the account status-map roster): the counts,
-   the names, and the one-line notes all come straight from that structure so nothing
-   is invented. Rows tap through to the athlete profile via openAthleteByName(). */
+/* ---- account landing (#v-dash): the rich, account-wide overview a coach lands on ----
+   Everything is derived from SM_DATA (the account status-map roster): the map dots, the
+   quantitative strip, the recurring movement-pattern cards, and the triage list all read
+   straight from that structure so nothing is invented. The centerpiece is a roster-scoped
+   clone of the org-overview quadrant scatter (.statusmap) — same visual grammar, every
+   athlete plotted, distinct dash-statusmap / dash-sm-* classes so there is zero collision
+   with the global org .statusmap or the squad wizard's .sq-statusmap. Dots and cards tap
+   through to the athlete profile via openAthleteByName(). */
 function renderDashLanding(){
   const el = document.getElementById('dash-land');
   if (!el || typeof SM_DATA === 'undefined') return;
@@ -5431,7 +5469,10 @@ function renderDashLanding(){
   const clear   = names.filter(n => SM_DATA[n].risk === 'clear');
   const need    = flagged.concat(watch);   // flagged first, then watch
   const initials = n => n.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-  const esc = n => n.replace(/'/g, "\\'");
+  const first    = n => n.split(' ')[0];
+  const esc      = n => n.replace(/'/g, "\\'");
+  const overall  = n => { const a=SM_DATA[n]; return Math.round((a.elas+a.gct+a.sym+a.trunk+a.decel+a.knee)/6); };
+  const HUE = { clear:'#00CC00', watch:'#E0A400', flagged:'#DC4A3F' };
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const mons = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const d = new Date();
@@ -5439,6 +5480,120 @@ function renderDashLanding(){
   const statusLine = need.length
     ? `<b>${need.length} of your ${names.length} athletes</b> need a look — ${flagged.length} flagged, ${watch.length} to watch`
     : `<b>All ${names.length} athletes are clear</b> — nothing needs your eyes right now`;
+
+  /* ---- STATUS MAP — every athlete plotted by trend (x) × strength (y), colored by risk.
+     Reuses SM_DATA's own x,y coords (already in the org 560×400 plot space) and the exact
+     quadrant rects / labels / axis grammar from the org .statusmap, generated for the whole
+     roster. Flagged dots get the same faint halo ring as the org map. Labels only on the
+     athletes worth naming (flags, watches, and the model) to keep the field readable. ---- */
+  const labelSet = new Set(need.concat(clear.slice().sort((a,b)=>overall(b)-overall(a)).slice(0,1)));
+  const dots = names.map(n => {
+    const a = SM_DATA[n], cx = a.x, cy = a.y, hue = HUE[a.risk] || HUE.clear;
+    const r = a.risk === 'flagged' ? 9 : 8;
+    const halo = a.risk === 'flagged'
+      ? `<circle cx="${cx}" cy="${cy}" r="14" fill="none" stroke="${hue}" stroke-width="1.5" opacity=".4"/>` : '';
+    let label = '';
+    if (labelSet.has(n)) {
+      const nearRight = cx > 460;
+      const lx = nearRight ? cx - 12 : cx + 12;
+      const anchor = nearRight ? 'end' : 'start';
+      label = `<text x="${lx}" y="${cy+4}" text-anchor="${anchor}" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">${first(n)}</text>`;
+    }
+    return `<g onclick="openAthleteByName('${esc(n)}')" style="cursor:pointer"><title>${n} — tap to open</title>${halo}<circle cx="${cx}" cy="${cy}" r="${r}" fill="${hue}" stroke="#fff" stroke-width="1.5"/>${label}</g>`;
+  }).join('');
+  const flagStr = flagged.length
+    ? flagged.map(n => `<b>${first(n)}</b> (${SM_DATA[n].note})`).join(' and ')
+    : '';
+  const insight = flagged.length
+    ? `<span class="ico">💡</span><span>Most of your roster clusters top-right — <b>thriving or developing.</b> ${flagged.length} flagged this week: ${flagStr}.</span>`
+    : `<span class="ico">💡</span><span>Whole roster clusters top-right — <b>thriving or developing.</b> ${watch.length} to keep an eye on, none flagged.</span>`;
+  const mapCard = `
+    <div class="dash-mapcard">
+      <div class="dash-maphd"><span class="dash-mapttl">Where every athlete stands</span><span class="dash-mapsub">trend × strength · color = risk · tap a dot</span></div>
+      <svg class="dash-statusmap" viewBox="0 0 560 400" role="img" aria-label="Account status map: every athlete plotted by 30-day trend and strength, colored by injury risk">
+        <rect x="60" y="30" width="240" height="155" fill="#FBF3DD" opacity=".5"/>
+        <rect x="300" y="30" width="240" height="155" fill="#E7F6EE" opacity=".6"/>
+        <rect x="60" y="185" width="240" height="155" fill="#FBE4E1" opacity=".5"/>
+        <rect x="300" y="185" width="240" height="155" fill="#F1F3F5" opacity=".6"/>
+        <line x1="300" y1="30" x2="300" y2="340" stroke="#D8D2C4" stroke-width="1"/>
+        <line x1="60" y1="185" x2="540" y2="185" stroke="#D8D2C4" stroke-width="1"/>
+        <rect x="60" y="30" width="480" height="310" fill="none" stroke="#E5DFCF" stroke-width="1.5"/>
+        <g font-family="Inter,sans-serif" font-weight="800" letter-spacing="1">
+          <text x="72" y="50" font-size="10" fill="#B8860B">SLIPPING</text>
+          <text x="528" y="50" font-size="10" fill="#3f9a57" text-anchor="end">THRIVING</text>
+          <text x="72" y="332" font-size="10" fill="#DC4A3F">ACT NOW</text>
+          <text x="528" y="332" font-size="10" fill="#8A908A" text-anchor="end">DEVELOPING</text>
+        </g>
+        <g font-family="Inter,sans-serif" font-weight="700" fill="#9BA1AC" font-size="9.5">
+          <text x="64" y="362">◂ trending down</text>
+          <text x="536" y="362" text-anchor="end">trending up ▸</text>
+          <text x="50" y="40" text-anchor="end" transform="rotate(-90 50 40)">◂ needs work</text>
+          <text x="50" y="335" text-anchor="end" transform="rotate(-90 50 335)">strong ▸</text>
+        </g>
+        ${dots}
+      </svg>
+      <div class="dash-sm-legend">
+        <span><span class="dash-sm-key" style="background:#00CC00"></span>Clear</span>
+        <span><span class="dash-sm-key" style="background:#E0A400"></span>Watch</span>
+        <span><span class="dash-sm-key" style="background:#DC4A3F"></span>Flagged</span>
+      </div>
+      <div class="insight" style="margin:.9rem auto 0;max-width:none">${insight}</div>
+    </div>`;
+
+  /* ---- MOVEMENT-PATTERN CARDS — genuine account-wide signal, not per-athlete noise.
+     Group the roster by SM_DATA[].pat and only surface a theme shared by ≥2 athletes.
+     Risk theme = the pattern carrying the most non-clear athletes (here Crossover-lander,
+     which every flagged/watch athlete shares); strength theme = an all-clear pattern led by
+     the model. Reuses the global .patcard component (risk / edge) like the org & squad
+     screens; the viz is a lightweight inline-SVG score strip (no body-heat assets). ---- */
+  const groups = {};
+  names.forEach(n => { (groups[SM_DATA[n].pat] = groups[SM_DATA[n].pat] || []).push(n); });
+  const nonClear = g => g.filter(n => SM_DATA[n].risk !== 'clear').length;
+  const riskTheme = Object.values(groups)
+    .filter(g => g.length >= 2 && nonClear(g) >= 2)
+    .sort((a,b) => nonClear(b) - nonClear(a))[0];
+  const strengthTheme = Object.values(groups)
+    .filter(g => g.length >= 2 && nonClear(g) === 0)
+    .sort((a,b) => (b.reduce((s,n)=>s+overall(n),0)/b.length) - (a.reduce((s,n)=>s+overall(n),0)/a.length))[0];
+
+  const allOv = names.map(overall);
+  const lo = Math.min(...allOv) - 5, hi = Math.max(...allOv) + 5, span = hi > lo ? hi - lo : 1;
+  const px = v => (30 + ((v - lo)/span) * 260).toFixed(1);
+  const patViz = (g, hue) => {
+    const ctx = names.filter(n => g.indexOf(n) < 0)
+      .map(n => `<circle cx="${px(overall(n))}" cy="72" r="5" fill="#D7D8DB"/>`).join('');
+    const marks = g.map(n => `<circle cx="${px(overall(n))}" cy="72" r="12" fill="${hue}"/><text x="${px(overall(n))}" y="76" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="Inter,sans-serif">${initials(n)}</text><text x="${px(overall(n))}" y="50" text-anchor="middle" font-size="12" font-weight="700" fill="${hue}" font-family="Inter,sans-serif">${overall(n)}</text>`).join('');
+    return `<svg viewBox="0 0 320 118" role="img" aria-label="Where these ${g.length} athletes sit against the rest of the roster"><line x1="24" y1="72" x2="296" y2="72" stroke="#E4E2DA" stroke-width="2"/><text x="24" y="100" font-size="10" fill="#9BA1AC" font-family="Inter,sans-serif">lower</text><text x="296" y="100" text-anchor="end" font-size="10" fill="#9BA1AC" font-family="Inter,sans-serif">stronger</text>${ctx}${marks}</svg>`;
+  };
+  const patCard = (g, kind) => {
+    const risk = kind === 'risk';
+    const hue = risk ? '#C0920F' : '#059669';
+    const chip = SM_DATA[g[0]].pat;
+    const target = risk
+      ? g.slice().sort((a,b)=>overall(a)-overall(b))[0]        // weakest / most at risk
+      : g.slice().sort((a,b)=>overall(b)-overall(a))[0];       // the model
+    const fnames = g.map(first);
+    const nameList = fnames.length === 2 ? `${fnames[0]} &amp; ${fnames[1]}` : `${fnames.slice(0,-1).join(', ')} &amp; ${fnames[fnames.length-1]}`;
+    const avs = g.map(n => `<span class="avx ${risk?'md':'ok'}">${initials(n)}</span>`).join('');
+    return `<div class="patcard ${risk?'risk':'edge'} dash-patcard" onclick="openAthleteByName('${esc(target)}')">
+        <div class="pat-k">${risk?'⚠ Watch':'★ Strength'} · <span class="pat-count">${g.length} of your roster</span></div>
+        <div class="pat-name">${chip}</div>
+        <div class="pat-viz dash-patviz">${patViz(g, hue)}</div>
+        <p class="pat-cap"><b>${nameList} share this read.</b> ${risk?'Every flagged and watched athlete lands here — it is the account-wide theme to coach.':'Your model group — clean, stacked mechanics across the board.'}</p>
+        <div class="pat-foot">
+          <div class="pat-ath">${avs}</div>
+          <span class="pat-go">Open ${first(target)} ▸</span>
+        </div>
+      </div>`;
+  };
+  const themeCards = [];
+  if (riskTheme) themeCards.push(patCard(riskTheme, 'risk'));
+  if (strengthTheme) themeCards.push(patCard(strengthTheme, 'strength'));
+  const patternSec = themeCards.length
+    ? `<div class="sec">What recurs across your roster</div><div class="patgrid dash-patgrid">${themeCards.join('')}</div>`
+    : '';
+
+  /* ---- TRIAGE — the direct action list, richest treatment (avatar rows), tap to review. ---- */
   const rows = need.map(n => {
     const a = SM_DATA[n];
     const sev = a.risk === 'flagged' ? 'hi' : 'md';
@@ -5453,6 +5608,7 @@ function renderDashLanding(){
        <div class="card triage-hero">${rows}</div>
        <p class="dash-hint">Or open any athlete from <a onclick="openAthletes()">your full roster</a> to see their sessions.</p>`
     : `<p class="dash-hint">Open any athlete from <a onclick="openAthletes()">your full roster</a> to see their sessions.</p>`;
+
   el.innerHTML = `
     <div class="today-hero">
       <div>
@@ -5462,6 +5618,8 @@ function renderDashLanding(){
       </div>
       <button class="btn btn-yellow" onclick="show('squadupload')">＋ &nbsp;Upload a session</button>
     </div>
+    ${mapCard}
+    ${patternSec}
     <div class="dash-scoreboard">
       <div class="dash-sbtile"><div class="dash-sbk">Roster</div><div class="dash-sbh">${names.length}</div><div class="dash-sbs">athletes across your account</div></div>
       <div class="dash-sbtile risk"><div class="dash-sbk">Needs you</div><div class="dash-sbh">${need.length}</div><div class="dash-sbs">${flagged.length} flagged · ${watch.length} to watch</div></div>
@@ -6145,6 +6303,14 @@ function captureUse(){
   if (side && !side.classList.contains('filled')) dzToggle(side);
   toast('Recorded in-app · added as <b>Side View</b>');
 }
+/* Monochrome line-icon SVGs for the movement-type picker trigger (mirrors the dropdown menu icons). */
+const UPTYPEICONS = {
+  track: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="2.2"/><path d="M11 9l-3 4 3 2-1 5M11 9l4 1 2 3M11 9l-4 1"/></svg>',
+  tread: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 10.5h9l-2 6h-9z"/><circle cx="4.5" cy="18" r="1.3"/><circle cx="12" cy="18" r="1.3"/><path d="M14.5 10.5l2.5-4.5H21"/></svg>',
+  flow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a8 8 0 0 1 14-4"/><path d="M20 14a8 8 0 0 1-14 4"/><path d="M18 2v4h-4"/><path d="M6 22v-4h4"/></svg>',
+  bball: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M3 12h18"/><path d="M5.6 5.6Q12 12 5.6 18.4"/><path d="M18.4 5.6Q12 12 18.4 18.4"/></svg>',
+  soft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M6.8 5Q3.5 12 6.8 19"/><path d="M17.2 5Q20.5 12 17.2 19"/><path d="M5.4 8.6l1.6.4M5 11.6l1.7.2M5.1 14.6l1.6-.3M18.6 8.6l-1.6.4M19 11.6l-1.7.2M18.9 14.6l-1.6-.3"/></svg>'
+};
 function upType(btn, key){
   btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
@@ -6160,7 +6326,7 @@ function upType(btn, key){
   const adv = document.getElementById('upadv'); if (adv) adv.style.display = key === 'track' ? '' : 'none';
   // reflect the pick in the dropdown trigger chip, then close the menu
   const tl = document.getElementById('up-typetrigger-lbl'); if (tl) tl.textContent = g.label;
-  const ti = document.getElementById('up-typetrigger-ic'); if (ti && g.ic) ti.textContent = g.ic;
+  const ti = document.getElementById('up-typetrigger-ic'); if (ti && UPTYPEICONS[key]) ti.innerHTML = UPTYPEICONS[key];
   upTypeCloseMenu();
   renderUpZones();
   toast('Session · <b>' + g.label + '</b>');
