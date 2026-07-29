@@ -430,6 +430,24 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .action-card h4{ font-size:1.5rem; font-weight:600; } .action-card p{ font-size:1.3rem; color:var(--muted); font-weight:400; }
 .action-card.danger{ border-color:#fecaca; } .action-card.danger h4{ color:var(--down); }
 
+/* settings polish (scoped) */
+#v-settings .lbl{ display:flex; align-items:center; gap:.7rem; margin-top:3rem; margin-bottom:1rem; }
+#v-settings .lbl:first-of-type{ margin-top:0; }
+#v-settings .lbl::before{ content:""; width:.35rem; height:1.4rem; border-radius:2px; background:var(--yellow); flex:none; }
+#v-settings .card{ margin-bottom:0; }
+#v-settings .inforow{ align-items:center; }
+#v-settings .inforow:first-child{ padding-top:.4rem; }
+#v-settings .action-card{ align-items:center; box-shadow:none; transition:border-color .12s, background .12s, box-shadow .12s; }
+#v-settings .action-card .ic{ transition:background .12s; }
+#v-settings .action-card .chev{ margin-left:auto; color:var(--muted-2); flex:none; transition:transform .12s, color .12s; }
+#v-settings .action-card:hover{ background:#FFFDF3; box-shadow:0 6px 18px rgba(41,45,50,.06); }
+#v-settings .action-card:hover .ic{ background:#FFF4CC; }
+#v-settings .action-card:hover .chev{ transform:translateX(3px); color:var(--muted); }
+#v-settings .action-card.danger .ic{ background:#FEF2F2; }
+#v-settings .action-card.danger:hover{ background:#FEF7F7; box-shadow:0 6px 18px rgba(239,68,68,.07); }
+#v-settings .action-card.danger:hover .ic{ background:#FEE2E2; }
+#v-settings .action-card.danger:hover .chev{ color:var(--down); }
+
 /* plans */
 .plans-wrap{ max-width:104rem; margin:0 auto; padding:3.2rem 2.4rem; }
 .plans-wrap h1{ font-size:2.8rem; font-weight:700; text-align:center; }
@@ -460,6 +478,21 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .fld input:focus,.fld select:focus{ outline:none; border-color:var(--yellow); box-shadow:0 0 0 4px rgba(255,199,0,.15); }
 .hgt{ display:flex; align-items:center; gap:1rem; }
 .hgt span{ color:var(--muted); }
+
+/* ---- Create New Athlete: grouped sections + live profile preview ---- */
+#v-create .create-preview{ display:flex; align-items:center; gap:1.4rem; padding:1.5rem 1.7rem; margin-bottom:2rem;
+  background:linear-gradient(135deg,#FFFDF3,#fff); border:1.5px solid var(--yellow); border-radius:1.4rem; }
+#v-create .cp-av{ flex:none; width:5.2rem; height:5.2rem; border-radius:50%; border:2.5px solid var(--yellow);
+  background:var(--fill); display:flex; align-items:center; justify-content:center; font-size:1.9rem; font-weight:700;
+  color:var(--muted-2); text-transform:uppercase; }
+#v-create .cp-av.filled{ color:var(--ink); background:#fff; }
+#v-create .cp-name{ font-size:1.7rem; font-weight:700; color:var(--ink); line-height:1.2; }
+#v-create .cp-name.ph{ color:var(--muted-2); font-weight:600; }
+#v-create .cp-meta{ font-size:1.3rem; color:var(--muted); font-weight:400; margin-top:.3rem; }
+#v-create .fgroup{ background:#fff; border:1.5px solid var(--line); border-radius:1.4rem;
+  padding:1.8rem 2rem 2rem; margin-bottom:1.6rem; box-shadow:var(--shadow-soft); }
+#v-create .fgroup .fsec{ display:flex; align-items:center; gap:.7rem; margin:0 0 1.4rem; }
+#v-create .fgroup .fsec svg{ width:1.7rem; height:1.7rem; color:var(--yellow); flex:none; }
 
 /* ============ Onboarding overlay (CONCEPT) ============ */
 .ob-overlay{ position:fixed; inset:0; background:rgba(26,29,36,.6); z-index:200; display:flex; align-items:center; justify-content:center; padding:2rem; }
@@ -2218,18 +2251,33 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       </div>
     </header>
 
-    <!-- ============ VIEW: dashboard empty state ============ -->
+    <!-- ============ VIEW: account landing (triage) ============ -->
+    <!-- Was a static "select an athlete" empty state. Now a real account-level landing:
+         reuses the org today-tab's today-hero + "Needs you first" triage pattern, scoped to
+         the WHOLE roster. All numbers/names/notes are derived at render time from SM_DATA
+         (the account status-map roster) — see renderDashLanding(). Nothing here is invented. -->
     <div id="v-dash" class="view">
-      <div class="empty">
-        <h1>Select an <span class="yel">athlete</span> to view their data</h1>
-        <p>Click on an athlete to view their training sessions</p>
-        <div class="illus">
-          <svg width="220" height="220" viewBox="0 0 100 100" fill="none" stroke="#FFC700" stroke-width="2.2" stroke-linecap="round">
-            <circle cx="60" cy="16" r="7"/><path d="M56 25 40 42l10 10-6 20"/><path d="M40 42l16 4 12-8"/><path d="M50 52l14 6 4 16"/><path d="M28 34l12 8"/>
-            <path d="M10 90h80" stroke="#EAEAEA"/>
-          </svg>
-        </div>
-      </div>
+      <style>
+        #v-dash .dash-land{ max-width:780px; margin:0 auto; padding:2.6rem 2rem 4rem; text-align:left; }
+        #v-dash .dash-scoreboard{ display:grid; grid-template-columns:repeat(3,1fr); gap:.9rem; margin:1.6rem 0 2.2rem; }
+        #v-dash .dash-sbtile{ position:relative; border:1.5px solid var(--line); border-radius:var(--r-card); background:var(--cream); padding:1.15rem 1.3rem 1.25rem 1.5rem; overflow:hidden; }
+        #v-dash .dash-sbtile::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--muted-2); }
+        #v-dash .dash-sbtile.risk{ background:#FFFAF9; }
+        #v-dash .dash-sbtile.risk::before{ background:#DC4A3F; }
+        #v-dash .dash-sbtile.clear{ background:#F3FAF6; }
+        #v-dash .dash-sbtile.clear::before{ background:var(--s-great); }
+        #v-dash .dash-sbk{ font-size:1.05rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-2); }
+        #v-dash .dash-sbtile.risk .dash-sbk{ color:#DC4A3F; }
+        #v-dash .dash-sbtile.clear .dash-sbk{ color:var(--s-great); }
+        #v-dash .dash-sbh{ font-size:1.9rem; font-weight:800; line-height:1.1; margin:.4rem 0 .25rem; color:var(--ink); }
+        #v-dash .dash-sbtile.risk .dash-sbh{ color:#DC4A3F; }
+        #v-dash .dash-sbtile.clear .dash-sbh{ color:var(--s-great); }
+        #v-dash .dash-sbs{ font-size:1.2rem; font-weight:500; line-height:1.35; color:var(--muted); }
+        #v-dash .dash-hint{ margin-top:1.4rem; color:var(--muted); font-size:1.3rem; font-weight:400; }
+        #v-dash .dash-hint a{ color:var(--ink); font-weight:600; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+        @media (max-width:640px){ #v-dash .dash-scoreboard{ grid-template-columns:1fr; } }
+      </style>
+      <div class="dash-land" id="dash-land"><!-- populated by renderDashLanding() --></div>
     </div>
 
     <!-- ============ VIEW: athlete profile ============ -->
@@ -3045,31 +3093,73 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       <div class="card form-card">
         <h2>Create <span class="yel">New Athlete</span></h2>
         <p class="sub">Add a new athlete to your training program</p>
-        <div class="fsec">Athlete Information</div>
-        <div class="frow">
-          <div class="fld"><label>Full Name</label><input placeholder="Enter full name"></div>
-          <div class="fld"><label>Gender</label>
-            <select><option>Select Gender</option><option>Male</option><option>Female</option><option>Non-binary</option></select>
+
+        <!-- live preview of the profile being created — grounded in the fields below -->
+        <div class="create-preview">
+          <div class="cp-av" id="cpAv">+</div>
+          <div>
+            <div class="cp-name ph" id="cpName">New athlete</div>
+            <div class="cp-meta" id="cpMeta">Fill in the details — the profile builds as you type</div>
           </div>
         </div>
-        <div class="fld" style="margin-top:1.4rem"><label>Age group <span style="font-weight:400;color:var(--muted-2);text-transform:none;letter-spacing:0">· optional — helps Couro learn how movement changes with age</span></label>
-          <div class="tabs" id="agebands">
-            <button type="button" onclick="ageBand(this)">U14</button><button type="button" onclick="ageBand(this)">14–17</button><button type="button" onclick="ageBand(this)">18–22</button><button type="button" onclick="ageBand(this)">23–34</button><button type="button" onclick="ageBand(this)">35+</button>
+
+        <div class="fgroup">
+          <div class="fsec">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+            Athlete Information
+          </div>
+          <div class="frow">
+            <div class="fld"><label>Full Name</label><input id="cpNameInput" placeholder="Enter full name" oninput="updateCreatePreview()"></div>
+            <div class="fld"><label>Gender</label>
+              <select id="cpGenderInput" onchange="updateCreatePreview()"><option>Select Gender</option><option>Male</option><option>Female</option><option>Non-binary</option></select>
+            </div>
+          </div>
+          <div class="fld" style="margin-top:1.4rem"><label>Age group <span style="font-weight:400;color:var(--muted-2);text-transform:none;letter-spacing:0">· optional — helps Couro learn how movement changes with age</span></label>
+            <div class="tabs" id="agebands">
+              <button type="button" onclick="ageBand(this)">U14</button><button type="button" onclick="ageBand(this)">14–17</button><button type="button" onclick="ageBand(this)">18–22</button><button type="button" onclick="ageBand(this)">23–34</button><button type="button" onclick="ageBand(this)">35+</button>
+            </div>
           </div>
         </div>
-        <div class="fsec">Physical Measurements</div>
-        <div class="frow">
-          <div class="fld"><label>Weight (lbs)</label><input placeholder="e.g. 145"></div>
-          <div class="fld"><label>Height</label>
-            <div class="hgt"><input placeholder="5" style="text-align:center"><span>ft</span><span>–</span><input placeholder="7" style="text-align:center"><span>in</span></div>
+
+        <div class="fgroup">
+          <div class="fsec">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="8" width="18" height="8" rx="1.5"/><path d="M7.5 8v3M12 8v4M16.5 8v3"/></svg>
+            Physical Measurements
+          </div>
+          <div class="frow">
+            <div class="fld"><label>Weight (lbs)</label><input placeholder="e.g. 145"></div>
+            <div class="fld"><label>Height</label>
+              <div class="hgt"><input placeholder="5" style="text-align:center"><span>ft</span><span>–</span><input placeholder="7" style="text-align:center"><span>in</span></div>
+            </div>
           </div>
         </div>
-        <button class="btn btn-yellow btn-block" style="margin-top:2.4rem;padding:1.6rem" onclick="show('athlete')">Create Athlete</button>
+
+        <button class="btn btn-yellow btn-block" style="margin-top:.4rem;padding:1.6rem" onclick="show('athlete')">Create Athlete</button>
       </div>
     </div>
 
     <!-- ============ VIEW: create a whole roster at once ============ -->
     <div id="v-newteam" class="view page" hidden>
+      <style>
+        /* scoped copy of the squad-upload review "big number" treatment (defined under
+           #v-squadupload) so the create-team confirm step reads with the same big/bold/
+           labelled figures — same class name, scoped to this view to avoid collision. */
+        #v-newteam .sq-reviewbig{ text-align:center; padding:1.4rem 0 .4rem; }
+        #v-newteam .sq-reviewbig .n{ font-size:4.4rem; font-weight:800; line-height:1; }
+        #v-newteam .sq-reviewbig .l{ font-size:1.4rem; color:var(--muted); font-weight:500; margin-top:.4rem; }
+        #v-newteam .sq-reviewbig .n.zero{ color:var(--muted-2); }
+        #v-newteam .nt-reviewrow{ display:flex; justify-content:center; gap:3.5rem; }
+        #v-newteam .nt-reviewnote{ text-align:center; color:var(--muted); font-weight:500; font-size:1.3rem; margin:.2rem 0 1.2rem; }
+        #v-newteam .nt-reviewrows{ border-top:1px solid var(--line); margin-top:.4rem; }
+        /* step-header icon — small tint chip that gives each setup step a scannable anchor */
+        #v-newteam .lbl{ display:flex; align-items:center; gap:.7rem; }
+        #v-newteam .lbl .lbl-ic{ width:2.2rem; height:2.2rem; border-radius:.6rem; background:rgba(255,199,0,.15); color:var(--gold); display:inline-flex; align-items:center; justify-content:center; flex:none; }
+        #v-newteam .lbl .lbl-ic svg{ width:1.4rem; height:1.4rem; }
+        #v-newteam .lbl .lbl-rest{ display:inline-flex; align-items:baseline; gap:.5rem; flex-wrap:wrap; }
+        /* paste vs preview: give the pair a shared header so it reads as one "roster" block */
+        #v-newteam .rosterpaste-head{ font-size:1.2rem; font-weight:600; color:var(--muted); margin-bottom:.5rem; display:flex; align-items:center; gap:.5rem; }
+        #v-newteam .rosterpaste-head svg{ width:1.4rem; height:1.4rem; flex:none; }
+      </style>
       <div class="backbar" onclick="show('upload')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
         Back
@@ -3078,7 +3168,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       <p style="color:var(--muted);font-size:1.4rem;font-weight:400;margin:.4rem 0 .2rem">Name the team and paste your athletes. Profiles belong to your organization, not to the team — so an athlete on two teams stays one profile with one history, and anyone on your staff can film them.</p>
 
       <div class="upsec">
-        <div class="lbl">1 · Team details</div>
+        <div class="lbl"><span class="lbl-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>1 · Team details</div>
         <div class="frow">
           <div class="fld"><label>Team name</label><input id="rname" placeholder="e.g. Westgate — Sprints"></div>
           <div class="fld"><label>Sport &amp; group</label>
@@ -3089,7 +3179,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       </div>
 
       <div class="upsec">
-        <div class="lbl">2 · Add your athletes <span style="font-weight:400;color:var(--muted-2);text-transform:none;letter-spacing:0">· one profile per person, org-wide</span></div>
+        <div class="lbl"><span class="lbl-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6M19 8v6"/></svg></span><span class="lbl-rest">2 · Add your athletes <span style="font-weight:400;color:var(--muted-2);text-transform:none;letter-spacing:0">· one profile per person, org-wide</span></span></div>
         <p class="stepnote">Two ways: <b>upload your roster spreadsheet</b> (Excel — fastest, and if it has height &amp; weight the profiles come out <b>already personalized</b>), or <b>paste names</b> below. If the sheet has a <b>Student ID</b>, re-importing next term <b>updates</b> those athletes rather than duplicating them — and a <b>Team</b> column creates teams as it goes.</p>
         <div class="importdz" id="importdz" onclick="rosterImport()">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4A504A" stroke-width="1.6"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg>
@@ -3097,7 +3187,10 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         </div>
         <div class="importmap" id="importmap" hidden></div>
         <div class="rostergrid">
-          <textarea id="rosterpaste" class="rosterpaste" placeholder="Marcus Webb&#10;Chloe Tan&#10;Devon Hart&#10;Sam Brooks&#10;…" oninput="parseRoster()"></textarea>
+          <div>
+            <div class="rosterpaste-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>Paste one name per line</div>
+            <textarea id="rosterpaste" class="rosterpaste" placeholder="Marcus Webb&#10;Chloe Tan&#10;Devon Hart&#10;Sam Brooks&#10;…" oninput="parseRoster()"></textarea>
+          </div>
           <div class="rosterprevwrap">
             <div class="rp-head"><b id="rcount">0</b> athletes · <span id="rnewcount">0</span> new profiles</div>
             <div id="rosterprev" class="rosterprev"><div class="rprev-empty">Names appear here as you type — check the list, remove any typo.</div></div>
@@ -3116,13 +3209,18 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       </div>
 
       <div class="upsec">
-        <div class="lbl">4 · Confirm</div>
+        <div class="lbl"><span class="lbl-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg></span>4 · Confirm</div>
         <div class="card">
-          <div class="metric-row"><span>Roster</span><span style="font-weight:600" id="rc-name">—</span></div>
-          <div class="metric-row"><span>Sport &amp; group</span><span style="font-weight:600" id="rc-sport">Track — Sprints</span></div>
-          <div class="metric-row"><span>Profiles to create</span><span style="font-weight:600" id="rc-count">0</span></div>
-          <div class="metric-row"><span>Personalized now</span><span style="font-weight:600" id="rc-pers">0 — rest use defaults</span></div>
-          <div class="metric-row"><span>Next step</span><span style="color:var(--muted)">Film the group in one video</span></div>
+          <div class="nt-reviewrow">
+            <div class="sq-reviewbig"><div class="n zero" id="rc-count">0</div><div class="l">profiles to create</div></div>
+            <div class="sq-reviewbig"><div class="n zero" id="rc-pers">0</div><div class="l">personalized now</div></div>
+          </div>
+          <p class="nt-reviewnote" id="rc-persnote">The rest score against sport defaults.</p>
+          <div class="nt-reviewrows">
+            <div class="metric-row"><span>Team</span><span style="font-weight:600" id="rc-name">—</span></div>
+            <div class="metric-row"><span>Sport &amp; group</span><span style="font-weight:600" id="rc-sport">Track — Sprints</span></div>
+            <div class="metric-row"><span>Next step</span><span style="color:var(--muted)">Film the group in one video</span></div>
+          </div>
         </div>
         <button class="btn btn-yellow btn-block" style="margin-top:1.6rem;padding:1.6rem" onclick="createRoster()">Create profiles &amp; start team upload →</button>
         <div class="claimcard">
@@ -3154,6 +3252,10 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           #v-upload .up-nav{ display:flex; align-items:center; gap:1rem; margin-top:1.8rem; }
           #v-upload .up-nav .btn-block{ flex:1; margin:0; }
           #v-upload .up-back{ flex:none; background:none; border:1.5px solid var(--line); border-radius:999px; padding:1.05rem 1.6rem; font-size:1.4rem; font-weight:700; color:var(--muted); cursor:pointer; }
+          #v-upload .up-reviewhero{ text-align:center; padding:.6rem 0 1.4rem; margin-bottom:.2rem; border-bottom:1px solid var(--line); }
+          #v-upload .up-reviewhero .n{ font-size:2.6rem; font-weight:800; line-height:1.1; }
+          #v-upload .up-reviewhero .l{ font-size:1.4rem; color:var(--muted); font-weight:500; margin-top:.5rem; }
+          #v-upload .up-reviewhero .l .ses{ color:var(--gold); font-weight:700; text-transform:capitalize; }
           #v-upload .up-pane[hidden]{ display:none; }
         </style>
         <div class="backbar" onclick="show('athlete')">
@@ -3244,10 +3346,11 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="up-pane" id="up-pane-3" hidden>
           <div class="upsec">
             <div class="lbl">3 · Review &amp; analyze</div>
-            <div class="card">
-              <div class="metric-row"><span>Athlete</span><span style="font-weight:600" id="upconfirmath">Montana Carlson</span></div>
-              <div class="metric-row"><span>Session</span><span style="font-weight:600" id="upconfirmtype">Track</span></div>
-              <div class="metric-row"><span>Videos</span><span style="font-weight:600" id="dzcount">no video yet</span></div>
+            <div class="card up-reviewcard">
+              <div class="up-reviewhero">
+                <div class="n" id="upconfirmath">Montana Carlson</div>
+                <div class="l"><span class="ses" id="upconfirmtype">Track</span> session · <span id="dzcount">no video yet</span></div>
+              </div>
               <div class="metric-row" id="upcmprow" hidden><span>Comparison</span><span style="font-weight:600;color:#FFC700" id="upcmplbl">—</span></div>
               <div class="metric-row"><span>Result</span><span style="color:var(--muted)">Report ready in ~1 min · uses 1 credit</span></div>
             </div>
@@ -3266,10 +3369,10 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <h2>Analyzing <span id="up-procname">Montana</span>'s run…</h2>
         <p>This usually takes 3–5 minutes. You'll get a notification when the report is ready — feel free to leave this screen.</p>
         <div class="card proc-steps">
-          <div class="metric-row"><span>Upload complete</span><span style="color:var(--s-great)">✓</span></div>
-          <div class="metric-row"><span>Pose estimation</span><span style="color:var(--s-great)" id="ps2">…</span></div>
-          <div class="metric-row"><span>Biomechanical scoring</span><span style="color:var(--muted-2)" id="ps3">–</span></div>
-          <div class="metric-row"><span>Building your report</span><span style="color:var(--muted-2)" id="ps4">–</span></div>
+          <div class="metric-row"><span>Upload complete</span><span style="color:var(--s-great);font-weight:700">✓</span></div>
+          <div class="metric-row"><span>Pose estimation</span><span style="color:var(--gold);font-weight:700" id="ps2">…</span></div>
+          <div class="metric-row"><span>Biomechanical scoring</span><span style="color:var(--muted-2);font-weight:700" id="ps3">–</span></div>
+          <div class="metric-row"><span>Building your report</span><span style="color:var(--muted-2);font-weight:700" id="ps4">–</span></div>
         </div>
       </div>
     </div>
@@ -3284,7 +3387,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <span class="cam" style="cursor:pointer" onclick="toast('Opens your photo library to change the avatar')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>
         </div>
         <div class="lbl">Personal Information</div>
-        <div class="card" style="margin-bottom:2.4rem">
+        <div class="card">
           <div class="inforow"><span class="k">Email Address</span><span class="v">cam@couro.io</span></div>
           <div class="inforow"><span class="k">Account Type</span><span class="v">Trainer Account</span></div>
           <div class="inforow" style="border:none"><span class="k">Gender</span><span class="v">Male</span></div>
@@ -3293,18 +3396,22 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <button class="action-card" onclick="show('plans')">
           <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></span>
           <span><h4>Billing &amp; Plans</h4><p>Manage your subscription and payment details</p></span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
         <button class="action-card" onclick="toast('Opens the invite form — sends the athlete an email link')">
           <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c1-3.5 4-5 7-5"/><path d="M19 8v6M22 11h-6"/></svg></span>
           <span><h4>Invite Athlete</h4><p>Send an invite link to a new athlete</p></span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
         <button class="action-card" onclick="toast('Lists pending athlete connection requests — approve or decline')">
           <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/></svg></span>
           <span><h4>View Athlete Requests</h4><p>Approve or decline pending athlete connections</p></span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
         <button class="action-card danger" onclick="toast('Double-confirmation modal, then <b>permanent</b> account deletion')">
-          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFC700" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></span>
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--down)" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></span>
           <span><h4>Delete Account</h4><p>Permanently remove your account and data</p></span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
       </div>
     </div>
@@ -3458,6 +3565,18 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         #v-squadupload .sq-patgrid{ margin:.5rem 0 .4rem; }
         #v-squadupload .sq-patcard .pat-name{ text-transform:capitalize; }
         #v-squadupload .sq-patviz{ padding:.2rem .3rem; }
+        /* ---- batch-scoped squad map — a clone of the org quadrant scatter, narrowed to this batch.
+           Distinct sq-statusmap / sq-sm-* prefixes guarantee zero collision with the unscoped global
+           .statusmap / .sm-* used by the org-overview screen. Only two tones exist in this data
+           (clear / watch), so the legend is deliberately two entries, not three. ---- */
+        #v-squadupload .sq-mapcard{ border:1.5px solid var(--line); border-radius:var(--r-card); background:var(--cream); padding:1.2rem 1rem 1.3rem; margin-top:1.2rem; }
+        #v-squadupload .sq-mapttl{ font-size:1.05rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-2); text-align:center; }
+        #v-squadupload .sq-statusmap{ width:100%; max-width:460px; height:auto; display:block; margin:.4rem auto 0; }
+        #v-squadupload .sq-statusmap g[onclick]{ transition:opacity .12s; cursor:pointer; }
+        #v-squadupload .sq-statusmap g[onclick]:hover{ opacity:.72; }
+        #v-squadupload .sq-sm-legend{ display:flex; gap:1.6rem; justify-content:center; font-size:1.2rem; color:var(--muted); font-weight:600; margin-top:.5rem; }
+        #v-squadupload .sq-sm-legend .sq-sm-key{ display:inline-block; width:1.05rem; height:1.05rem; border-radius:50%; margin-right:.35rem; vertical-align:middle; }
+        #v-squadupload .sq-sm-insight{ font-size:1.25rem; color:var(--muted); font-weight:500; text-align:center; margin-top:.5rem; line-height:1.4; }
       </style>
       <div class="backbar" onclick="show('dash')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
@@ -3725,6 +3844,76 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
     const insight = `<div class="sq-scoreboard">${standoutTile}${trendTile}${watchTile}</div>`;
 
+    /* Squad map — the visual centerpiece. A batch-scoped clone of the org quadrant scatter:
+       every scored athlete plotted by session trend (x = delta, symmetric about 0) and strength
+       (y = score), landing in one of four quadrants (SLIPPING / THRIVING / ACT NOW / DEVELOPING).
+       Tone drives dot color — warn = deep gold #C0920F (matches patViz + gold scoreboard tile),
+       clear = green #059669 (matches patViz + .sq-resscore.ok) — and warn dots get a faint halo
+       ring for emphasis, exactly like the org flagged dots. Every dot taps into the real profile
+       via the same openAthleteByName the rows use. Guarded to n≥2 (a one-dot scatter isn't a map).
+       Reuses the existing `dir` helper; distinct sq-statusmap / sq-sm-* classes avoid any collision
+       with the unscoped global org .statusmap. */
+    const squadMap = (function(){
+      if(done.length < 2) return '';
+      const PX0=58, PX1=430, PY0=26, PY1=270;          // plot rect
+      const CX=(PX0+PX1)/2, CY=(PY0+PY1)/2;            // quadrant dividers (delta=0 / score midpoint)
+      const XPAD=18, YPAD=16;                          // keep extreme dots off the border
+      const magOf = r => { const m=(r.delta||'').match(/\d+/); return m ? dir(r.delta)*(+m[0]) : 0; };
+      const D = Math.max(2, ...done.map(r=>Math.abs(magOf(r))));
+      const mapX = v => PX0 + XPAD + ((v + D)/(2*D)) * (PX1-PX0-2*XPAD);
+      const sc = done.map(r=>r.score);
+      const yLo = Math.min(...sc) - 4, yHi = Math.max(...sc) + 4;
+      const ySpan = yHi > yLo ? yHi - yLo : 1;
+      const mapY = s => PY1 - YPAD - ((s - yLo)/ySpan) * (PY1-PY0-2*YPAD);
+
+      const dots = done.map(r=>{
+        const cx = mapX(magOf(r)).toFixed(1);
+        const cy = mapY(r.score).toFixed(1);
+        const warn = r.tone==='warn';
+        const hue = warn ? '#C0920F' : '#059669';
+        const esc = name(r.id).replace(/'/g,"\\'");
+        const halo = warn ? `<circle cx="${cx}" cy="${cy}" r="16" fill="none" stroke="${hue}" stroke-width="1.5" opacity=".35"/>` : '';
+        const nearRight = +cx > PX1 - 70;
+        const lx = (nearRight ? +cx - 15 : +cx + 15).toFixed(1);
+        const anchor = nearRight ? 'end' : 'start';
+        return `<g onclick="openAthleteByName('${esc}')" style="cursor:pointer"><title>${name(r.id)} — tap to open</title>${halo}<circle cx="${cx}" cy="${cy}" r="11" fill="${hue}" stroke="#fff" stroke-width="1.5"/><text x="${lx}" y="${(+cy+4).toFixed(1)}" text-anchor="${anchor}" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">${first(r.id)}</text></g>`;
+      }).join('');
+
+      const thriving = done.filter(r=>r.tone!=='warn' && dir(r.delta) > 0).length;
+      const lead = thriving ? `${thriving} of ${done.length} thriving` : `${cleared.length} of ${done.length} holding`;
+      const smInsight = flags.length
+        ? `${lead} — ${first(flags[0].id)} is the one to watch.`
+        : `${lead} — no one flagged this batch.`;
+
+      return `<div class="sq-mapcard">
+          <div class="sq-mapttl">Where the squad sits</div>
+          <svg class="sq-statusmap" viewBox="0 0 460 320" role="img" aria-label="Squad map: each athlete plotted by session trend and strength, colored by whether they're clear or one to watch">
+            <rect x="58" y="26" width="186" height="122" fill="#FBF3DD" opacity=".5"/>
+            <rect x="244" y="26" width="186" height="122" fill="#E7F6EE" opacity=".6"/>
+            <rect x="58" y="148" width="186" height="122" fill="#FBE4E1" opacity=".5"/>
+            <rect x="244" y="148" width="186" height="122" fill="#F1F3F5" opacity=".6"/>
+            <line x1="244" y1="26" x2="244" y2="270" stroke="#D8D2C4" stroke-width="1"/>
+            <line x1="58" y1="148" x2="430" y2="148" stroke="#D8D2C4" stroke-width="1"/>
+            <rect x="58" y="26" width="372" height="244" fill="none" stroke="#E5DFCF" stroke-width="1.5"/>
+            <g font-family="Inter,sans-serif" font-weight="800" letter-spacing="1">
+              <text x="70" y="44" font-size="10" fill="#B8860B">SLIPPING</text>
+              <text x="418" y="44" font-size="10" fill="#3f9a57" text-anchor="end">THRIVING</text>
+              <text x="70" y="262" font-size="10" fill="#DC4A3F">ACT NOW</text>
+              <text x="418" y="262" font-size="10" fill="#8A908A" text-anchor="end">DEVELOPING</text>
+            </g>
+            <g font-family="Inter,sans-serif" font-weight="700" fill="#9BA1AC" font-size="9.5">
+              <text x="62" y="290">◂ trending down</text>
+              <text x="426" y="290" text-anchor="end">trending up ▸</text>
+              <text x="46" y="44" text-anchor="end" transform="rotate(-90 46 44)">◂ needs work</text>
+              <text x="46" y="252" text-anchor="end" transform="rotate(-90 46 252)">strong ▸</text>
+            </g>
+            ${dots}
+          </svg>
+          <div class="sq-sm-legend"><span><span class="sq-sm-key" style="background:#059669"></span>Clear</span><span><span class="sq-sm-key" style="background:#C0920F"></span>One to watch</span></div>
+          <div class="sq-sm-insight">${smInsight}</div>
+        </div>`;
+    })();
+
     /* Pattern synthesis — this batch grouped by shared finding, not just listed athlete by
        athlete. Only surface a card when ≥2 athletes share a theme; a lone finding (n=1) stays
        in the per-athlete list below rather than being inflated into a "pattern". Reuses the
@@ -3794,6 +3983,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <h1 style="font-size:2.4rem;font-weight:700">Squad analyzed</h1>
         <p style="color:var(--muted);font-size:1.4rem;margin:.4rem 0 1.2rem">${ok} of ${total} processed${bad?` · <b style="color:var(--s-bad)">${bad} need a re-film</b>`:''} · reports are on each profile</p>
         ${insight}
+        ${squadMap}
       </div>
       <div class="upsec" style="text-align:left;margin-top:.4rem">
         ${patternSec}${attentionSec}${clearedSec}
@@ -5194,6 +5384,57 @@ function openAthleteByName(name){
   window.scrollTo(0,0);
   toast('Opening <b>' + name + '</b>’s profile');
 }
+/* ---- account landing (#v-dash): triage of who needs your eyes ----
+   Everything is derived from SM_DATA (the account status-map roster): the counts,
+   the names, and the one-line notes all come straight from that structure so nothing
+   is invented. Rows tap through to the athlete profile via openAthleteByName(). */
+function renderDashLanding(){
+  const el = document.getElementById('dash-land');
+  if (!el || typeof SM_DATA === 'undefined') return;
+  const names   = Object.keys(SM_DATA);
+  const flagged = names.filter(n => SM_DATA[n].risk === 'flagged');
+  const watch   = names.filter(n => SM_DATA[n].risk === 'watch');
+  const clear   = names.filter(n => SM_DATA[n].risk === 'clear');
+  const need    = flagged.concat(watch);   // flagged first, then watch
+  const initials = n => n.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  const esc = n => n.replace(/'/g, "\\'");
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const mons = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const d = new Date();
+  const dateStr = days[d.getDay()] + ' · ' + d.getDate() + ' ' + mons[d.getMonth()];
+  const statusLine = need.length
+    ? `<b>${need.length} of your ${names.length} athletes</b> need a look — ${flagged.length} flagged, ${watch.length} to watch`
+    : `<b>All ${names.length} athletes are clear</b> — nothing needs your eyes right now`;
+  const rows = need.map(n => {
+    const a = SM_DATA[n];
+    const sev = a.risk === 'flagged' ? 'hi' : 'md';
+    return `<div class="trow sev-${sev}" onclick="openAthleteByName('${esc(n)}')" style="cursor:pointer">
+        <span class="avx ${sev}">${initials(n)}</span>
+        <span class="tinfo"><b>${n}</b><small>${a.note}</small></span>
+        <span class="acts"><button onclick="event.stopPropagation();openAthleteByName('${esc(n)}')">Review ▸</button></span>
+      </div>`;
+  }).join('');
+  const triage = need.length
+    ? `<div class="zone"><span class="zn act"></span><span class="zl">Needs you first</span><span class="zr"></span><span class="zc">${need.length} of your athletes</span></div>
+       <div class="card triage-hero">${rows}</div>
+       <p class="dash-hint">Or open any athlete from <a onclick="openAthletes()">your full roster</a> to see their sessions.</p>`
+    : `<p class="dash-hint">Open any athlete from <a onclick="openAthletes()">your full roster</a> to see their sessions.</p>`;
+  el.innerHTML = `
+    <div class="today-hero">
+      <div>
+        <div class="today-date">${dateStr}</div>
+        <h2 class="today-title">Your athletes</h2>
+        <div class="today-ctx">${statusLine}</div>
+      </div>
+      <button class="btn btn-yellow" onclick="show('squadupload')">＋ &nbsp;Upload a session</button>
+    </div>
+    <div class="dash-scoreboard">
+      <div class="dash-sbtile"><div class="dash-sbk">Roster</div><div class="dash-sbh">${names.length}</div><div class="dash-sbs">athletes across your account</div></div>
+      <div class="dash-sbtile risk"><div class="dash-sbk">Needs you</div><div class="dash-sbh">${need.length}</div><div class="dash-sbs">${flagged.length} flagged · ${watch.length} to watch</div></div>
+      <div class="dash-sbtile clear"><div class="dash-sbk">Clear</div><div class="dash-sbh">${clear.length}</div><div class="dash-sbs">no action needed</div></div>
+    </div>
+    ${triage}`;
+}
 /* ---- wayfinding: breadcrumb + prev/next through the roster ---- */
 const ROSTER_ORDER = ['Montana Carlson','Jaylen Ford','Rosa Delgado','Aaliyah Brooks','Sam Whitfield','Marcus Webb'];
 let athIdx = 0;
@@ -5294,6 +5535,7 @@ function show(view){
     const el = document.getElementById('v-'+v); if (el) el.hidden = v !== view;
   });
   if (view === 'upload') resetUpload();
+  if (view === 'dash') renderDashLanding();
   if (view === 'squadupload' && window.sqInit) window.sqInit();
   document.getElementById('usermenu').hidden = true;
   document.querySelector('.main').scrollTo(0,0);
@@ -5621,10 +5863,18 @@ function rosterConfirm(){
   const done = names.filter(bodyDone).length;
   document.getElementById('rc-name').textContent = name || '—';
   document.getElementById('rc-sport').textContent = document.getElementById('rsport').value;
-  document.getElementById('rc-count').textContent = names.length;
+  const countEl = document.getElementById('rc-count');
+  countEl.textContent = names.length;
+  countEl.classList.toggle('zero', names.length === 0);
   const pers = document.getElementById('rc-pers');
-  if (pers) pers.textContent = done === names.length && names.length
-    ? done + ' — all set' : done + ' — rest use defaults';
+  if (pers){
+    pers.textContent = done;
+    pers.classList.toggle('zero', done === 0);
+  }
+  const note = document.getElementById('rc-persnote');
+  if (note) note.textContent = names.length && done === names.length
+    ? 'Every profile is personalized — ready to score.'
+    : 'The rest score against sport defaults until height & weight are added.';
 }
 function rosterDemo(){
   document.getElementById('rname').value = 'Westgate — Sprints';
@@ -5699,6 +5949,31 @@ function stype(btn){
 function ageBand(btn){
   btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
+  updateCreatePreview();
+}
+
+/* Live preview of the "Create New Athlete" profile — reflects only what the form collects */
+function updateCreatePreview(){
+  var nameEl = document.getElementById('cpNameInput');
+  var genderEl = document.getElementById('cpGenderInput');
+  var avEl = document.getElementById('cpAv');
+  var nameOut = document.getElementById('cpName');
+  var metaOut = document.getElementById('cpMeta');
+  if(!nameEl || !avEl || !nameOut || !metaOut) return;
+
+  var name = (nameEl.value || '').trim();
+  var initials = name.split(/\s+/).filter(Boolean).slice(0,2).map(function(w){ return w[0]; }).join('');
+  avEl.textContent = initials || '+';
+  avEl.classList.toggle('filled', !!initials);
+
+  nameOut.textContent = name || 'New athlete';
+  nameOut.classList.toggle('ph', !name);
+
+  var gender = genderEl && genderEl.value !== 'Select Gender' ? genderEl.value : '';
+  var ageBtn = document.querySelector('#agebands button.on');
+  var age = ageBtn ? ageBtn.textContent.trim() : '';
+  var parts = [gender, age].filter(Boolean);
+  metaOut.textContent = parts.length ? parts.join(' · ') : 'Fill in the details — the profile builds as you type';
 }
 
 /* ---- upload: per-type suggestions + before/after comparison ---- */
