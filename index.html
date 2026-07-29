@@ -3257,6 +3257,28 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           #v-upload .up-reviewhero .l{ font-size:1.4rem; color:var(--muted); font-weight:500; margin-top:.5rem; }
           #v-upload .up-reviewhero .l .ses{ color:var(--gold); font-weight:700; text-transform:capitalize; }
           #v-upload .up-pane[hidden]{ display:none; }
+
+          /* Scope toggle — Individual / Team segmented control (matches .upmode-toggle language).
+             "Team" navigates to the squad-upload wizard; it does not toggle in-place content. */
+          #v-upload .up-scopetoggle{ display:inline-flex; gap:.4rem; background:var(--fill); border:1.5px solid var(--line); border-radius:var(--r-pill); padding:.4rem; margin:1.2rem 0 .2rem; }
+          #v-upload .up-scopetoggle button{ border:none; background:none; border-radius:var(--r-pill); padding:.75rem 1.7rem; font-size:1.35rem; font-weight:600; color:var(--muted); cursor:pointer; }
+          #v-upload .up-scopetoggle button.on{ background:#fff; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.08); }
+
+          /* Movement-type picker — a considered dropdown: a compact chip showing the current
+             selection + chevron, tapping opens a short menu of the 5 movement types. */
+          #v-upload .up-typepick{ position:relative; display:inline-block; }
+          #v-upload .up-typetrigger{ display:inline-flex; align-items:center; gap:.7rem; background:#fff; border:1.5px solid var(--line); border-radius:var(--r-pill); padding:1rem 1.5rem; font-size:1.5rem; font-weight:700; color:var(--ink); cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+          #v-upload .up-typetrigger .tt-ic{ font-size:1.7rem; line-height:1; }
+          #v-upload .up-typetrigger .tt-chev{ margin-left:.4rem; color:var(--muted); font-size:1.1rem; transition:transform .2s ease; }
+          #v-upload .up-typepick.open .up-typetrigger{ border-color:var(--yellow); box-shadow:0 2px 10px rgba(255,199,0,.22); }
+          #v-upload .up-typepick.open .up-typetrigger .tt-chev{ transform:rotate(180deg); }
+          #v-upload .up-typemenu{ position:absolute; top:calc(100% + .6rem); left:0; z-index:40; background:#fff; border:1px solid var(--line); border-radius:var(--r-card); box-shadow:0 10px 30px rgba(0,0,0,.15); padding:.5rem; min-width:23rem; max-width:min(30rem,86vw); display:flex; flex-direction:column; gap:.15rem; }
+          #v-upload .up-typemenu[hidden]{ display:none; }
+          #v-upload .up-typemenu button{ display:flex; align-items:center; gap:1rem; width:100%; text-align:left; background:none; border:none; border-radius:var(--r-btn); padding:1.1rem 1.2rem; font-size:1.45rem; font-weight:500; color:var(--ink); cursor:pointer; }
+          #v-upload .up-typemenu button .tm-ic{ font-size:1.7rem; width:2.2rem; text-align:center; flex:none; }
+          #v-upload .up-typemenu button:hover{ background:var(--fill); }
+          #v-upload .up-typemenu button.on{ background:var(--fill); font-weight:700; }
+          #v-upload .up-typemenu button.on::after{ content:'✓'; margin-left:auto; color:var(--gold); font-weight:800; font-size:1.5rem; }
         </style>
         <div class="backbar" onclick="show('athlete')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
@@ -3265,7 +3287,12 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <h1 style="font-size:2.6rem;font-weight:700">New <span class="yel">Run Analysis</span></h1>
         <p style="color:var(--muted);font-size:1.4rem;font-weight:400;margin-top:.4rem" id="up-subhead">for Montana Carlson</p>
 
-        <button class="teamswitch" onclick="show('squadupload')" style="display:inline-flex;align-items:center;gap:.5rem;background:none;border:none;padding:.4rem 0;margin:1.2rem 0 .2rem;color:var(--yellow);font-size:1.35rem;font-weight:600;cursor:pointer">Uploading for the whole team instead? →</button>
+        <!-- scope: Individual (this screen) vs Team. "Team" navigates to the separate squad-upload
+             wizard — presented as a segmented toggle per product-owner request, but behavior is a jump. -->
+        <div class="up-scopetoggle" role="tablist" aria-label="Upload for">
+          <button type="button" role="tab" aria-selected="true" class="on" onclick="return false">Individual</button>
+          <button type="button" role="tab" aria-selected="false" onclick="show('squadupload')">Team</button>
+        </div>
 
         <div id="up-single">
         <!-- who is this for: lightweight + secondary. This screen is always opened from a specific
@@ -3289,8 +3316,15 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="up-pane" id="up-pane-1">
           <div class="upsec">
             <div class="lbl">1 · What are they doing?</div>
-            <div class="tabs" id="uptypes">
-              <button class="on" onclick="upType(this,'track')">Track</button><button onclick="upType(this,'tread')">Treadmill</button><button onclick="upType(this,'flow')">FreeFlow</button><button onclick="upType(this,'bball')">Basketball</button><button onclick="upType(this,'soft')">Softball</button>
+            <div class="up-typepick" id="up-typepick">
+              <button type="button" class="up-typetrigger" id="up-typetrigger" onclick="upTypeToggleMenu(event)" aria-haspopup="listbox" aria-expanded="false">
+                <span class="tt-ic" id="up-typetrigger-ic">⚡</span>
+                <span class="tt-lbl" id="up-typetrigger-lbl">Track</span>
+                <span class="tt-chev">▾</span>
+              </button>
+              <div class="up-typemenu" id="uptypes" role="listbox" hidden>
+                <button class="on" role="option" onclick="upType(this,'track')"><span class="tm-ic">⚡</span>Track</button><button role="option" onclick="upType(this,'tread')"><span class="tm-ic">🎚️</span>Treadmill</button><button role="option" onclick="upType(this,'flow')"><span class="tm-ic">🔄</span>FreeFlow</button><button role="option" onclick="upType(this,'bball')"><span class="tm-ic">↔️</span>Basketball</button><button role="option" onclick="upType(this,'soft')"><span class="tm-ic">🥎</span>Softball</button>
+              </div>
             </div>
             <div class="upfast" style="margin-top:1.6rem">
               <span class="uf-t"><b>Three taps, about 30 seconds.</b> <span class="uf-steps">Pick the move · drop a clip · analyze.</span></span>
@@ -6124,9 +6158,38 @@ function upType(btn, key){
   const k = document.getElementById('upconfirmtypek'); if (k) k.textContent = g.label;
   // the assessment-gear override is track-only; hide it entirely otherwise
   const adv = document.getElementById('upadv'); if (adv) adv.style.display = key === 'track' ? '' : 'none';
+  // reflect the pick in the dropdown trigger chip, then close the menu
+  const tl = document.getElementById('up-typetrigger-lbl'); if (tl) tl.textContent = g.label;
+  const ti = document.getElementById('up-typetrigger-ic'); if (ti && g.ic) ti.textContent = g.ic;
+  upTypeCloseMenu();
   renderUpZones();
   toast('Session · <b>' + g.label + '</b>');
 }
+
+/* Movement-type dropdown open/close. "Team"-style content is untouched; this only manages the picker. */
+function upTypeToggleMenu(e){
+  if (e) e.stopPropagation();
+  const pick = document.getElementById('up-typepick'),
+        menu = document.getElementById('uptypes'),
+        trig = document.getElementById('up-typetrigger');
+  if (!pick || !menu) return;
+  const willOpen = menu.hidden;
+  menu.hidden = !willOpen;
+  pick.classList.toggle('open', willOpen);
+  if (trig) trig.setAttribute('aria-expanded', String(willOpen));
+}
+function upTypeCloseMenu(){
+  const pick = document.getElementById('up-typepick'),
+        menu = document.getElementById('uptypes'),
+        trig = document.getElementById('up-typetrigger');
+  if (menu) menu.hidden = true;
+  if (pick) pick.classList.remove('open');
+  if (trig) trig.setAttribute('aria-expanded', 'false');
+}
+document.addEventListener('click', function(e){
+  const pick = document.getElementById('up-typepick');
+  if (pick && !pick.contains(e.target)) upTypeCloseMenu();
+});
 
 /* render the Add-Video area: single capture (angles) OR a before/after pair */
 function renderUpZones(){
