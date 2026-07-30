@@ -3143,14 +3143,16 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
 
 
+        <!-- The score + "+8 vs last" row that used to close this card is gone: it's the
+             same 82/Glider/+8 already stated in the profile header, the TL;DR, and the
+             Reveal hero above. Speed and the archetype match% are the only facts here
+             that don't appear anywhere else on this tab, so they're what's left. -->
         <div class="darkcard snap">
           <div class="speed">5.4 <small>m/s avg</small></div>
           <button class="archbox" onclick="toast('Opens the Archetype flow — how Glider traits map to her metrics')">
             <span><span class="nm">GLIDER</span><br><span class="sub">Smooth, low-oscillation strider</span></span>
             <span class="match">78% match</span>
           </button>
-          <div class="divider"></div>
-          <div class="bottom"><span class="sc">82</span><small>/100</small><small style="margin-left:1rem">Run Score · +8 vs last</small></div>
         </div>
 
         <div>
@@ -4746,6 +4748,16 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
     <!-- ===== ORG TAB: OVERVIEW (org landing — Today folded in) ===== -->
     <div id="ot-overview">
       <div class="headline" id="og-line" style="margin-top:1.4rem"><b>Trending up 5 points this quarter.</b> Two athletes are falling — Rosa (arm path) and Marcus (knee load) — both fatigue-pattern, both flagged below.</div>
+
+      <!-- "Who needs you today" used to only exist in the Act-first queue, three sections
+           and a full team table below this point. This is a preview, not a duplicate — it
+           names the same 2 athletes + the inactive count the queue already lists, then
+           jumps there, rather than restating their detail a second time on this screen. -->
+      <div class="insight" style="margin-top:1rem;background:#FFF3F0;border-color:#F5C2BC;color:#7A2A1E">
+        <span class="ico">🎯</span>
+        <span><b>Who needs you today —</b> Rosa Delgado (arm path drift), Marcus Webb (knee load rising), and 7 inactive athletes.
+          <a href="#og-triage" onclick="document.getElementById('og-triage').scrollIntoView({behavior:'smooth',block:'start'});return false;" style="color:#7A2A1E;font-weight:700;text-decoration:underline;white-space:nowrap">Jump to Act first ↓</a></span>
+      </div>
 
       <!-- ===== MOVEMENT-PATTERN INTELLIGENCE (the coaching brain) =====
            Rolls every athlete's Signature + Risk Map findings UP to the org, so staff
