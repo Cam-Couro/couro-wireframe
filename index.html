@@ -260,6 +260,9 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .orgtbl tr td .athlink::after, .rostertbl tr td .athlink::after{ content:''; }
 /* org walkthrough button */
 .walkbtn{ display:inline-flex; align-items:center; gap:.6rem; background:#fff; border:1.5px solid var(--yellow); color:var(--ink); border-radius:var(--r-pill); font-size:1.3rem; font-weight:600; padding:.9rem 1.6rem; cursor:pointer; }
+.walkwrap{ display:inline-flex; align-items:center; gap:.5rem; }
+.walkx{ display:inline-flex; align-items:center; justify-content:center; width:2.1rem; height:2.1rem; border-radius:50%; border:1.5px solid #E5E1D6; background:#fff; color:var(--muted); font-size:1.1rem; line-height:1; cursor:pointer; padding:0; }
+.walkx:hover{ background:#FAF7EE; color:var(--ink); }
 .walkbtn:hover{ background:#FFFDF3; }
 .guidestrip .gbtn{ background:linear-gradient(135deg,var(--yellow-2),var(--yellow)); border:none; border-radius:var(--r-pill); font-size:1.25rem; font-weight:700; color:var(--ink); padding:.8rem 1.5rem; cursor:pointer; white-space:nowrap; box-shadow:var(--glow); }
 
@@ -2795,7 +2798,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <button onclick="exSel(this,'bball')">Basketball</button>
           <button onclick="exSel(this,'soft')">Softball</button>
         </div>
-        <div id="tourrow"><button class="walkbtn" style="font-size:1.2rem" onclick="tourStart()">✨ Walk me through this report</button></div>
+        <div id="tourrow" class="walkwrap"><button class="walkbtn" style="font-size:1.2rem" onclick="tourStart()">✨ Walk me through this report</button><button class="walkx" onclick="walkOptOut(event)" aria-label="Don't show walkthroughs again" title="Don't show walkthroughs again">✕</button></div>
       </div>
       <div class="tabs" id="reptabs">
         <button class="on" onclick="repTab(this,'overview')">Overview</button>
@@ -3615,7 +3618,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             </div>
             <div class="upfast" style="margin-top:1.6rem">
               <span class="uf-t"><b>Three taps, about 30 seconds.</b> <span class="uf-steps">Pick the move · drop a clip · analyze.</span></span>
-              <button class="walkbtn" onclick="startUpTour()">✨ Walk me through it</button>
+              <span class="walkwrap"><button class="walkbtn" onclick="startUpTour()">✨ Walk me through it</button><button class="walkx" onclick="walkOptOut(event)" aria-label="Don't show walkthroughs again" title="Don't show walkthroughs again">✕</button></span>
             </div>
           </div>
           <div class="up-nav">
@@ -4587,7 +4590,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <h1>Your <span class="yel">Organization</span></h1>
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <button class="walkbtn" onclick="startOrgTour()">✨ Walk me through Program view</button>
+        <span class="walkwrap"><button class="walkbtn" onclick="startOrgTour()">✨ Walk me through Program view</button><button class="walkx" onclick="walkOptOut(event)" aria-label="Don't show walkthroughs again" title="Don't show walkthroughs again">✕</button></span>
         <button class="btn btn-ghost" onclick="openSquadUpload()">＋ &nbsp;Upload Squad</button>
         <button class="btn btn-yellow" onclick="newRoster()">＋ &nbsp;New Team</button>
       </div>
@@ -6217,7 +6220,7 @@ function go(screen){
   const j = document.getElementById('scr-join'); if (j) j.hidden = screen !== 'join';
   if (screen === 'dash') { show('dash'); if (!window.obSeen) obOpen(); }
   else markDemoBar(screen);
-  if (screen === 'org' && !window.tourOrgSeen){ window.tourOrgSeen = true; setTimeout(startOrgTour, 450); }
+  if (screen === 'org' && !window.tourAutoFired && !window.tourOptedOut){ window.tourAutoFired = true; setTimeout(startOrgTour, 450); }
   closeNav();
   syncViewSwitch();
   window.scrollTo(0,0);
@@ -6304,11 +6307,13 @@ function show(view){
   });
   if (view === 'upload') resetUpload();
   if (view === 'dash') renderDashLanding();
-  /* first-ever visit to these two screens auto-opens their walkthrough, once,
-     mirroring the existing go('dash') -> obOpen() first-run pattern below.
-     A short delay lets the screen render before the tour scrim + glow appear. */
-  if (view === 'session' && !window.tourReportSeen){ window.tourReportSeen = true; setTimeout(tourStart, 450); }
-  if (view === 'upload' && !window.tourUploadSeen){ window.tourUploadSeen = true; setTimeout(startUpTour, 450); }
+  /* Auto-launch a walkthrough exactly once per login — whichever of these
+     screens (session / upload / org) the coach reaches first is the one
+     that fires; window.tourAutoFired then blocks the other two from also
+     self-launching later. tourOptedOut lets the "Walk me through" button's
+     own dismiss (x) turn this off entirely for the rest of the session. */
+  if (view === 'session' && !window.tourAutoFired && !window.tourOptedOut){ window.tourAutoFired = true; setTimeout(tourStart, 450); }
+  if (view === 'upload' && !window.tourAutoFired && !window.tourOptedOut){ window.tourAutoFired = true; setTimeout(startUpTour, 450); }
   if (view === 'squadupload' && window.sqInit) window.sqInit();
   window.lastAthleteView = view;           /* so "Athletes" returns you where you were */
   closeUserMenus();
@@ -7493,21 +7498,16 @@ function miToggle(el){
 }
 
 /* ---- report walkthrough (v15) ---- */
+/* Kept deliberately short (5 beats, not one step per card) — a walkthrough
+   with more steps than the report has sections stops reading as "simple."
+   A step's sel can be an array: every element in it opens/glows together,
+   so "the story" reads as one beat even though it spans three cards. */
 const TOUR = [
   { tab:'overview', sel:'#tg-head', t:'Start with the headline', b:'Every report opens with one sentence and the session\'s three biggest numbers. If you read nothing else, you leave knowing what happened.' },
-  { tab:'overview', sel:'#tg-diff', t:'What changed since last time', b:'Coaches read diffs, not absolutes. Three metrics moved; the fix target didn\'t — which is exactly why it\'s the mission.' },
-  { tab:'overview', sel:'#tg-callback', t:'It keeps receipts', b:'The last report made a call on the record — this one shows it landed. Trust first, then the new story.' },
-  { tab:'overview', sel:'#tg-story', t:'Then it reads like a story', b:'Three acts: what clicked, what\'s pushing back, and what fixing it unlocks. Green → red → gold, top to bottom.' },
-  { tab:'overview', sel:'#tg-evidence', t:'Act two — what\'s pushing back', b:'Left foot crosses midline on the back straight. This is the actual evidence frame, not just a number — tap it any time to see the crossover for yourself.' },
-  { tab:'overview', sel:'#tg-unlock', t:'Act three — what it unlocks', b:'Clear that one pattern and her profile projects 3–5 more symmetry points within six weeks — enough to reach the elite band.' },
-  { tab:'overview', sel:'#tg-fix', t:'One fix, not twenty', b:'Everything funnels into a single priority with its exact drills. This is what the athlete actually does this week — tap any drill for the why, the dose, and the cue.' },
-  { tab:'overview', sel:'#tg-mission', t:'It ends with a new call, not a summary', b:'A prediction goes on the record and writes straight to her Open Thread, where the drills and the re-test window live. The next upload settles the call — that is the reason to come back.' },
-  { tab:'performance', sel:'#tg-bl', t:'The Bottom Line', b:'All 20+ metrics roll up into Speed, Efficiency, and Durability. The colored tags on every card below tell you which outcome each number feeds.' },
-  { tab:'performance', sel:'#tg-fatigue', t:'Fresh vs fatigued — honestly', b:'One short clip can\'t separate fatigue from pacing, so the report says so — and offers the paired-capture protocol instead: upload one fresh rep and one tired rep, and Couro compares them.' },
-  { tab:'performance', sel:'#tg-matrix', t:'What to fix first', b:'Every issue plotted by payoff vs effort — start top-left. Tap any dot for the full explanation.' },
-  { tab:'performance', sel:'#tg-bands', expand:'mbbody', t:'Proof for every number', b:'Each reading against the live target band from Couro\'s scoring config. Rows with a ▶ open the actual video frame the number was measured on.' },
-  { tab:'risk', sel:'#tg-body', t:'Where the load is going', b:'The body map shows what this movement pattern costs physically. The knee flag here is the same crossover from the story — one pattern, every altitude.' },
-  { tab:'research', sel:'#reptabs', t:'And the receipts', b:'The Research tab holds the peer-reviewed sources behind each metric. That\'s the tour — now tap anything with a ▶ or a chip to go deeper.' }
+  { tab:'overview', sel:['#tg-diff','#tg-callback'], t:'What changed, and what we called', b:'Coaches read diffs, not absolutes — three metrics moved since last time. And every report keeps receipts: the last call this app made just landed.' },
+  { tab:'overview', sel:['#tg-story','#tg-evidence','#tg-unlock'], t:'Then it reads like a story', b:'Three acts, top to bottom: what clicked, what\'s still pushing back, and what fixing it unlocks. Green → red → gold.' },
+  { tab:'overview', sel:['#tg-fix','#tg-mission'], t:'One fix — and a new call on the record', b:'Everything funnels into a single priority with its exact drills. The report ends by putting a prediction on the record, which writes straight to her Open Thread.' },
+  { tab:'overview', sel:'#reptabs', t:'Dig deeper anytime', b:'Performance, Risk, and Research tabs hold the full metric breakdown, the body map, and the sources behind every number — tap into any of them whenever you want the detail. That\'s the tour.' }
 ];
 /* upload walkthrough — short + practical, matches the 3-tap flow */
 const UP_TOUR = [
@@ -7549,22 +7549,25 @@ function tourShow(){
   if (s.otab) orgTabByKey(s.otab);
   if (s.expand){ const b = document.getElementById(s.expand); if (b) b.hidden = false; }
   if (s.act) s.act();
-  const el = document.querySelector(s.sel);
-  if (el){
-    const accCard = el.closest('.acc'); if (accCard) accCard.classList.remove('collapsed');
-    /* Spotlight exactly one chapter at a time: collapse every accordion this
-       step isn't inside before opening the one it is, so the tour only ever
-       shows what the current step is actually narrating — not a growing
-       stack of everything opened by earlier steps. */
-    const chap = el.closest('.rchap');
+  /* A step's sel may be one selector or an array — every element it names
+     opens/glows together, as a single narrated beat. */
+  const sels = Array.isArray(s.sel) ? s.sel : [s.sel];
+  const els = sels.map(x => document.querySelector(x)).filter(Boolean);
+  if (els.length){
+    els.forEach(el => { const accCard = el.closest('.acc'); if (accCard) accCard.classList.remove('collapsed'); });
+    /* Spotlight exactly what this step is narrating: collapse every accordion
+       none of this step's elements live in before opening the ones that do,
+       so the tour never shows stale content left open by an earlier step. */
+    const chaps = new Set(els.map(el => el.closest('.rchap')).filter(Boolean));
     document.querySelectorAll('.rchap').forEach(c => {
-      if (c !== chap && !c.classList.contains('collapsed')){
+      if (!chaps.has(c) && !c.classList.contains('collapsed')){
         c.classList.add('collapsed');
         const bar = c.querySelector(':scope > .rchap-bar'); if (bar) bar.setAttribute('aria-expanded','false');
       }
     });
-    rchapOpen(el);
-    el.classList.add('tour-glow'); setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'center' }), 80); }
+    els.forEach(el => { rchapOpen(el); el.classList.add('tour-glow'); });
+    setTimeout(() => els[0].scrollIntoView({ behavior:'smooth', block:'center' }), 80);
+  }
   document.getElementById('tc-step').textContent = (tourI + 1) + ' of ' + activeTour.length;
   document.getElementById('tc-title').textContent = s.t;
   document.getElementById('tc-body').textContent = s.b;
@@ -7576,6 +7579,15 @@ function tourStep(d){
   if (tourI < 0) tourI = 0;
   if (tourI >= activeTour.length){ tourEnd(); return; }
   tourShow();
+}
+/* the little x next to every "Walk me through" button: turns walkthroughs
+   off entirely for the rest of this session — no more auto-launches, and
+   the trigger buttons themselves disappear, not just the current popup */
+function walkOptOut(ev){
+  if (ev) ev.stopPropagation();
+  window.tourOptedOut = true;
+  document.querySelectorAll('.walkwrap').forEach(w => w.hidden = true);
+  if (!document.getElementById('tourcard').hidden) tourEnd();
 }
 function tourEnd(){
   document.querySelectorAll('.tour-glow').forEach(e => e.classList.remove('tour-glow'));
