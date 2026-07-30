@@ -1637,7 +1637,13 @@ body.mobile .reel .clip{ width:11rem; }
 /* the share-worthy 9:16 story card */
 .sharecard{ aspect-ratio:9/16; width:100%; max-width:26rem; margin:0 auto; border-radius:2.2rem; overflow:hidden; position:relative;
   background:radial-gradient(120% 80% at 50% -10%, #2b3038, #16181d 70%); color:#fff; box-shadow:0 18px 50px rgba(0,0,0,.4); }
+/* the actual session photo behind the card content, same source as the Reveal
+   hero, so a shared card reads as "this real session" rather than a generic
+   stat graphic — with a strong scrim underneath so the score/text stay legible */
+.sc-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.sc-scrim{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,11,13,.55) 0%, rgba(10,11,13,.72) 45%, rgba(10,11,13,.92) 100%); }
 .sc-in{ position:absolute; inset:0; display:flex; flex-direction:column; padding:2.2rem 2rem; }
+.sc-watermark{ position:absolute; right:1.4rem; bottom:1.5rem; width:2.4rem; height:auto; opacity:.9; filter:drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
 .sc-top{ display:flex; align-items:center; justify-content:space-between; }
 .sc-brand{ display:flex; align-items:center; gap:.7rem; font-size:1.15rem; font-weight:700; letter-spacing:.02em; }
 .sc-brand img{ width:26px; height:22px; object-fit:contain; }
@@ -6220,7 +6226,7 @@ function go(screen){
   const j = document.getElementById('scr-join'); if (j) j.hidden = screen !== 'join';
   if (screen === 'dash') { show('dash'); if (!window.obSeen) obOpen(); }
   else markDemoBar(screen);
-  if (screen === 'org' && !window.tourAutoFired && !window.tourOptedOut){ window.tourAutoFired = true; setTimeout(startOrgTour, 450); }
+  if (screen === 'org' && !window.tourAutoFired && !window.tourOptedOut){ window.tourAutoFired = true; setTimeout(() => tourMaybeAutoFire(startOrgTour, () => !document.getElementById('scr-org').hidden), 450); }
   closeNav();
   syncViewSwitch();
   window.scrollTo(0,0);
@@ -6312,8 +6318,8 @@ function show(view){
      that fires; window.tourAutoFired then blocks the other two from also
      self-launching later. tourOptedOut lets the "Walk me through" button's
      own dismiss (x) turn this off entirely for the rest of the session. */
-  if (view === 'session' && !window.tourAutoFired && !window.tourOptedOut){ window.tourAutoFired = true; setTimeout(tourStart, 450); }
-  if (view === 'upload' && !window.tourAutoFired && !window.tourOptedOut){ window.tourAutoFired = true; setTimeout(startUpTour, 450); }
+  if (view === 'session' && !window.tourAutoFired && !window.tourOptedOut){ window.tourAutoFired = true; setTimeout(() => tourMaybeAutoFire(tourStart, () => !document.getElementById('v-session').hidden), 450); }
+  if (view === 'upload' && !window.tourAutoFired && !window.tourOptedOut){ window.tourAutoFired = true; setTimeout(() => tourMaybeAutoFire(startUpTour, () => !document.getElementById('v-upload').hidden), 450); }
   if (view === 'squadupload' && window.sqInit) window.sqInit();
   window.lastAthleteView = view;           /* so "Athletes" returns you where you were */
   closeUserMenus();
@@ -6571,11 +6577,16 @@ function renderShareCard(tpl){
       + '<svg class="sc-spark" viewBox="0 0 100 40" preserveAspectRatio="none"><polyline points="4,34 24,31 44,26 64,19 84,12 96,6" fill="none" stroke="#FFC700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="96" cy="6" r="3.5" fill="#FFC700"/></svg>'
       + '<div class="sc-id" style="margin-top:.3rem">Best session on record.</div>';
   }
+  const strobe = document.getElementById('strobeimg');
+  const bg = strobe && strobe.src ? strobe.src : '';
   document.getElementById('sharecard').innerHTML =
-    '<div class="sc-in"><div class="sc-top"><span class="sc-brand"><img src="'+LOGO+'" alt="">Couro</span>'
+    (bg ? '<img class="sc-bg" src="'+bg+'" alt="">' : '')
+    + '<div class="sc-scrim"></div>'
+    + '<div class="sc-in"><div class="sc-top"><span class="sc-brand"><img src="'+LOGO+'" alt="">Couro</span>'
     + '<span class="sc-eyebrow" style="color:rgba(255,255,255,.5)">'+s.first+'</span></div>'
     + '<div class="sc-mid">'+mid+'</div>'
-    + '<div class="sc-foot"><b>Analyzed from one phone video.</b><br>couro.io</div></div>';
+    + '<div class="sc-foot"><b>Analyzed from one phone video.</b><br>couro.io</div></div>'
+    + '<img class="sc-watermark" src="'+LOGO+'" alt="Couro">';
 }
 function shareTpl(btn, tpl){ btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on')); btn.classList.add('on'); renderShareCard(tpl); }
 function openShare(){ renderShareCard(shareTplCur); document.getElementById('share').hidden = false; }
@@ -7536,6 +7547,16 @@ function orgTabByKey(key){
   const map = { overview:0, teams:1, access:2 };
   const btns = document.querySelectorAll('#scr-org .tabs button');
   if (btns[map[key]]) orgTab(btns[map[key]], key);
+}
+/* Guards the delayed auto-fire: skips it if the coach already opened a
+   modal (Share, Invite, claim links…) or navigated off the screen in the
+   450ms since it was scheduled, so the tour never stacks on top of
+   something else that's already open. */
+function tourMaybeAutoFire(startFn, stillRelevant){
+  if (window.tourOptedOut) return;
+  if (document.querySelector('.ev-overlay:not([hidden])')) return;
+  if (stillRelevant && !stillRelevant()) return;
+  startFn();
 }
 function tourStart(){ activeTour = TOUR; tourI = 0; document.getElementById('tourcard').hidden = false; tourShow(); }
 function startUpTour(){ activeTour = UP_TOUR; tourI = 0; document.getElementById('tourcard').hidden = false; tourShow(); }
