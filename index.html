@@ -2795,7 +2795,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <button onclick="exSel(this,'bball')">Basketball</button>
           <button onclick="exSel(this,'soft')">Softball</button>
         </div>
-        <div id="tourrow"><button class="btn btn-ghost ai-cta" style="font-size:1.2rem" onclick="tourStart()">✨ Walk me through this report</button></div>
+        <div id="tourrow"><button class="walkbtn" style="font-size:1.2rem" onclick="tourStart()">✨ Walk me through this report</button></div>
       </div>
       <div class="tabs" id="reptabs">
         <button class="on" onclick="repTab(this,'overview')">Overview</button>
@@ -2880,7 +2880,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <span class="chev">▾</span>
           </button>
           <div class="rchap-body">
-          <div class="card story" style="border-left-color:#FFC700">
+          <div class="card story" id="tg-evidence" style="border-left-color:#FFC700">
             <div class="sthead">
               <div><span class="act" style="color:var(--gold-ink)">THE BOTTLENECK</span><h4>Left foot still crosses midline</h4></div>
               <div class="scorecol"><span class="big" style="color:var(--gold-ink)">57</span><small>2 sessions flat</small></div>
@@ -2899,7 +2899,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <span class="chev">▾</span>
           </button>
           <div class="rchap-body">
-          <div class="card story" style="border-left-color:#FFC700">
+          <div class="card story" id="tg-unlock" style="border-left-color:#FFC700">
             <div class="sthead">
               <div><span class="act" style="color:var(--gold-ink)">THE UNLOCK</span><h4>~4 points of score head-room</h4></div>
               <div class="scorecol"><span class="big" style="color:var(--s-good)">86</span><small>projected</small></div>
@@ -3615,7 +3615,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             </div>
             <div class="upfast" style="margin-top:1.6rem">
               <span class="uf-t"><b>Three taps, about 30 seconds.</b> <span class="uf-steps">Pick the move · drop a clip · analyze.</span></span>
-              <button class="ai-cta" onclick="startUpTour()">✨ Walk me through it</button>
+              <button class="walkbtn" onclick="startUpTour()">✨ Walk me through it</button>
             </div>
           </div>
           <div class="up-nav">
@@ -4587,7 +4587,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <h1>Your <span class="yel">Organization</span></h1>
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <button class="walkbtn ai-cta" onclick="startOrgTour()">✨ Walk me through Program view</button>
+        <button class="walkbtn" onclick="startOrgTour()">✨ Walk me through Program view</button>
         <button class="btn btn-ghost" onclick="openSquadUpload()">＋ &nbsp;Upload Squad</button>
         <button class="btn btn-yellow" onclick="newRoster()">＋ &nbsp;New Team</button>
       </div>
@@ -6217,6 +6217,7 @@ function go(screen){
   const j = document.getElementById('scr-join'); if (j) j.hidden = screen !== 'join';
   if (screen === 'dash') { show('dash'); if (!window.obSeen) obOpen(); }
   else markDemoBar(screen);
+  if (screen === 'org' && !window.tourOrgSeen){ window.tourOrgSeen = true; setTimeout(startOrgTour, 450); }
   closeNav();
   syncViewSwitch();
   window.scrollTo(0,0);
@@ -6303,6 +6304,11 @@ function show(view){
   });
   if (view === 'upload') resetUpload();
   if (view === 'dash') renderDashLanding();
+  /* first-ever visit to these two screens auto-opens their walkthrough, once,
+     mirroring the existing go('dash') -> obOpen() first-run pattern below.
+     A short delay lets the screen render before the tour scrim + glow appear. */
+  if (view === 'session' && !window.tourReportSeen){ window.tourReportSeen = true; setTimeout(tourStart, 450); }
+  if (view === 'upload' && !window.tourUploadSeen){ window.tourUploadSeen = true; setTimeout(startUpTour, 450); }
   if (view === 'squadupload' && window.sqInit) window.sqInit();
   window.lastAthleteView = view;           /* so "Athletes" returns you where you were */
   closeUserMenus();
@@ -7492,6 +7498,8 @@ const TOUR = [
   { tab:'overview', sel:'#tg-diff', t:'What changed since last time', b:'Coaches read diffs, not absolutes. Three metrics moved; the fix target didn\'t — which is exactly why it\'s the mission.' },
   { tab:'overview', sel:'#tg-callback', t:'It keeps receipts', b:'The last report made a call on the record — this one shows it landed. Trust first, then the new story.' },
   { tab:'overview', sel:'#tg-story', t:'Then it reads like a story', b:'Three acts: what clicked, what\'s pushing back, and what fixing it unlocks. Green → red → gold, top to bottom.' },
+  { tab:'overview', sel:'#tg-evidence', t:'Act two — what\'s pushing back', b:'Left foot crosses midline on the back straight. This is the actual evidence frame, not just a number — tap it any time to see the crossover for yourself.' },
+  { tab:'overview', sel:'#tg-unlock', t:'Act three — what it unlocks', b:'Clear that one pattern and her profile projects 3–5 more symmetry points within six weeks — enough to reach the elite band.' },
   { tab:'overview', sel:'#tg-fix', t:'One fix, not twenty', b:'Everything funnels into a single priority with its exact drills. This is what the athlete actually does this week — tap any drill for the why, the dose, and the cue.' },
   { tab:'overview', sel:'#tg-mission', t:'It ends with a new call, not a summary', b:'A prediction goes on the record and writes straight to her Open Thread, where the drills and the re-test window live. The next upload settles the call — that is the reason to come back.' },
   { tab:'performance', sel:'#tg-bl', t:'The Bottom Line', b:'All 20+ metrics roll up into Speed, Efficiency, and Durability. The colored tags on every card below tell you which outcome each number feeds.' },
@@ -7542,7 +7550,20 @@ function tourShow(){
   if (s.expand){ const b = document.getElementById(s.expand); if (b) b.hidden = false; }
   if (s.act) s.act();
   const el = document.querySelector(s.sel);
-  if (el){ const accCard = el.closest('.acc'); if (accCard) accCard.classList.remove('collapsed'); rchapOpen(el);
+  if (el){
+    const accCard = el.closest('.acc'); if (accCard) accCard.classList.remove('collapsed');
+    /* Spotlight exactly one chapter at a time: collapse every accordion this
+       step isn't inside before opening the one it is, so the tour only ever
+       shows what the current step is actually narrating — not a growing
+       stack of everything opened by earlier steps. */
+    const chap = el.closest('.rchap');
+    document.querySelectorAll('.rchap').forEach(c => {
+      if (c !== chap && !c.classList.contains('collapsed')){
+        c.classList.add('collapsed');
+        const bar = c.querySelector(':scope > .rchap-bar'); if (bar) bar.setAttribute('aria-expanded','false');
+      }
+    });
+    rchapOpen(el);
     el.classList.add('tour-glow'); setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'center' }), 80); }
   document.getElementById('tc-step').textContent = (tourI + 1) + ' of ' + activeTour.length;
   document.getElementById('tc-title').textContent = s.t;
@@ -7558,6 +7579,13 @@ function tourStep(d){
 }
 function tourEnd(){
   document.querySelectorAll('.tour-glow').forEach(e => e.classList.remove('tour-glow'));
+  /* restore the report's default collapsed state on exit, so a re-run (or just
+     reading the report normally afterward) starts clean rather than however
+     the tour happened to leave things mid-walkthrough */
+  document.querySelectorAll('.rchap').forEach(c => {
+    c.classList.add('collapsed');
+    const bar = c.querySelector(':scope > .rchap-bar'); if (bar) bar.setAttribute('aria-expanded','false');
+  });
   document.getElementById('tourcard').hidden = true;
   const scrim = document.getElementById('tour-scrim');
   if (scrim){ scrim.classList.remove('on'); scrim.hidden = true; }
