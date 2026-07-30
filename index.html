@@ -12,7 +12,10 @@
 /* ============ Tokens — extracted from couro-react-app SCSS ============ */
 :root{
   --yellow:#FFC700; --yellow-2:#FFD233; --gold:#f8c145;
-  --ink:#292D32; --ink-dark:#1A1D24; --muted:#6F7480; --muted-2:#9BA1AC;
+  /* a11y: --yellow (1.57:1 on white) and --gold are FILL colours only.
+     Any gold TEXT on a light surface must use --gold-ink (#8A6A00 = 5.07:1 on #fff). */
+  --gold-ink:#8A6A00;
+  --ink:#292D32; --ink-dark:#1A1D24; --muted:#6F7480; --muted-2:#70757F;
   --cream:#FFFFFA; --bg:#ffffff; --fill:#F8F9FA; --line:#F1F3F5; --divider:#EAEAEA;
   --s-great:#059669; --s-good:#00CC00; --s-ok:#99CC00; --s-warn:#FFC700; --s-bad:#FF0000;
   --up:#16a34a; --down:#ef4444;
@@ -29,7 +32,7 @@ button{ font-family:inherit; cursor:pointer; }
 input,select{ font-family:inherit; }
 h1,h2,h3{ text-wrap:balance; }
 .num{ font-family:'Inter',system-ui,sans-serif; font-weight:700; font-variant-numeric:tabular-nums; }
-.yel{ color:var(--yellow); }
+.yel{ color:var(--gold-ink); }
 [hidden]{ display:none !important; }
 
 /* ============ Demo chrome (not part of the app) ============ */
@@ -92,7 +95,7 @@ button.btn-pop{ animation:btnpop .24s cubic-bezier(.16,1,.3,1); }
 .socials{ display:flex; gap:1.2rem; }
 .socials .btn{ flex:1; display:flex; align-items:center; justify-content:center; gap:.8rem; font-size:1.35rem; padding:1.3rem; }
 .auth-foot{ margin-top:2.4rem; font-size:1.4rem; color:var(--muted); }
-.auth-foot b{ color:var(--yellow); cursor:pointer; }
+.auth-foot b{ color:var(--gold-ink); cursor:pointer; }
 
 /* ============ App shell ============ */
 .shell{ display:flex; height:100vh; overflow:hidden; }
@@ -173,7 +176,7 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .hub{ min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4rem 2.4rem 6rem; background:radial-gradient(120rem 60rem at 50% -10%, #FFFDF3, var(--bg) 60%); }
 .hub-logo{ width:64px; height:52px; object-fit:contain; margin-bottom:2rem; }
 .hub h1{ font-size:3rem; font-weight:700; letter-spacing:-.02em; text-align:center; }
-.hub h1 .yel{ color:var(--yellow); }
+.hub h1 .yel{ color:var(--gold-ink); }
 .hub .lede{ font-size:1.6rem; color:var(--muted); font-weight:400; text-align:center; margin-top:.8rem; max-width:52rem; }
 .hub-badge{ display:inline-block; background:var(--ink-dark); color:var(--yellow); font-size:1.05rem; font-weight:700; letter-spacing:.14em; border-radius:var(--r-pill); padding:.3rem 1.1rem; margin-bottom:1.6rem; }
 .pathgrid{ display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:3.2rem; width:100%; max-width:82rem; }
@@ -187,13 +190,18 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .pathcard h2{ font-size:2.2rem; font-weight:700; letter-spacing:-.01em; margin:.3rem 0 .5rem; }
 .pathcard .psub{ font-size:1.5rem; color:var(--muted); font-weight:400; }
 .pathguide{ list-style:none; padding:0; margin:1.6rem 0 0; display:flex; flex-direction:column; gap:.9rem; }
-.pathguide li{ display:flex; gap:1rem; align-items:flex-start; font-size:1.35rem; color:var(--ink); line-height:1.45; }
-.pathguide li .ck{ flex:none; width:2rem; height:2rem; border-radius:50%; background:var(--fill); display:flex; align-items:center; justify-content:center; margin-top:.1rem; }
-.pathcard.prog .pathguide li .ck{ color:#FFC700; } .pathcard.athl .pathguide li .ck{ color:#00CC00; }
+/* Bullets must read as ONE continuous sentence with inline bold. Do not make the
+   <li> a flex/grid container: that promotes each text run and each <b> into its
+   own anonymous flex item, fragmenting the sentence into misaligned columns.
+   Block flow + hanging indent keeps the checkmark badge aligned identically. */
+.pathguide li{ display:block; position:relative; padding-left:3rem; font-size:1.35rem; color:var(--ink); line-height:1.45; }
+.pathguide li b{ font-weight:700; color:inherit; }
+.pathguide li .ck{ position:absolute; left:0; top:.1rem; width:2rem; height:2rem; border-radius:50%; background:var(--fill); display:flex; align-items:center; justify-content:center; }
+.pathcard.prog .pathguide li .ck{ color:var(--gold-ink); } .pathcard.athl .pathguide li .ck{ color:#00CC00; }
 .pathfoot{ margin-top:2.2rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:1.6rem; border-top:1px solid var(--line); }
 .pathfoot .who{ font-size:1.2rem; color:var(--muted-2); font-weight:500; }
 .pathcta{ font-size:1.45rem; font-weight:700; color:var(--ink); display:inline-flex; align-items:center; gap:.5rem; }
-.pathcard.prog:hover .pathcta{ color:#FFC700; } .pathcard.athl:hover .pathcta{ color:#00CC00; }
+.pathcard.prog:hover .pathcta{ color:var(--gold-ink); } .pathcard.athl:hover .pathcta{ color:#00CC00; }
 .hub-note{ margin-top:2.8rem; font-size:1.3rem; color:var(--muted-2); text-align:center; }
 .hub-note b{ color:var(--muted); font-weight:600; }
 /* switch-view control reused in both worlds */
@@ -210,7 +218,7 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .upsuggest{ border:1.5px solid var(--yellow); border-radius:1.6rem; padding:1.8rem 2rem; background:linear-gradient(135deg,#FFFDF3,#fff); margin-top:1.2rem; }
 .us-head{ display:flex; align-items:flex-start; gap:1.3rem; }
 .us-ic{ flex:none; width:4.2rem; height:4.2rem; border-radius:1.2rem; background:var(--yellow); display:flex; align-items:center; justify-content:center; font-size:2.1rem; }
-.us-k{ font-size:1.05rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#FFC700; }
+.us-k{ font-size:1.05rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-ink); }
 .us-head h4{ font-size:1.9rem; font-weight:700; letter-spacing:-.01em; margin-top:.2rem; }
 .upsuggest > p{ font-size:1.4rem; color:var(--muted); font-weight:400; line-height:1.55; margin:1.1rem 0 1.4rem; }
 .us-actions{ display:flex; gap:1rem; flex-wrap:wrap; }
@@ -239,11 +247,11 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 @media (max-width:640px){ .dropzones.pair{ grid-template-columns:1fr; } }
 .dz .slotnum{ position:absolute; top:1.1rem; left:1.1rem; width:2.4rem; height:2.4rem; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Inter',sans-serif; font-weight:700; font-size:1.3rem; }
 .dz.ba{ position:relative; }
-.dz .abtag{ font-size:1.05rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); }
+.dz .abtag{ font-size:1.05rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-ink); }
 
 /* clickable athlete name -> profile */
 .athlink{ cursor:pointer; border-bottom:1.5px solid transparent; transition:border-color .12s, color .12s; }
-.athlink:hover{ color:var(--gold); border-bottom-color:var(--yellow); }
+.athlink:hover{ color:var(--gold-ink); border-bottom-color:var(--yellow); }
 .tinfo .athlink{ display:inline-flex; align-items:center; gap:.4rem; }
 .tinfo .athlink::after{ content:'›'; color:var(--muted-2); font-weight:700; }
 .orgtbl tr td .athlink::after, .rostertbl tr td .athlink::after{ content:''; }
@@ -264,10 +272,10 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .teamctx .tc-sg{ display:flex; gap:.8rem; flex-wrap:wrap; margin-left:auto; }
 .sg{ font-size:1.15rem; font-weight:600; border-radius:var(--r-pill); padding:.5rem 1.2rem; white-space:nowrap; }
 .sg.good{ background:rgba(34,202,90,.12); color:#00CC00; }
-.sg.gap{ background:rgba(255,199,0,.16); color:#FFC700; }
+.sg.gap{ background:rgba(255,199,0,.16); color:var(--gold-ink); }
 .decision{ display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:center; }
 @media(max-width:860px){ .decision{ grid-template-columns:1fr; } .teamctx .tc-sg{ margin-left:0; } }
-.decision .dz-tag{ font-size:1.1rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#FFC700; }
+.decision .dz-tag{ font-size:1.1rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--gold-ink); }
 .decision h3{ font-size:2.1rem; font-weight:700; margin:.3rem 0 .5rem; }
 .decision p{ font-size:1.35rem; color:var(--muted); font-weight:400; line-height:1.5; margin-bottom:1rem; }
 .decision .dz-r{ display:flex; flex-direction:column; gap:.8rem; }
@@ -275,7 +283,7 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .secfix{ display:flex; gap:1.2rem; flex-wrap:wrap; margin-top:1.2rem; }
 .secfix .sf{ flex:1; min-width:22rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; border:1.5px solid var(--line); border-radius:1rem; padding:1rem 1.4rem; }
 .secfix .sf .sl b{ font-size:1.35rem; font-weight:600; } .secfix .sf .sl small{ display:block; font-size:1.15rem; color:var(--muted); }
-.secfix .sf .sc{ font-family:'Inter',sans-serif; font-weight:700; font-size:1.3rem; color:var(--s-warn); white-space:nowrap; }
+.secfix .sf .sc{ font-family:'Inter',sans-serif; font-weight:700; font-size:1.3rem; color:var(--gold-ink); white-space:nowrap; }
 .secfix .sf button{ background:#fff; border:1.5px solid var(--yellow); border-radius:var(--r-pill); font-size:1.1rem; font-weight:600; padding:.5rem 1.2rem; cursor:pointer; white-space:nowrap; }
 .secfix .sf button:hover{ background:var(--yellow); }
 /* ---- team synthesis: comparison strip ---- */
@@ -318,7 +326,7 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .tr-item .ti-b{ flex:1; }
 .tr-item .ti-b b{ font-size:1.4rem; font-weight:700; }
 .tr-item .ti-b small{ display:block; font-size:1.2rem; color:var(--muted); margin-top:.2rem; line-height:1.45; }
-.tr-item .ti-b .cnt{ font-weight:700; color:#FFC700; }
+.tr-item .ti-b .cnt{ font-weight:700; color:var(--gold-ink); }
 .tr-item .ti-assign{ align-self:center; background:#fff; border:1.5px solid var(--yellow); border-radius:var(--r-pill); font-size:1.1rem; font-weight:600; padding:.5rem 1.2rem; cursor:pointer; white-space:nowrap; }
 .tr-item .ti-assign:hover{ background:var(--yellow); }
 .tr-col .tr-cta{ margin-top:1.4rem; width:100%; }
@@ -350,9 +358,36 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .statrow .k{ font-size:1.1rem; letter-spacing:.1em; color:var(--muted); font-weight:600; }
 .statrow .v{ font-size:2.4rem; margin-top:.4rem; }
 
+/* ---- concept info affordance ----
+   A small ⓘ that reveals a plain-language definition of a Couro-invented term
+   (Archetype, FreeFlow) right where the term is first used. Hover on desktop,
+   tap on touch — so the coach never has to guess what a word means. */
+.cinfo{ position:relative; display:inline-flex; vertical-align:middle; margin-left:.45rem; }
+.cinfo .cinfo-btn{ display:inline-flex; align-items:center; justify-content:center; width:1.7rem; height:1.7rem;
+  color:var(--muted-2); cursor:pointer; border-radius:50%; line-height:0; transition:color .12s; }
+.cinfo .cinfo-btn svg{ width:1.5rem; height:1.5rem; display:block; }
+.cinfo .cinfo-btn:hover, .cinfo.open .cinfo-btn{ color:var(--ink); }
+.cinfo .cinfo-btn:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(255,199,0,.35); }
+.cinfo-pop{ position:absolute; z-index:60; top:calc(100% + .9rem); left:50%; transform:translateX(-50%);
+  width:27rem; max-width:calc(100vw - 3.2rem); background:#fff; border:1.5px solid var(--line); border-radius:1rem;
+  box-shadow:0 12px 32px rgba(26,29,36,.18); padding:1.1rem 1.25rem; text-align:left; text-transform:none;
+  letter-spacing:0; font-size:1.18rem; line-height:1.5; font-weight:400; color:var(--muted);
+  opacity:0; visibility:hidden; pointer-events:none; transition:opacity .12s ease; }
+.cinfo-pop b{ display:block; color:var(--ink); font-weight:700; font-size:1.25rem; margin-bottom:.35rem; }
+.cinfo-pop em{ font-style:normal; font-weight:700; color:var(--ink); }
+.cinfo-pop::before{ content:''; position:absolute; top:-.66rem; left:var(--cinfo-arrow,50%); margin-left:-.6rem;
+  width:1.2rem; height:1.2rem; background:#fff; border-left:1.5px solid var(--line); border-top:1.5px solid var(--line);
+  transform:rotate(45deg); }
+.cinfo-pop.r{ left:auto; right:-.5rem; transform:none; --cinfo-arrow:auto; }
+.cinfo-pop.r::before{ left:auto; right:.5rem; margin-left:0; }
+.cinfo:hover .cinfo-pop, .cinfo.open .cinfo-pop{ opacity:1; visibility:visible; pointer-events:auto; }
+#stypes .cinfo{ align-self:center; margin-left:-.6rem; margin-right:.35rem; }
+/* the ⓘ sits in the stat label, so drop its popover clear of the value it explains */
+.statrow .cinfo-pop{ top:calc(100% + 3.6rem); }
+
 /* Trend / chart cards */
 .chart-line{ width:100%; height:auto; }
-.focus-eyebrow{ font-size:1.1rem; letter-spacing:.12em; font-weight:700; color:var(--gold); margin-bottom:.8rem; }
+.focus-eyebrow{ font-size:1.1rem; letter-spacing:.12em; font-weight:700; color:var(--gold-ink); margin-bottom:.8rem; }
 .focus h4{ font-size:1.9rem; font-weight:700; margin-bottom:.6rem; }
 .focus p{ color:var(--muted); font-size:1.4rem; font-weight:400; margin-bottom:1.6rem; }
 .chiprow{ display:flex; gap:1rem; flex-wrap:wrap; }
@@ -498,7 +533,7 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 #v-create .fgroup{ background:#fff; border:1.5px solid var(--line); border-radius:1.4rem;
   padding:1.8rem 2rem 2rem; margin-bottom:1.6rem; box-shadow:var(--shadow-soft); }
 #v-create .fgroup .fsec{ display:flex; align-items:center; gap:.7rem; margin:0 0 1.4rem; }
-#v-create .fgroup .fsec svg{ width:1.7rem; height:1.7rem; color:var(--yellow); flex:none; }
+#v-create .fgroup .fsec svg{ width:1.7rem; height:1.7rem; color:var(--gold-ink); flex:none; }
 
 /* ============ Onboarding overlay (CONCEPT) ============ */
 .ob-overlay{ position:fixed; inset:0; background:rgba(26,29,36,.6); z-index:200; display:flex; align-items:center; justify-content:center; padding:2rem; }
@@ -509,7 +544,7 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 @keyframes obIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
 @media (prefers-reduced-motion:reduce){ .slide{ animation:none; } }
 .ob-art{ height:19rem; display:flex; align-items:center; justify-content:center; gap:1.4rem; margin-bottom:2rem; }
-.ob-kicker{ font-size:1.1rem; font-weight:700; letter-spacing:.14em; color:var(--gold); text-transform:uppercase; margin-bottom:.6rem; }
+.ob-kicker{ font-size:1.1rem; font-weight:700; letter-spacing:.14em; color:var(--gold-ink); text-transform:uppercase; margin-bottom:.6rem; }
 .ob-card h2{ font-size:2.4rem; font-weight:700; margin-bottom:.8rem; }
 .ob-card .slide p.body{ color:var(--muted); font-size:1.5rem; font-weight:400; max-width:40rem; margin:0 auto 2.4rem; }
 .ob-dots{ display:flex; gap:.8rem; justify-content:center; margin-bottom:2.2rem; }
@@ -553,7 +588,7 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .dz.filled{ border-style:solid; border-color:var(--yellow); background:#fff; }
 .dz h5{ font-size:1.45rem; font-weight:600; margin:.8rem 0 .3rem; }
 .dz p{ font-size:1.25rem; color:var(--muted); font-weight:400; }
-.dz .badge{ display:inline-block; margin-top:.9rem; font-size:1.05rem; font-weight:600; border-radius:var(--r-pill); padding:.25rem 1rem; background:rgba(255,199,0,.15); color:#FFC700; }
+.dz .badge{ display:inline-block; margin-top:.9rem; font-size:1.05rem; font-weight:600; border-radius:var(--r-pill); padding:.25rem 1rem; background:rgba(255,199,0,.15); color:var(--gold-ink); }
 .dz .badge.opt{ background:var(--fill); color:var(--muted); border:1px solid var(--line); }
 .dz.filled .badge{ background:rgba(34,202,90,.15); color:var(--s-great); border:none; }
 .upsec{ margin-top:2.4rem; }
@@ -579,12 +614,12 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .roster-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(28rem,1fr)); gap:1.8rem; margin-bottom:3.2rem; }
 .roster-card{ border:1.5px solid var(--line); border-radius:16px; padding:2.2rem; cursor:pointer; transition:box-shadow .12s,border-color .12s; background:#fff; }
 .roster-card:hover{ border-color:var(--yellow); box-shadow:var(--glow); }
-.roster-card .sport{ font-size:1.1rem; font-weight:700; letter-spacing:.08em; color:var(--gold); text-transform:uppercase; }
+.roster-card .sport{ font-size:1.1rem; font-weight:700; letter-spacing:.08em; color:var(--gold-ink); text-transform:uppercase; }
 .roster-card h3{ font-size:1.8rem; font-weight:700; margin:.5rem 0 .3rem; }
 .roster-card .coach{ font-size:1.3rem; color:var(--muted); font-weight:400; margin-bottom:1.6rem; }
 .roster-card .row{ display:flex; justify-content:space-between; align-items:center; font-size:1.3rem; padding:.8rem 0; border-top:1px solid var(--line); }
 .alertchip{ display:inline-block; font-size:1.1rem; font-weight:600; border-radius:var(--r-pill); padding:.3rem 1rem; }
-.alertchip.warn{ background:rgba(255,199,0,.18); color:#FFC700; }
+.alertchip.warn{ background:rgba(255,199,0,.18); color:var(--gold-ink); }
 .alertchip.ok{ background:rgba(34,202,90,.14); color:var(--s-great); }
 .alertchip.info{ background:var(--fill); color:var(--muted); }
 
@@ -755,7 +790,7 @@ body.mobile .bltile::after{ content:"Tap ›"; display:block; margin-top:.5rem; 
 .darkcard{ background:#1B1F1B; border-radius:18px; padding:1.8rem; color:#fff; }
 .darkcard h3{ color:#fff; }
 .kick{ font-size:1.1rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; margin-bottom:1rem; }
-.kick.g{ color:#00CC00; } .kick.a{ color:#FFC700; } .kick.grn2{ color:#00CC00; }
+.kick.g{ color:#00CC00; } .kick.a{ color:var(--gold-ink); } .kick.grn2{ color:#00CC00; }
 .pillrow{ display:flex; gap:.8rem; flex-wrap:wrap; margin-top:1.2rem; }
 .dpill{ flex:1; min-width:9rem; border-radius:10px; padding:.9rem 1rem; text-align:center; font-size:1.2rem; color:#ccc; }
 .dpill b{ display:block; font-size:1.7rem; font-family:'Inter',sans-serif; }
@@ -792,7 +827,7 @@ body.mobile .bltile::after{ content:"Tap ›"; display:block; margin-top:.5rem; 
 .ma-chips{ display:flex; flex-direction:column; gap:.7rem; margin-bottom:1.4rem; }
 .ma-chip{ text-align:left; font-size:1.3rem; font-weight:700; padding:.75rem 1.1rem; border-radius:.9rem; border:none; cursor:pointer; }
 .ma-chip.strong{ background:rgba(5,150,105,.12); color:#0a7d54; }
-.ma-chip.gap{ background:rgba(224,164,0,.15); color:#B8860B; }
+.ma-chip.gap{ background:rgba(224,164,0,.15); color:var(--gold-ink); }
 .ma-chip:hover{ filter:brightness(.97); }
 .ma-vs{ font-size:1.25rem; color:var(--muted); line-height:1.5; }
 .ma-vs b{ color:var(--ink); }
@@ -825,7 +860,7 @@ svg text[onclick]:hover{ fill:var(--gold); }
 .tt-bars .bar.target{ background:transparent; border:2px dashed #00CC00; color:#00CC00; height:8.6rem; }
 .tt-bars .bl{ font-size:1.1rem; font-weight:700; letter-spacing:.08em; color:var(--muted); margin-top:.6rem; }
 .whybox{ background:#fefce8; border:1.5px solid #FFC700; border-radius:12px; padding:1.4rem; margin-top:1.4rem; }
-.whybox .t{ font-size:1.1rem; font-weight:700; letter-spacing:.1em; color:#FFC700; margin-bottom:.5rem; }
+.whybox .t{ font-size:1.1rem; font-weight:700; letter-spacing:.1em; color:var(--gold-ink); margin-bottom:.5rem; }
 .whybox p{ font-size:1.35rem; color:var(--muted); font-weight:400; }
 .darkfoot{ background:#1B1F1B; border-radius:13px; padding:1.4rem 1.6rem; margin-top:1.4rem; color:#fff; }
 .darkfoot .row{ display:flex; justify-content:space-between; align-items:center; font-size:1.3rem; }
@@ -861,7 +896,7 @@ body.mobile .gaugegrid{ grid-template-columns:1fr 1fr; }
 .riskbtn .head .t{ font-size:1.45rem; font-weight:600; }
 .riskbtn .asym{ font-size:1.05rem; background:var(--fill); border-radius:999px; padding:.2rem .8rem; color:var(--muted); }
 .riskbtn .badge{ margin-left:auto; font-size:1.1rem; font-weight:700; border-radius:999px; padding:.3rem 1.1rem; }
-.badge.hi{ background:#FEE2E2; color:#DC4A3F; } .badge.wa{ background:#FFFBE6; color:#b8860b; } .badge.lo{ background:#e8f8ed; color:#00CC00; }
+.badge.hi{ background:#FEE2E2; color:#DC4A3F; } .badge.wa{ background:#FFFBE6; color:var(--gold-ink); } .badge.lo{ background:#e8f8ed; color:#00CC00; }
 .lrlabels{ display:flex; justify-content:space-between; font-size:1.15rem; color:var(--muted); margin:.9rem 0 .4rem; }
 .splitbar{ display:flex; height:1rem; border-radius:999px; overflow:hidden; background:var(--fill); position:relative; }
 .splitbar::after{ content:""; position:absolute; left:50%; top:0; bottom:0; width:2px; background:#fff; }
@@ -914,7 +949,7 @@ body.mobile .gaugegrid{ grid-template-columns:1fr 1fr; }
 .ev-thumb .tt{ font-size:1.45rem; font-weight:700; }
 .ev-thumb .vv{ font-size:1.3rem; color:#00CC00; font-weight:600; margin-top:.2rem; }
 .ev-thumb .vv::before{ content:"▶ "; font-size:1.05rem; }
-.sideonly{ font-size:1.05rem; font-weight:700; letter-spacing:.06em; background:#FFF4CC; color:#B8860B; border-radius:999px; padding:.4rem 1.2rem; }
+.sideonly{ font-size:1.05rem; font-weight:700; letter-spacing:.06em; background:#FFF4CC; color:var(--gold-ink); border-radius:999px; padding:.4rem 1.2rem; }
 .strobebox{ border:2px solid var(--yellow); border-radius:16px; padding:1.6rem; margin-top:1.4rem; }
 .strobebox .hd{ display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; }
 .strobebox .star{ width:3.2rem; height:3.2rem; border-radius:8px; background:var(--yellow); display:flex; align-items:center; justify-content:center; }
@@ -1008,7 +1043,7 @@ body.mobile #mb-rows{ grid-template-columns:1fr; }
 .insight .ico{ flex:none; }
 .avx{ width:3.6rem; height:3.6rem; border-radius:50%; background:var(--fill); color:var(--ink); font-weight:700; font-size:1.2rem; display:flex; align-items:center; justify-content:center; flex:none; font-family:'Lexend',sans-serif; }
 .avx.hi{ background:#FDE8E6; color:#DC4A3F; }
-.avx.md{ background:#FFF3C4; color:#FFC700; }
+.avx.md{ background:#FFF3C4; color:var(--gold-ink); }
 .avx.ok{ background:#DCFCE7; color:#00CC00; }
 .trow{ display:flex; align-items:center; gap:1.3rem; padding:1.1rem 1.3rem; border:1px solid var(--line); border-left:4px solid #D8D0BC; border-radius:1rem; background:#fff; margin-bottom:.9rem; }
 .trow:last-child{ margin-bottom:0; }
@@ -1084,7 +1119,7 @@ body.mobile #mb-rows{ grid-template-columns:1fr; }
 .deck-check.todo{ background:transparent; border:2px dashed var(--line); }
 .deck-name{ flex:1; font-size:1.4rem; font-weight:600; color:var(--ink); }
 .deck-note{ font-size:1.2rem; color:var(--muted); }
-.deck-note.flag{ color:var(--s-warn); font-weight:600; }
+.deck-note.flag{ color:var(--gold-ink); font-weight:600; }
 .deck-note.est{ color:var(--muted-2); }
 .deckrow.done .deck-name{ color:var(--muted); font-weight:500; }
 .deck-go{ color:var(--muted-2); font-size:1.3rem; font-weight:700; padding-left:.4rem; }
@@ -1107,7 +1142,7 @@ body.mobile #mb-rows{ grid-template-columns:1fr; }
 .sqchip.two{ border-color:var(--yellow); background:#FFFDF3; }
 .sqchip.est small{ color:var(--muted-2); }
 .sqchip i{ font-style:normal; color:var(--muted); cursor:pointer; padding:0 .2rem; }
-.sqchip i:hover{ color:#FFC700; }
+.sqchip i:hover{ color:var(--gold-ink); }
 
 /* ---- search-first roster ---- */
 .rsearch{ display:flex; flex-wrap:wrap; align-items:center; gap:.8rem; margin-bottom:1.2rem; }
@@ -1129,7 +1164,7 @@ body.mobile #mb-rows{ grid-template-columns:1fr; }
 
 /* ---- staff & access (org tab) ---- */
 .rolepill{ font-size:1.15rem; font-weight:600; padding:.4rem 1rem; border-radius:var(--r-pill); background:var(--fill); color:var(--muted); }
-.rolepill.owner{ background:#FFF3C4; color:#FFC700; }
+.rolepill.owner{ background:#FFF3C4; color:var(--gold-ink); }
 .rolesel{ font-family:inherit; font-size:1.15rem; font-weight:600; padding:.45rem .8rem; border:1.5px solid var(--line); border-radius:var(--r-pill); background:#fff; color:var(--ink); }
 .accessnote{ font-size:1.2rem; color:var(--muted); line-height:1.6; margin:1.2rem 0 0; padding-top:1.2rem; border-top:1px solid var(--line); }
 .accessnote b{ color:var(--ink); font-weight:600; }
@@ -1185,7 +1220,7 @@ body.mobile .bfly .brow{ grid-template-columns:2.4rem 1fr 8rem 1fr 2.4rem; }
 body.mobile .cmp-chips .cl{ width:100%; padding-top:0; }
 
 /* ---------- The Bottom Line synthesis (v12) ---------- */
-.blkick{ font-size:1.05rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#FFC700; }
+.blkick{ font-size:1.05rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-ink); }
 .blgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; margin-top:1.4rem; }
 body.mobile .blgrid{ grid-template-columns:1fr; }
 @media (max-width:860px){ .blgrid{ grid-template-columns:1fr; } }
@@ -1205,7 +1240,7 @@ body.mobile .blgrid{ grid-template-columns:1fr; }
 .blhook{ font-size:1.35rem; font-weight:600; color:var(--ink); line-height:1.35; margin:.7rem 0 .5rem; }
 .blwhy{ font-size:1.2rem; font-weight:700; color:var(--muted); }
 .bltile:hover .blwhy{ color:var(--ink); }
-.status.watch{ color:#B8860B; }
+.status.watch{ color:var(--gold-ink); }
 .blsection{ font-size:1.15rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--muted-2); margin:2.2rem 0 1.1rem; }
 .blsplit .blbox{ background:var(--fill); border-radius:1.2rem; padding:1.5rem 1.6rem; }
 .blsplit .blbox h4{ margin:0; font-size:1.55rem; }
@@ -1213,14 +1248,14 @@ body.mobile .blgrid{ grid-template-columns:1fr; }
 .blcallout{ margin-top:1rem; font-size:1.28rem; color:var(--ink); background:#FFFBEB; border:1px solid #FDE68A; border-radius:.8rem; padding:.85rem 1.1rem; line-height:1.45; }
 .projstat{ display:flex; align-items:baseline; gap:.7rem; margin:.2rem 0 1rem; flex-wrap:wrap; }
 .projstat .ps-now,.projstat .ps-proj{ font-size:2.6rem; font-weight:800; font-family:'Inter',sans-serif; line-height:1; }
-.projstat .ps-now{ color:var(--ink); } .projstat .ps-proj{ color:#E0A400; }
+.projstat .ps-now{ color:var(--ink); } .projstat .ps-proj{ color:var(--gold-ink); }
 .projstat .ps-arrow{ font-size:1.7rem; color:var(--muted-2); }
 .projstat .ps-note{ font-size:1.15rem; color:var(--muted); font-weight:500; }
 .onefix{ display:flex; align-items:center; gap:.9rem; width:100%; margin-top:1.6rem; background:var(--fill); border:1px solid var(--line); border-left:3px solid var(--yellow); border-radius:.9rem; padding:.9rem 1.2rem; cursor:pointer; text-align:left; font-size:1.32rem; font-weight:400; color:var(--ink); line-height:1.4; transition:background .14s; }
 .onefix:hover{ background:#F3F1EA; }
 .onefix b{ font-weight:700; }
 .onefix .ico{ font-size:1.5rem; }
-.onefix .ofx-arrow{ margin-left:auto; font-weight:800; color:#B8860B; white-space:nowrap; }
+.onefix .ofx-arrow{ margin-left:auto; font-weight:800; color:var(--gold-ink); white-space:nowrap; }
 .fatcard{ background:#fff; border:1.5px solid var(--line); border-radius:var(--r-card); box-shadow:var(--shadow-soft); overflow:hidden; }
 .fatcard > summary{ list-style:none; cursor:pointer; padding:1.7rem 2rem; display:flex; align-items:center; gap:1rem; }
 .fatcard > summary::-webkit-details-marker{ display:none; }
@@ -1253,10 +1288,10 @@ body.mobile .blsplit{ grid-template-columns:1fr; }
 
 /* ---------- outcome thread + headlines (v14) ---------- */
 .otag{ display:inline-block; font-size:.95rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; border-radius:var(--r-pill); padding:.25rem .8rem; margin-left:.6rem; vertical-align:2px; }
-.otag.spd{ background:rgba(224,164,0,.16); color:#B8860B; }
+.otag.spd{ background:rgba(224,164,0,.16); color:var(--gold-ink); }
 .otag.eff{ background:rgba(22,163,74,.14); color:#0a7d54; }
 .otag.dur{ background:rgba(220,74,63,.13); color:#C0392B; }
-.fixtag{ display:inline-block; font-size:1rem; font-weight:600; border-radius:var(--r-pill); padding:.25rem .9rem; background:#FFF3C4; color:#FFC700; border:1px dashed #FFC700; margin-left:.6rem; vertical-align:2px; white-space:nowrap; }
+.fixtag{ display:inline-block; font-size:1rem; font-weight:600; border-radius:var(--r-pill); padding:.25rem .9rem; background:#FFF3C4; color:var(--gold-ink); border:1px dashed var(--gold-ink); margin-left:.6rem; vertical-align:2px; white-space:nowrap; }
 .odot{ display:inline-block; width:.9rem; height:.9rem; border-radius:.25rem; margin-right:.5rem; vertical-align:-1px; }
 .odot.spd{ background:#E0A400; } .odot.eff{ background:#16A34A; } .odot.dur{ background:#DC4A3F; }
 .headline{ font-size:1.5rem; font-weight:400; line-height:1.5; padding:1.4rem 1.8rem; background:#fff; border:1.5px solid var(--line); border-left:4px solid var(--yellow); border-radius:1rem; margin-bottom:.4rem; color:var(--muted); }
@@ -1273,7 +1308,7 @@ body.mobile .blsplit{ grid-template-columns:1fr; }
 .xplink:hover{ border-color:var(--yellow); color:var(--ink); }
 .tourcard{ position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); width:min(46rem, calc(100vw - 3rem)); background:#fff; border:2px solid var(--yellow); border-radius:1.4rem; box-shadow:0 14px 44px rgba(26,29,36,.22); padding:1.6rem 1.9rem 1.5rem; z-index:400; }
 .tourcard .tc-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:.5rem; }
-.tourcard .tc-step{ font-size:1.05rem; font-weight:700; letter-spacing:.14em; color:#FFC700; text-transform:uppercase; }
+.tourcard .tc-step{ font-size:1.05rem; font-weight:700; letter-spacing:.14em; color:var(--gold-ink); text-transform:uppercase; }
 .tourcard .tc-x{ background:none; border:none; font-size:1.5rem; color:var(--muted); cursor:pointer; padding:.2rem .5rem; }
 .tourcard h4{ font-size:1.55rem; font-weight:700; margin-bottom:.35rem; }
 .tourcard p{ font-size:1.28rem; line-height:1.55; font-weight:400; color:var(--muted); }
@@ -1390,7 +1425,7 @@ body.mobile .cap-view{ width:366px; height:calc(100vh - 2.4rem - var(--phone-bot
 .clipname{ flex:1; min-width:0; font-family:'Lexend',sans-serif; font-size:1.2rem; font-weight:600; color:var(--ink); border:1.5px solid var(--line); border-radius:.7rem; padding:.5rem .6rem; background:#fff; -webkit-appearance:none; appearance:none; }
 .clipx{ flex:none; background:#fff; border:1.5px solid var(--line); border-radius:.6rem; width:2.8rem; height:2.8rem; color:var(--muted); font-size:1.2rem; }
 .clipx:hover{ border-color:#E0701A; color:#E0701A; }
-.clipflaglbl{ font-size:1rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#FFC700; margin-top:.5rem; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+.clipflaglbl{ font-size:1rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--gold-ink); margin-top:.5rem; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
 .clippick{ background:#FFC700; color:#fff; border:none; border-radius:.5rem; font-size:.95rem; font-weight:700; letter-spacing:.02em; text-transform:none; padding:.25rem .7rem; cursor:pointer; }
 .clippick:hover{ background:#FFC700; }
 .clip2{ position:absolute; top:.6rem; left:.6rem; background:rgba(230,161,0,.95); color:#fff; font-family:'Inter',sans-serif; font-size:1rem; font-weight:700; width:2rem; height:2rem; border-radius:50%; display:flex; align-items:center; justify-content:center; }
@@ -1427,9 +1462,9 @@ body.mobile .reel .clip{ width:11rem; }
 .rchip .rav{ flex:none; width:2.4rem; height:2.4rem; border-radius:50%; background:var(--ink); color:#fff; font-family:'Inter',sans-serif; font-weight:700; font-size:1rem; display:flex; align-items:center; justify-content:center; }
 .rchip .rnum{ font-family:'Inter',sans-serif; color:var(--muted-2); font-size:1.15rem; width:1.8rem; }
 .rchip .rx{ margin-left:auto; background:none; border:none; color:var(--muted-2); font-size:1.5rem; cursor:pointer; line-height:1; padding:.2rem .5rem; }
-.rchip .rx:hover{ color:#FFC700; }
+.rchip .rx:hover{ color:var(--gold-ink); }
 .rchip.dupe{ border-color:#FFC700; background:#FFFDF3; }
-.rchip.dupe .rflag{ font-size:1.05rem; font-weight:700; color:#FFC700; }
+.rchip.dupe .rflag{ font-size:1.05rem; font-weight:700; color:var(--gold-ink); }
 .rchip .rstat{ margin-left:auto; font-size:1.05rem; font-weight:700; padding:.2rem .7rem; border-radius:var(--r-pill); }
 .rchip .rstat.est{ background:var(--fill); color:var(--muted); }
 .rchip .rstat.pers{ background:rgba(5,150,105,.14); color:#00CC00; }
@@ -1480,7 +1515,7 @@ body.mobile .reel .clip{ width:11rem; }
 .bhstep .bh-n{ width:2.4rem; height:2.4rem; border-radius:50%; background:var(--yellow); color:var(--ink); font-family:'Inter',sans-serif; font-weight:700; font-size:1.25rem; display:flex; align-items:center; justify-content:center; margin-bottom:.7rem; }
 .bhstep b{ display:block; font-size:1.3rem; font-weight:700; margin-bottom:.2rem; }
 .bhstep small{ display:block; font-size:1.15rem; color:var(--muted); line-height:1.45; }
-.bhstep .bh-key{ display:inline-block; margin-top:.4rem; font-size:1rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#FFC700; background:rgba(255,199,0,.16); border-radius:var(--r-pill); padding:.2rem .7rem; }
+.bhstep .bh-key{ display:inline-block; margin-top:.4rem; font-size:1rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--gold-ink); background:rgba(255,199,0,.16); border-radius:var(--r-pill); padding:.2rem .7rem; }
 /* order row avatar — makes "who is who" tangible */
 .orow .oav{ flex:none; width:3rem; height:3rem; border-radius:50%; background:var(--ink); color:#fff; font-family:'Inter',sans-serif; font-weight:700; font-size:1.15rem; display:flex; align-items:center; justify-content:center; }
 .orow .ometa{ display:flex; flex-direction:column; }
@@ -1491,7 +1526,7 @@ body.mobile .reel .clip{ width:11rem; }
 /* reel: identity confirm on each clip */
 .clip .clipwho{ display:flex; align-items:center; gap:.5rem; margin-top:.7rem; font-size:1.05rem; color:var(--muted); font-weight:400; }
 .clip .clipwho .wav{ flex:none; width:1.9rem; height:1.9rem; border-radius:50%; background:var(--fill); color:var(--muted); font-family:'Inter',sans-serif; font-weight:700; font-size:.95rem; display:flex; align-items:center; justify-content:center; }
-.clip.flag .clipwho{ color:#FFC700; }
+.clip.flag .clipwho{ color:var(--gold-ink); }
 
 /* ===== share sheet (word-of-mouth) ===== */
 .share-wrap{ background:#fff; border-radius:2rem; width:calc(100vw - 3.2rem); max-width:44rem; max-height:90vh; overflow-y:auto; padding:2.4rem 2.4rem 2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,.28); }
@@ -1577,14 +1612,45 @@ body.mobile .journey .js2{ display:none; }
 
 /* ---------- The Reveal (v18) ---------- */
 .reveal{ position:relative; border-radius:1.8rem; overflow:hidden; background:#1B1F1B; }
-.reveal>img{ width:100%; display:block; min-height:32rem; object-fit:cover; opacity:.92; }
-.rv-body{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; gap:.45rem; padding:2.6rem; background:linear-gradient(180deg, rgba(16,18,22,.05) 22%, rgba(16,18,22,.60) 58%, rgba(16,18,22,.94) 100%); }
+/* the img's own background/colour also keeps the alt text ("One full gait cycle — nine
+   positions across a single stride") legible if the photo ever fails to decode */
+.reveal>img{ width:100%; display:block; min-height:32rem; object-fit:cover; opacity:.92; background:#12151A; color:rgba(255,255,255,.85); font-size:1.15rem; letter-spacing:.05em; }
+/* scrim (v22): flat 22% base over the whole photo + a gradient that reaches ~66% behind the
+   kicker/headline and ~96% behind the score row, so every overlay element clears contrast
+   regardless of what is in the underlying image */
+.rv-body{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; gap:.45rem; padding:2.6rem;
+  background:
+    linear-gradient(180deg, rgba(11,13,16,0) 0%, rgba(11,13,16,.35) 30%, rgba(11,13,16,.70) 52%, rgba(11,13,16,.88) 72%, rgba(11,13,16,.96) 100%),
+    rgba(11,13,16,.22);
+  text-shadow:0 1px 3px rgba(0,0,0,.6); }
 .rv-kick{ font-size:1.05rem; font-weight:700; letter-spacing:.22em; color:var(--yellow); text-transform:uppercase; }
 .rv-body h3{ font-size:2.1rem; font-weight:700; color:#fff; line-height:1.25; text-wrap:balance; }
-.rv-sub{ font-size:1.3rem; color:rgba(255,255,255,.75); font-weight:400; line-height:1.55; max-width:62ch; }
+.rv-sub{ font-size:1.3rem; color:rgba(255,255,255,.88); font-weight:400; line-height:1.55; max-width:62ch; }
 .rv-sub b{ color:#fff; }
 .rv-row{ display:flex; align-items:center; gap:2.4rem; margin-top:1.1rem; flex-wrap:wrap; }
-.rv-score .num{ font-family:'Inter',sans-serif; font-weight:700; font-size:4.6rem; line-height:1; color:#00CC00; font-variant-numeric:tabular-nums; }
+/* stat chips inside the Reveal hero only — near-opaque so the chip carries its own contrast
+   instead of borrowing it from whatever pixels sit behind it (v22) */
+.rv-row .pillrow .dpill{ background:rgba(11,13,16,.78); border:1px solid rgba(255,255,255,.16); color:rgba(255,255,255,.92); text-shadow:none; }
+.rv-row .pillrow .dpill.up{ background:rgba(13,71,44,.92); border-color:rgba(80,220,150,.5); }
+.rv-row .pillrow .dpill.up b{ color:#4BE38A; }
+.rv-row .pillrow .dpill.dn{ background:rgba(122,32,32,.92); border-color:rgba(255,150,150,.5); }
+.rv-row .pillrow .dpill.dn b{ color:#FFC700; }
+.rv-row .pillrow .dpill.nu{ background:rgba(30,33,38,.9); border-color:rgba(255,255,255,.2); }
+.rv-row .pillrow .dpill.nu b{ color:#F2F2F2; }
+/* text-shadow:none — the number sits on the ~96%-black foot of the scrim, and the inherited
+   blur was muddying the green at this size */
+.rv-score .num{ display:inline-block; font-family:'Inter',sans-serif; font-weight:700; font-size:4.6rem; line-height:1; color:#00CC00; font-variant-numeric:tabular-nums; text-shadow:none; }
+/* one-shot reveal flourish. Purely visual — it never rewrites the number, so the hero can
+   never be screenshotted or printed showing a partial score (v22) */
+@keyframes rvCount{ 0%{ transform:translateY(.5rem) scale(.9); opacity:.25; } 55%{ transform:translateY(0) scale(1.05); opacity:1; } 100%{ transform:none; opacity:1; } }
+.rv-score .num.rv-count{ animation:rvCount .56s cubic-bezier(.2,.75,.3,1) both; }
+@media (prefers-reduced-motion: reduce){ .rv-score .num.rv-count{ animation:none; } }
+/* image caption, restated as real text on its own opaque chip (v22) */
+.rv-cap{ position:absolute; top:1.6rem; left:1.6rem; z-index:2; font-size:1rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:rgba(255,255,255,.95); background:rgba(11,13,16,.74); border:1px solid rgba(255,255,255,.2); border-radius:999px; padding:.5rem .95rem; }
+/* the mobile hero is only 24rem tall and .rv-body already overflows it, so the caption chip
+   would land on top of the sub-copy — hide it there rather than compound the collision */
+body.mobile .rv-cap{ display:none; }
 .rv-score small{ display:block; font-size:1.05rem; color:rgba(255,255,255,.65); letter-spacing:.14em; text-transform:uppercase; margin-top:.3rem; }
 .rv-row .pillrow{ margin:0; flex:1; min-width:24rem; }
 body.mobile .rv-body{ padding:1.6rem; }
@@ -1612,7 +1678,7 @@ body.mobile .rvm-grid{ grid-template-columns:1fr; }
 .dchip{ display:flex; flex-direction:column; gap:.15rem; border:1.5px solid var(--line); border-radius:1rem; padding:.7rem 1.2rem; min-width:11rem; }
 .dchip .dk{ font-size:1.05rem; color:var(--muted); font-weight:600; }
 .dchip .dv{ font-family:'Inter',sans-serif; font-weight:700; font-size:1.35rem; white-space:nowrap; }
-.dchip.up .dv{ color:#00CC00; } .dchip.flat .dv{ color:#FFC700; }
+.dchip.up .dv{ color:#00CC00; } .dchip.flat .dv{ color:var(--gold-ink); }
 .thread-dot{ display:inline-block; width:.9rem; height:.9rem; border-radius:50%; background:#00CC00; margin-right:.5rem; box-shadow:0 0 0 3px rgba(34,202,90,.2); }
 .adh{ display:inline-flex; gap:.4rem; }
 .adh i{ width:2.2rem; height:.9rem; border-radius:.3rem; background:var(--fill); }
@@ -1645,7 +1711,7 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 .patcard.risk::before{ background:#FFC700; }
 .patcard.edge::before{ background:var(--s-good); }
 .pat-k{ font-size:1rem; letter-spacing:.14em; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:.5rem; }
-.patcard.risk .pat-k{ color:#B8860B; }
+.patcard.risk .pat-k{ color:var(--gold-ink); }
 .patcard.edge .pat-k{ color:var(--s-good); }
 .pat-count{ font-family:'Inter',sans-serif; }
 .pat-name{ font-size:1.65rem; font-weight:700; margin:.35rem 0 .45rem; line-height:1.22; color:var(--ink); }
@@ -1663,7 +1729,7 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 
 /* ===== TEAM MOVEMENT-STRATEGY SYNTHESIS ===== */
 .tms-hero{ background:linear-gradient(180deg,#FFFDF6,#fff); border:1.5px solid #F0E4B8 !important; margin-bottom:1.2rem; }
-.tms-k{ font-size:1rem; letter-spacing:.16em; font-weight:800; color:#B8860B; text-transform:uppercase; }
+.tms-k{ font-size:1rem; letter-spacing:.16em; font-weight:800; color:var(--gold-ink); text-transform:uppercase; }
 .tms-headline{ font-size:1.95rem; line-height:1.28; font-weight:800; margin:.4rem 0 .9rem; color:var(--ink); max-width:46ch; }
 .tms-move{ font-size:1.3rem; line-height:1.5; color:var(--ink); background:#F3FAF6; border-left:4px solid var(--s-good); border-radius:.7rem; padding:.9rem 1.1rem; margin:0; }
 .tms-move-k{ font-weight:800; color:#0a7d54; margin-right:.4rem; white-space:nowrap; }
@@ -1672,7 +1738,7 @@ body.mobile .ffhead, body.mobile .ffrow{ grid-template-columns:minmax(0,1fr) 6re
 .teamhero .th-score{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1rem; padding:.5rem 2.4rem; margin-right:-0.2rem; border:none; border-right:1.5px solid #F0E4B8; align-self:stretch; background:transparent; font:inherit; cursor:pointer; border-radius:.9rem; transition:background .12s; }
 .teamhero .th-score:hover{ background:rgba(192,146,15,.07); }
 .teamhero .th-meta{ display:flex; flex-direction:column; align-items:center; gap:.35rem; margin-top:.7rem; }
-.teamhero .th-more{ font-size:1.05rem; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:#B8860B; white-space:nowrap; }
+.teamhero .th-more{ font-size:1.05rem; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:var(--gold-ink); white-space:nowrap; }
 /* score ring — turns the number into a visual gauge (v29) */
 .teamhero .th-ring{ width:11rem; height:11rem; }
 .teamhero .th-ring svg{ width:100%; height:100%; display:block; }
@@ -1739,7 +1805,7 @@ body.mobile .teamhero .th-meta{ align-items:flex-start; margin-top:0; }
 .tms-dist{ display:flex; flex-direction:column; gap:1.2rem; margin-bottom:1rem; }
 .tms-strat-top{ display:flex; justify-content:space-between; align-items:baseline; }
 .tms-strat-top b{ font-size:1.45rem; } .tms-n{ font-family:'Inter',sans-serif; font-weight:800; font-size:1.6rem; }
-.tms-strat.edge .tms-n{ color:var(--s-good); } .tms-strat.risk .tms-n{ color:#B8860B; } .tms-strat.neutral .tms-n{ color:var(--muted); }
+.tms-strat.edge .tms-n{ color:var(--s-good); } .tms-strat.risk .tms-n{ color:var(--gold-ink); } .tms-strat.neutral .tms-n{ color:var(--muted); }
 .tms-bar{ height:.9rem; background:var(--line); border-radius:.5rem; overflow:hidden; margin:.4rem 0; }
 .tms-bar i{ display:block; height:100%; border-radius:.5rem; }
 .tms-bar i.edge{ background:var(--s-good); } .tms-bar i.risk{ background:#FFC700; } .tms-bar i.neutral{ background:var(--muted-2); }
@@ -1771,7 +1837,7 @@ body.mobile .tms-heat{ flex-direction:column; align-items:flex-start; }
 .ewspark{ width:170px; height:54px; flex:none; }
 .ewtag{ text-align:center; font-weight:800; font-size:1.3rem; line-height:1.15; white-space:nowrap; min-width:6rem; }
 .ewtag small{ display:block; font-weight:600; font-size:1rem; color:var(--muted); }
-.ewtag.hot{ color:#DC4A3F; } .ewtag.watch{ color:#B8860B; } .ewtag.ok{ color:var(--s-good); }
+.ewtag.hot{ color:#DC4A3F; } .ewtag.watch{ color:var(--gold-ink); } .ewtag.ok{ color:var(--s-good); }
 /* asymmetry map */
 .asymhead{ display:grid; grid-template-columns:10rem 1fr 7rem; gap:1rem; font-size:1.02rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted-2); font-weight:700; padding:.4rem .2rem; }
 .asymhead .lr{ display:flex; justify-content:space-between; }
@@ -1788,7 +1854,7 @@ body.mobile .tms-heat{ flex-direction:column; align-items:flex-start; }
 .asym-mid{ width:2px; height:2rem; background:var(--ink); }
 .asymtag{ text-align:right; font-weight:800; font-size:1.25rem; line-height:1.15; }
 .asymtag small{ display:block; font-weight:600; font-size:1rem; color:var(--muted); }
-.asymtag.hot{ color:#B8860B; } .asymtag.ok{ color:var(--s-good); }
+.asymtag.hot{ color:var(--gold-ink); } .asymtag.ok{ color:var(--s-good); }
 /* team fingerprint radar */
 .radarwrap{ display:flex; gap:1.4rem; align-items:center; flex-wrap:wrap; }
 .radar{ width:250px; height:230px; flex:none; }
@@ -1829,7 +1895,7 @@ body.mobile .tmbar .tm-upload{ margin-left:0; width:100%; justify-content:center
 .vsrow{ display:grid; grid-template-columns:9rem 1fr; align-items:center; gap:1rem; }
 .vsrow.big .vslab{ color:var(--ink); }
 .vslab{ font-size:1.22rem; font-weight:600; color:var(--muted); }
-.vslab .gaptag{ display:block; font-size:1rem; font-weight:700; color:#C0920F; letter-spacing:.02em; }
+.vslab .gaptag{ display:block; font-size:1rem; font-weight:700; color:var(--gold-ink); letter-spacing:.02em; }
 .vstrack{ display:flex; flex-direction:column; gap:.4rem; }
 .vsline{ display:flex; align-items:center; gap:.7rem; }
 .vsbar{ height:.9rem; border-radius:.45rem; min-width:2px; transition:width .3s; }
@@ -1913,7 +1979,7 @@ body.mobile .tmbar .tm-upload{ margin-left:0; width:100%; justify-content:center
 .tt-dot{ position:absolute; top:50%; width:1.5rem; height:1.5rem; border-radius:50%; transform:translate(-50%,-50%); border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.25); }
 .tt-dot.good{ background:var(--s-good); } .tt-dot.warn{ background:#E0A400; } .tt-dot.bad{ background:#DC4A3F; }
 .tt-chip{ font-size:1.18rem; font-weight:700; }
-.tt-chip.good{ color:#0a7d54; } .tt-chip.warn{ color:#B8860B; }
+.tt-chip.good{ color:#0a7d54; } .tt-chip.warn{ color:var(--gold-ink); }
 .techsplit{ display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; margin-top:1.8rem; }
 .techcol h5{ font-size:1.05rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); font-weight:800; margin:0 0 1rem; }
 .tt-flag{ padding:.5rem 0 .5rem .9rem; border-left:3px solid #E0A400; margin-bottom:.7rem; }
@@ -1963,7 +2029,7 @@ body.mobile .tt-row{ grid-template-columns:11rem 1fr 8rem; gap:.9rem; }
 .tcmp-bodies figure{ margin:0; display:flex; flex-direction:column; align-items:center; gap:.5rem; }
 .bodysvg{ width:7rem; height:auto; }
 .bcap{ font-size:1.2rem; font-weight:700; }
-.bcap.a{ color:#2F6FED; } .bcap.b{ color:#C0920F; }
+.bcap.a{ color:#2F6FED; } .bcap.b{ color:var(--gold-ink); }
 .bodykey{ font-size:1.1rem; color:var(--muted-2); text-align:center; margin-top:1rem; }
 .tcmp-open{ display:flex; gap:1.8rem; flex-wrap:wrap; margin-top:1.2rem; }
 .tcmp-open a{ font-size:1.25rem; font-weight:700; color:var(--ink); cursor:pointer; }
@@ -1975,7 +2041,7 @@ body.mobile .tcmp-grid{ grid-template-columns:1fr; }
 .tmx tr.selC .selbox::after{ content:"✓"; color:#fff; font-size:1.05rem; font-weight:800; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
 .tmx tr.selC td{ background:var(--fill); }
 .airead{ background:linear-gradient(180deg,#FBFAF4,#fff); border:1.5px solid #ECE6D5; border-radius:1rem; padding:1.4rem 1.6rem; margin-bottom:1.6rem; }
-.ai-k{ font-size:1.05rem; letter-spacing:.14em; text-transform:uppercase; font-weight:800; color:#B8860B; margin-bottom:.5rem; }
+.ai-k{ font-size:1.05rem; letter-spacing:.14em; text-transform:uppercase; font-weight:800; color:var(--gold-ink); margin-bottom:.5rem; }
 .ai-verdict{ font-size:1.5rem; font-weight:700; line-height:1.4; margin:0 0 .5rem; color:var(--ink); }
 .ai-line{ font-size:1.3rem; line-height:1.5; color:var(--muted); margin:.35rem 0; }
 .ai-verdict b, .ai-line b{ color:var(--ink); }
@@ -1992,7 +2058,7 @@ body.mobile .tcmp-grid{ grid-template-columns:1fr; }
 .simdiff{ display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.4rem; }
 .sd-col{ background:var(--fill); border-radius:.9rem; padding:1rem 1.1rem; }
 .sd-h{ font-size:1.05rem; letter-spacing:.08em; text-transform:uppercase; font-weight:800; margin-bottom:.7rem; }
-.sd-h.share{ color:#0a7d54; } .sd-h.diff{ color:#B8860B; }
+.sd-h.share{ color:#0a7d54; } .sd-h.diff{ color:var(--gold-ink); }
 .sd-chip{ display:inline-flex; align-items:baseline; gap:.45rem; background:#fff; border:1.5px solid var(--line); border-radius:2rem; padding:.35rem .9rem; margin:0 .45rem .45rem 0; font-size:1.18rem; font-weight:700; }
 .sd-chip em{ font-style:normal; font-weight:600; color:var(--muted); font-size:1.05rem; }
 .sd-chip.sgood{ border-color:#B8E0C8; } .sd-chip.swarn{ border-color:#F0DDA8; } .sd-chip.sbad{ border-color:#F2C4BE; }
@@ -2029,7 +2095,7 @@ body.mobile .movegrid{ gap:1.2rem; }
 .swcols{ display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; }
 .sw-h{ font-size:1.12rem; letter-spacing:.1em; text-transform:uppercase; font-weight:800; margin-bottom:.8rem; }
 .swcol.good .sw-h{ color:var(--s-good); }
-.swcol.watch .sw-h{ color:#B8860B; }
+.swcol.watch .sw-h{ color:var(--gold-ink); }
 .sw-item{ padding:.55rem 0 .55rem .9rem; border-left:3px solid var(--line); margin-bottom:.6rem; }
 .swcol.good .sw-item{ border-left-color:var(--s-good); }
 .swcol.watch .sw-item{ border-left-color:#E0A400; }
@@ -2052,7 +2118,7 @@ body.mobile .asymhead, body.mobile .asymrow{ grid-template-columns:8rem 1fr 6rem
 .pat-ath .avx:first-child{ margin-left:0; }
 .pat-ath .more{ margin-left:.7rem; font-size:1.12rem; color:var(--muted); font-weight:600; }
 .pat-go{ font-size:1.18rem; font-weight:700; white-space:nowrap; }
-.patcard.risk .pat-go{ color:#B8860B; }
+.patcard.risk .pat-go{ color:var(--gold-ink); }
 .patcard.edge .pat-go{ color:var(--s-good); }
 
 /* Archetype micro-tag — gives every roster row a movement identity, not just a number */
@@ -2210,6 +2276,46 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
 <!-- ===================== SCREEN: APP SHELL ===================== -->
 <section id="scr-app" hidden>
+  <!-- ===== PERSISTENT TOP BAR — Athletes shell =====================================
+       Structurally identical to the Program-view bar in #scr-org. If you edit one,
+       edit the other: only the id suffix (-ath / -org) and the account label differ. -->
+  <header class="hdr topbar">
+    <div class="tb-left">
+      <img class="tblogo" alt="Couro">
+      <span class="tb-name">Westgate Athletics</span>
+      <span class="concept-badge">CONCEPT</span>
+    </div>
+    <div class="viewswitch" role="group" aria-label="Switch between Program and Athletes">
+      <button type="button" data-vs="program" aria-pressed="false" onclick="switchView('program')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M10 21v-5h4v5"/></svg>
+        <span>Program</span>
+      </button>
+      <button type="button" data-vs="athletes" aria-pressed="false" onclick="switchView('athletes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5c1.4-3.7 4.6-5.5 7.5-5.5s6.1 1.8 7.5 5.5"/></svg>
+        <span>Athletes</span>
+      </button>
+    </div>
+    <div class="tb-right">
+      <button class="admin-btn" onclick="toast('Opens <b>admin.ai.couro.io</b> in a new tab')">Admin Panel</button>
+      <button class="hammenu" onclick="toggleNav(event)" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div class="userpill" onclick="toggleMenu(event)">
+        <span class="nm">My Account</span>
+        <span class="av">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+        </span>
+        <div class="menu" id="usermenu" hidden>
+          <button onclick="menuGo('settings')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-2-1.2L14 3h-4l-.4 2.6a7.6 7.6 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1c.6.5 1.3.9 2 1.2L10 21h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.2-.8.2-1.2z"/></svg>
+            Settings
+          </button>
+          <button onclick="go('login')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
 <div class="shell">
   <button id="hamb" aria-label="Open athlete roster" onclick="document.body.classList.toggle('drawer-open')">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -2236,26 +2342,6 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
   <!-- Main -->
   <div class="main">
-    <header class="hdr">
-      <button class="admin-btn" onclick="toast('Opens <b>admin.ai.couro.io</b> in a new tab')">Admin Panel</button>
-      <button class="hammenu" onclick="toggleNav(event)" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-      <div class="userpill" onclick="toggleMenu(event)">
-        <span class="nm">My Account</span>
-        <span class="av">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
-        </span>
-        <div class="menu" id="usermenu" hidden>
-          <button onclick="show('settings')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-2-1.2L14 3h-4l-.4 2.6a7.6 7.6 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1c.6.5 1.3.9 2 1.2L10 21h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.2-.8.2-1.2z"/></svg>
-            Settings
-          </button>
-          <button onclick="go('login')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
-            Logout
-          </button>
-        </div>
-      </div>
-    </header>
 
     <!-- ============ VIEW: account landing (triage) ============ -->
     <!-- Was a static "select an athlete" empty state. Now a real account-level landing:
@@ -2319,7 +2405,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       </div>
       <div class="lbl">Sessions Types</div>
       <div class="tabs" id="stypes">
-        <button class="on" onclick="stype(this)">Track</button><button onclick="stype(this)">Treadmill</button><button onclick="stype(this)">FreeFlow</button><button onclick="stype(this)">Basketball</button><button onclick="stype(this)">Softball</button>
+        <button class="on" onclick="stype(this)">Track</button><button onclick="stype(this)">Treadmill</button><button onclick="stype(this)">FreeFlow</button><span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is FreeFlow?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>FreeFlow</b>Scores movement quality in unscripted play — any drill, any gym, no setup. Use it when there's no rep to standardise: warm-ups, scrimmage, open movement.</span></span><button onclick="stype(this)">Basketball</button><button onclick="stype(this)">Softball</button>
       </div>
 
       <div class="profile">
@@ -2332,7 +2418,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="statrow">
           <div class="st"><div class="k">SESSIONS</div><div class="v num">12</div></div>
           <div class="st"><div class="k">LATEST SCORE</div><div class="v num" style="color:var(--s-good)">82</div></div>
-          <div class="st"><div class="k">ARCHETYPE</div><div class="v" style="font-size:1.9rem;font-weight:600">Glider</div></div>
+          <div class="st"><div class="k">ARCHETYPE<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is an archetype?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop r"><b>Archetype</b>A movement style Couro reads from an athlete's session patterns. <em>Glider:</em> smooth, low-oscillation stride with efficient ground contact — Gliders conserve energy well but can under-recruit hip drive at higher speeds. Full read on the <em>Signature</em> tab.</span></span></div><div class="v" style="font-size:1.9rem;font-weight:600">Glider</div></div>
         </div>
       </div>
 
@@ -2348,7 +2434,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="headline"><b>Best stretch of her year.</b> The crossover fix is week 2 of 6 and on track — knee drive is already +3. Re-test in 5 days.</div>
 
         <div class="card">
-          <p class="kick" style="color:#FFC700">SINCE HER LAST SESSION · JUN 22 → JUL 6</p>
+          <p class="kick" style="color:var(--gold-ink)">SINCE HER LAST SESSION · JUN 22 → JUL 6</p>
           <div class="diffstrip">
             <div class="dchip up"><span class="dk">Cadence symmetry</span><span class="dv">79 → 84 ▲</span></div>
             <div class="dchip up"><span class="dk">Knee drive</span><span class="dv">58 → 61 ▲</span></div>
@@ -2393,6 +2479,11 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             </div>
             <div class="ourcall" style="margin:0"><span class="k">OUR CALL</span><p>Knee drive 66+ within two uploads. The next capture is the verdict.</p></div>
           </div>
+          <p class="kick" style="margin:1.6rem 0 .2rem">THE DRILLS ON THIS FIX</p>
+          <div class="mi-check" onclick="miToggle(this)"><span class="bx">✓</span>Lane-line strides<span class="dose">4 × 60 m · 3 days/wk</span></div>
+          <div class="mi-check" onclick="miToggle(this)"><span class="bx">✓</span>Wall knee-drive holds<span class="dose">3 × 20 s · daily</span></div>
+          <div class="mi-check" onclick="miToggle(this)"><span class="bx">✓</span>A-skip ladder<span class="dose">4 × 30 m · 3 days/wk</span></div>
+          <p id="mi-note" style="font-size:1.2rem;color:var(--muted);font-weight:400;margin-top:.5rem">0 of 3 queued — tap to add to her plan</p>
           <div class="chiprow" style="margin-top:1.4rem">
             <button class="btn btn-yellow" onclick="show('session')">Open latest report</button>
             <button class="btn btn-ghost" onclick="toast('Nudges Montana with the remaining drill day + her cue: run on your own rail')">Nudge the last drill day</button>
@@ -2416,14 +2507,14 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <p style="font-size:1.4rem;color:var(--muted);font-weight:400">Smooth, low-oscillation stride with efficient ground contact. Gliders conserve energy well but can under-recruit hip drive at higher speeds.</p>
         </div>
         <div class="grid2">
-          <div class="card"><h3>Your Edge</h3><p style="font-size:1.4rem;color:var(--muted);font-weight:400">Elite-level vertical oscillation control — top 15% of Couro runners for stride smoothness.</p></div>
+          <div class="card"><h3>Her Edge</h3><p style="font-size:1.4rem;color:var(--muted);font-weight:400">Elite-level vertical oscillation control — top 15% of Couro runners for stride smoothness.</p></div>
           <div class="card"><h3>Areas to Develop</h3><p style="font-size:1.4rem;color:var(--muted);font-weight:400">Hip extension at toe-off and left-side knee drive lag the rest of the signature.</p></div>
         </div>
         <div class="card">
-          <h3>Your Growth Path</h3>
-          <p style="font-size:1.3rem;color:var(--muted);font-weight:400">Where you're headed if you make one change.</p>
+          <h3>Her Growth Path</h3>
+          <p style="font-size:1.3rem;color:var(--muted);font-weight:400">Where she's headed if she makes one change.</p>
           <div class="growflow">
-            <div class="growstep"><div class="k">YOU NOW</div><div class="v num" style="color:var(--s-good)">82</div><div class="l">Glider</div></div>
+            <div class="growstep"><div class="k">HER NOW</div><div class="v num" style="color:var(--s-good)">82</div><div class="l">Glider</div></div>
             <div class="growarrow">→</div>
             <div class="growstep now"><div class="k">THE FIX</div><div class="v" style="font-size:1.5rem">Free the left knee</div><div class="l">~6 weeks</div></div>
             <div class="growarrow">→</div>
@@ -2431,8 +2522,8 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           </div>
         </div>
         <div class="card">
-          <h3>Your Cues This Week</h3>
-          <p style="font-size:1.3rem;color:var(--muted);font-weight:400">The mantras that match your current focus.</p>
+          <h3>Her Cues This Week</h3>
+          <p style="font-size:1.3rem;color:var(--muted);font-weight:400">The mantras that match her current focus.</p>
           <div class="cuecard dark"><span class="emoji">🏃</span><span><span class="q">"Run on your own rail"</span><div class="ctx">Whole run — kills the crossover at the source</div></span></div>
           <div class="cuecard"><span class="emoji">🦵</span><span><span class="q">"Drive the left knee to the wall"</span><div class="ctx">During strides and A-skips</div></span></div>
           <div class="cuecard"><span class="emoji">🎵</span><span><span class="q">"Run tall through the hips"</span><div class="ctx">Warm-up posture reset</div></span></div>
@@ -2452,11 +2543,11 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           </div>
           <div class="chainstep">
             <div class="nwrap"><span class="n" style="background:#FFC700">1</span><span class="cline"></span></div>
-            <div><div class="sl" style="color:#FFC700">HAPPENING NOW</div><p>Left foot lands 3–4 cm across midline on the back straight.</p></div>
+            <div><div class="sl" style="color:var(--gold-ink)">HAPPENING NOW</div><p>Left foot lands 3–4 cm across midline on the back straight.</p></div>
           </div>
           <div class="chainstep">
             <div class="nwrap"><span class="n" style="background:#FFC700">2</span><span class="cline"></span></div>
-            <div><div class="sl" style="color:#FFC700">BUILDING</div><p>Adductor working ~18% harder on that side; knee PF load asymmetry now 12%.</p></div>
+            <div><div class="sl" style="color:var(--gold-ink)">BUILDING</div><p>Adductor working ~18% harder on that side; knee PF load asymmetry now 12%.</p></div>
           </div>
           <div class="chainstep">
             <div class="nwrap"><span class="n" style="background:#8A908A">3</span></div>
@@ -2497,7 +2588,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           </div>
           <div class="sess-card" onclick="show('session')">
             <div class="dt">Mon, May 5, 2026</div><div class="ty">Track Session</div>
-            <div class="sc num" style="color:var(--s-warn)">58</div>
+            <div class="sc num" style="color:var(--gold-ink)">58</div>
             <div class="foot">Returning from break</div>
           </div>
         </div>
@@ -2591,7 +2682,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <h3>Best track session on record — symmetry finally clicked</h3>
             <p class="rv-sub">From a few seconds of phone video, Couro tracked <b>thousands of joint positions</b> — 33 landmarks on every frame, every one of them hers. This is the second nobody can see at full speed. Jul 6 · Track Sprint · Glider</p>
             <div class="rv-row">
-              <div class="rv-score"><span class="num" id="rv-num">0</span><small>Couro Score</small></div>
+              <div class="rv-score"><span class="num" id="rv-num" data-final="82">82</span><small>Couro Score</small></div>
               <div class="pillrow">
                 <div class="dpill up"><b>↑ 84</b>cadence symmetry</div>
                 <div class="dpill dn"><b>↓ 61</b>knee drive</div>
@@ -2599,10 +2690,13 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
               </div>
             </div>
           </div>
+          <!-- the same caption is burned into the source photo, where the scrim + chips make it
+               unreadable; restating it as real text keeps it legible on any image (v22) -->
+          <span class="rv-cap">Full gait cycle · 9 positions across one stride</span>
         </div>
 
         <div class="card" id="tg-diff">
-          <p class="kick" style="color:#FFC700">SINCE HER LAST SESSION · JUN 22</p>
+          <p class="kick" style="color:var(--gold-ink)">SINCE HER LAST SESSION · JUN 22</p>
           <div class="diffstrip">
             <div class="dchip up"><span class="dk">Cadence symmetry</span><span class="dv">79 → 84 ▲</span></div>
             <div class="dchip up"><span class="dk">Knee drive</span><span class="dv">58 → 61 ▲</span></div>
@@ -2633,8 +2727,8 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
         <div class="card story" style="border-left-color:#FFC700">
           <div class="sthead">
-            <div><span class="act" style="color:#FFC700">THE BOTTLENECK</span><h4>Left foot still crosses midline</h4></div>
-            <div class="scorecol"><span class="big" style="color:var(--s-warn)">57</span><small>2 sessions flat</small></div>
+            <div><span class="act" style="color:var(--gold-ink)">THE BOTTLENECK</span><h4>Left foot still crosses midline</h4></div>
+            <div class="scorecol"><span class="big" style="color:var(--gold-ink)">57</span><small>2 sessions flat</small></div>
           </div>
           <p>On the back straight her left foot lands 3–4 cm across midline, loading the adductor chain and capping knee drive at 61.</p>
           <div class="storyviz"><div class="bandbar"><span class="bandseg" style="left:35%;width:45%"></span><span class="banddot" style="left:24%"></span></div><div class="bandnote">foot crossover (L) · dot sits below band</div></div>
@@ -2644,7 +2738,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
         <div class="card story" style="border-left-color:#FFC700">
           <div class="sthead">
-            <div><span class="act" style="color:#FFC700">THE UNLOCK</span><h4>~4 points of score head-room</h4></div>
+            <div><span class="act" style="color:var(--gold-ink)">THE UNLOCK</span><h4>~4 points of score head-room</h4></div>
             <div class="scorecol"><span class="big" style="color:var(--s-good)">86</span><small>projected</small></div>
           </div>
           <p>Runners with her profile who clean up crossover typically gain 3–5 symmetry points within six weeks — enough to move her into the elite band.</p>
@@ -2667,22 +2761,18 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         </div>
 
         <div class="card yb" id="tg-mission">
-          <p class="blkick">THIS WEEK'S MISSION</p>
-          <h3 style="margin:.3rem 0 .2rem">Break the crossover — two uploads to the elite band</h3>
+          <p class="blkick">THE NEW CALL</p>
+          <h3 style="margin:.3rem 0 .2rem">Knee drive 61 → 66+ within two uploads</h3>
+          <p style="font-size:1.3rem;color:var(--muted);font-weight:400;margin:.2rem 0 .2rem">Break the crossover and the elite band is two uploads away. That call is on the record — the next capture settles it.</p>
           <div class="journey">
             <div class="jnode"><span class="dot"></span><span class="jl">The hitch</span><span class="js2">spring · fixed</span></div>
             <div class="jnode"><span class="dot"></span><span class="jl">Symmetry clicks</span><span class="js2">today · 84 ✓</span></div>
             <div class="jnode now"><span class="dot"></span><span class="jl">The crossover</span><span class="js2">this block</span></div>
             <div class="jnode next"><span class="dot"></span><span class="jl">Elite band</span><span class="js2">86+ projected</span></div>
           </div>
-          <div class="mi-check" onclick="miToggle(this)"><span class="bx">✓</span>Lane-line strides<span class="dose">4 × 60 m · 3 days/wk</span></div>
-          <div class="mi-check" onclick="miToggle(this)"><span class="bx">✓</span>Wall knee-drive holds<span class="dose">3 × 20 s · daily</span></div>
-          <div class="mi-check" onclick="miToggle(this)"><span class="bx">✓</span>A-skip ladder<span class="dose">4 × 30 m · 3 days/wk</span></div>
-          <p id="mi-note" style="font-size:1.2rem;color:var(--muted);font-weight:400;margin-top:.5rem">0 of 3 queued — tap to add to her plan</p>
-          <div class="ourcall"><span class="k">OUR CALL</span><p>Knee drive 61 → 66+ within two uploads. Hold us to it — check 📌 Called It on her next report.</p></div>
+          <p style="display:flex;align-items:center;gap:.8rem;font-size:1.3rem;font-weight:600;margin:1.4rem 0 .9rem"><span style="width:2.2rem;height:2.2rem;border-radius:50%;background:var(--yellow);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex:none">✓</span>Logged — the drills, the checkpoint and this call now live on her thread.</p>
           <div style="display:flex;gap:1rem;flex-wrap:wrap">
-            <button class="btn btn-yellow" onclick="toast('Books the re-test capture — same track, same angle, 5–8 days out')">Schedule re-test · 5–8 days</button>
-            <button class="btn btn-ghost" onclick="toast('Sends Montana the mission card with drill videos + the journey strip')">Share the mission</button>
+            <button class="btn btn-yellow" onclick="openThread()">Added to her Open Thread →</button>
           </div>
         </div>
       </div>
@@ -3103,9 +3193,9 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         </div>
 
         <div style="background:#fff9e8;border:1.5px solid #f8d7a2;border-radius:16px;padding:1.8rem">
-          <p style="color:#FFC700;font-weight:700;font-size:1.4rem;margin-bottom:.6rem">A note on how we frame risk</p>
+          <p style="color:var(--gold-ink);font-weight:700;font-size:1.4rem;margin-bottom:.6rem">A note on how we frame risk</p>
           <p style="color:#92400e;font-size:1.35rem;font-weight:400">Couro's metrics are part of a broader load-management picture, not deterministic injury predictors. Injury risk is multifactorial — training load, history, sleep, nutrition, and biomechanics all play a role. We flag <i>mechanical attention levels</i>, not diagnoses.</p>
-          <p style="color:#FFC700;font-size:1.2rem;margin-top:.8rem">Based on: Buist et al. (2008), Umbrella Systematic Review (2024), IOC FAIR Consensus (2025)</p>
+          <p style="color:var(--gold-ink);font-size:1.2rem;margin-top:.8rem">Based on: Buist et al. (2008), Umbrella Systematic Review (2024), IOC FAIR Consensus (2025)</p>
         </div>
       </div>
     </div>
@@ -3175,7 +3265,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         #v-newteam .nt-reviewrows{ border-top:1px solid var(--line); margin-top:.4rem; }
         /* step-header icon — small tint chip that gives each setup step a scannable anchor */
         #v-newteam .lbl{ display:flex; align-items:center; gap:.7rem; }
-        #v-newteam .lbl .lbl-ic{ width:2.2rem; height:2.2rem; border-radius:.6rem; background:rgba(255,199,0,.15); color:var(--gold); display:inline-flex; align-items:center; justify-content:center; flex:none; }
+        #v-newteam .lbl .lbl-ic{ width:2.2rem; height:2.2rem; border-radius:.6rem; background:rgba(255,199,0,.15); color:var(--gold-ink); display:inline-flex; align-items:center; justify-content:center; flex:none; }
         #v-newteam .lbl .lbl-ic svg{ width:1.4rem; height:1.4rem; }
         #v-newteam .lbl .lbl-rest{ display:inline-flex; align-items:baseline; gap:.5rem; flex-wrap:wrap; }
         /* paste vs preview: give the pair a shared header so it reads as one "roster" block */
@@ -3270,14 +3360,14 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           #v-upload .up-clickable{ cursor:pointer; }
           #v-upload .up-forwho{ display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; background:var(--fill); border:1.5px solid var(--line); border-radius:1rem; padding:.85rem 1.1rem; margin:1.2rem 0 .2rem; font-size:1.35rem; }
           #v-upload .up-forwho .qav{ width:2.8rem; height:2.8rem; font-size:1.15rem; }
-          #v-upload .up-forwho-change{ margin-left:auto; background:none; border:none; color:var(--yellow); font-size:1.3rem; font-weight:700; cursor:pointer; text-decoration:underline; padding:.3rem .4rem; }
+          #v-upload .up-forwho-change{ margin-left:auto; background:none; border:none; color:var(--gold-ink); font-size:1.3rem; font-weight:700; cursor:pointer; text-decoration:underline; padding:.3rem .4rem; }
           #v-upload .up-nav{ display:flex; align-items:center; gap:1rem; margin-top:1.8rem; }
           #v-upload .up-nav .btn-block{ flex:1; margin:0; }
           #v-upload .up-back{ flex:none; background:none; border:1.5px solid var(--line); border-radius:999px; padding:1.05rem 1.6rem; font-size:1.4rem; font-weight:700; color:var(--muted); cursor:pointer; }
           #v-upload .up-reviewhero{ text-align:center; padding:.6rem 0 1.4rem; margin-bottom:.2rem; border-bottom:1px solid var(--line); }
           #v-upload .up-reviewhero .n{ font-size:2.6rem; font-weight:800; line-height:1.1; }
           #v-upload .up-reviewhero .l{ font-size:1.4rem; color:var(--muted); font-weight:500; margin-top:.5rem; }
-          #v-upload .up-reviewhero .l .ses{ color:var(--gold); font-weight:700; text-transform:capitalize; }
+          #v-upload .up-reviewhero .l .ses{ color:var(--gold-ink); font-weight:700; text-transform:capitalize; }
           #v-upload .up-pane[hidden]{ display:none; }
 
           /* Scope toggle — Individual / Team segmented control (matches .upmode-toggle language).
@@ -3302,7 +3392,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           #v-upload .up-typemenu button .tm-ic svg{ width:2rem; height:2rem; display:block; }
           #v-upload .up-typemenu button:hover{ background:var(--fill); }
           #v-upload .up-typemenu button.on{ background:var(--fill); font-weight:700; }
-          #v-upload .up-typemenu button.on::after{ content:'✓'; margin-left:auto; color:var(--gold); font-weight:800; font-size:1.5rem; }
+          #v-upload .up-typemenu button.on::after{ content:'✓'; margin-left:auto; color:var(--gold-ink); font-weight:800; font-size:1.5rem; }
         </style>
         <div class="backbar" onclick="show('athlete')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
@@ -3409,7 +3499,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
                 <div class="n" id="upconfirmath">Montana Carlson</div>
                 <div class="l"><span class="ses" id="upconfirmtype">Track</span> session · <span id="dzcount">no video yet</span></div>
               </div>
-              <div class="metric-row" id="upcmprow" hidden><span>Comparison</span><span style="font-weight:600;color:#FFC700" id="upcmplbl">—</span></div>
+              <div class="metric-row" id="upcmprow" hidden><span>Comparison</span><span style="font-weight:600;color:var(--gold-ink)" id="upcmplbl">—</span></div>
               <div class="metric-row"><span>Result</span><span style="color:var(--muted)">Report ready in ~1 min · uses 1 credit</span></div>
             </div>
             <span id="upconfirmtypek" hidden>Track</span><span id="upbucketlbl" hidden>Auto-detect</span>
@@ -3428,7 +3518,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <p>This usually takes 3–5 minutes. You'll get a notification when the report is ready — feel free to leave this screen.</p>
         <div class="card proc-steps">
           <div class="metric-row"><span>Upload complete</span><span style="color:var(--s-great);font-weight:700">✓</span></div>
-          <div class="metric-row"><span>Pose estimation</span><span style="color:var(--gold);font-weight:700" id="ps2">…</span></div>
+          <div class="metric-row"><span>Pose estimation</span><span style="color:var(--gold-ink);font-weight:700" id="ps2">…</span></div>
           <div class="metric-row"><span>Biomechanical scoring</span><span style="color:var(--muted-2);font-weight:700" id="ps3">–</span></div>
           <div class="metric-row"><span>Building your report</span><span style="color:var(--muted-2);font-weight:700" id="ps4">–</span></div>
         </div>
@@ -3555,7 +3645,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         #v-squadupload .sq-typemenu button .tm-ic svg{ width:2rem; height:2rem; display:block; }
         #v-squadupload .sq-typemenu button:hover{ background:var(--fill); }
         #v-squadupload .sq-typemenu button.on{ background:var(--fill); font-weight:700; }
-        #v-squadupload .sq-typemenu button.on::after{ content:'✓'; margin-left:auto; color:var(--gold); font-weight:800; font-size:1.5rem; }
+        #v-squadupload .sq-typemenu button.on::after{ content:'✓'; margin-left:auto; color:var(--gold-ink); font-weight:800; font-size:1.5rem; }
         /* read-only session-type confirmation on the Review step */
         #v-squadupload .sq-typeconfirm{ display:inline-flex; align-items:center; gap:.7rem; padding:1.3rem 1.5rem; background:var(--fill); border:1.5px solid var(--line); border-radius:12px; font-size:1.45rem; font-weight:700; color:var(--ink); }
         #v-squadupload .sq-typeconfirm .tt-ic{ display:inline-flex; align-items:center; justify-content:center; color:var(--ink); }
@@ -3585,7 +3675,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         #v-squadupload .sq-rn{ font-size:1.4rem; font-weight:600; flex:1; }
         #v-squadupload .sq-pill{ font-size:1.15rem; font-weight:800; padding:.45rem 1rem; border-radius:999px; text-transform:capitalize; }
         #v-squadupload .sq-pill.complete{ background:#E7F6EE; color:var(--s-great); }
-        #v-squadupload .sq-pill.processing{ background:#FBF3DD; color:var(--gold); }
+        #v-squadupload .sq-pill.processing{ background:#FBF3DD; color:var(--gold-ink); }
         #v-squadupload .sq-pill.error{ background:#FBE4E1; color:var(--s-bad); }
         #v-squadupload .sq-donecheck{ width:7rem; height:7rem; border-radius:50%; background:#E7F6EE; display:flex; align-items:center; justify-content:center; color:var(--s-great); margin:.4rem auto 1.4rem; font-size:3rem; }
         /* ---- one-at-a-time confirm card ---- */
@@ -3617,7 +3707,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         #v-squadupload .sq-resscore{ font-size:1.7rem; font-weight:800; flex:none; text-align:right; line-height:1; }
         #v-squadupload .sq-resscore small{ font-size:1.05rem; font-weight:700; margin-left:.3rem; }
         #v-squadupload .sq-resscore.ok{ color:var(--s-great); }
-        #v-squadupload .sq-resscore.warn{ color:var(--gold); }
+        #v-squadupload .sq-resscore.warn{ color:var(--gold-ink); }
         #v-squadupload .sq-resrow.err{ opacity:.85; }
         /* ---- session-at-a-glance scoreboard — 3 always-present KPI tiles (standout / squad trend /
            top watch). Shares the accent-bar + card language of .patcard and the value/label pairing
@@ -3632,10 +3722,10 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         #v-squadupload .sq-sbtile.gold::before{ background:#C0920F; }
         #v-squadupload .sq-sbk{ font-size:1.05rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-2); }
         #v-squadupload .sq-sbtile.great .sq-sbk{ color:var(--s-great); }
-        #v-squadupload .sq-sbtile.gold .sq-sbk{ color:#B8860B; }
+        #v-squadupload .sq-sbtile.gold .sq-sbk{ color:var(--gold-ink); }
         #v-squadupload .sq-sbh{ font-size:1.9rem; font-weight:800; line-height:1.1; margin:.4rem 0 .25rem; color:var(--ink); }
         #v-squadupload .sq-sbtile.great .sq-sbh{ color:var(--s-great); }
-        #v-squadupload .sq-sbtile.gold .sq-sbh{ color:#B8860B; }
+        #v-squadupload .sq-sbtile.gold .sq-sbh{ color:var(--gold-ink); }
         #v-squadupload .sq-sbs{ font-size:1.2rem; font-weight:500; line-height:1.35; color:var(--muted); }
         @media (max-width:640px){ #v-squadupload .sq-scoreboard{ grid-template-columns:1fr; } }
         /* batch-scoped pattern synthesis — reuses the org .patcard component, narrowed to this squad */
@@ -4010,7 +4100,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <line x1="58" y1="148" x2="430" y2="148" stroke="#D8D2C4" stroke-width="1"/>
             <rect x="58" y="26" width="372" height="244" fill="none" stroke="#E5DFCF" stroke-width="1.5"/>
             <g font-family="Inter,sans-serif" font-weight="800" letter-spacing="1">
-              <text x="70" y="44" font-size="10" fill="#B8860B">SLIPPING</text>
+              <text x="70" y="44" font-size="10" fill="#8A6A00">SLIPPING</text>
               <text x="418" y="44" font-size="10" fill="#3f9a57" text-anchor="end">THRIVING</text>
               <text x="70" y="262" font-size="10" fill="#DC4A3F">ACT NOW</text>
               <text x="418" y="262" font-size="10" fill="#8A908A" text-anchor="end">DEVELOPING</text>
@@ -4240,17 +4330,44 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
 <!-- ===================== SCREEN: ORGANIZATION (CONCEPT) ===================== -->
 <section id="scr-org" hidden>
-  <header class="hdr" style="justify-content:space-between">
-    <div style="display:flex;align-items:center;gap:1.4rem">
-      <img id="orglogo" alt="Couro" style="width:55px;height:45px;object-fit:contain">
-      <span style="font-size:1.6rem;font-weight:600">Westgate Athletics</span>
+  <!-- ===== PERSISTENT TOP BAR — Program shell =====================================
+       Structurally identical to the Athletes-view bar in #scr-app. If you edit one,
+       edit the other: only the id suffix (-ath / -org) and the account label differ. -->
+  <header class="hdr topbar">
+    <div class="tb-left">
+      <img id="orglogo" class="tblogo" alt="Couro">
+      <span class="tb-name">Westgate Athletics</span>
       <span class="concept-badge">CONCEPT</span>
     </div>
-    <div style="display:flex;align-items:center;gap:1rem">
-    <div class="userpill"><span class="nm">Master Account</span>
-      <span class="av"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg></span>
+    <div class="viewswitch" role="group" aria-label="Switch between Program and Athletes">
+      <button type="button" data-vs="program" aria-pressed="false" onclick="switchView('program')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M10 21v-5h4v5"/></svg>
+        <span>Program</span>
+      </button>
+      <button type="button" data-vs="athletes" aria-pressed="false" onclick="switchView('athletes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5c1.4-3.7 4.6-5.5 7.5-5.5s6.1 1.8 7.5 5.5"/></svg>
+        <span>Athletes</span>
+      </button>
     </div>
-    <button class="hammenu" id="og-hamb" onclick="toggleNav(event)" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="tb-right">
+      <button class="admin-btn" onclick="toast('Opens <b>admin.ai.couro.io</b> in a new tab')">Admin Panel</button>
+      <button class="hammenu" id="og-hamb" onclick="toggleNav(event)" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div class="userpill" onclick="toggleMenu(event)">
+        <span class="nm">My Account</span>
+        <span class="av">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+        </span>
+        <div class="menu" id="usermenu-org" hidden>
+          <button onclick="menuGo('settings')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-2-1.2L14 3h-4l-.4 2.6a7.6 7.6 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1c.6.5 1.3.9 2 1.2L10 21h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.2-.8.2-1.2z"/></svg>
+            Settings
+          </button>
+          <button onclick="go('login')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            Logout
+          </button>
+        </div>
+      </div>
     </div>
   </header>
   <div class="org-wrap">
@@ -4384,7 +4501,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="kpi"><div class="k">Athletes</div><div class="v num">912</div></div>
         <div class="kpi"><div class="k">Avg Couro Score</div><div class="v num" style="color:var(--s-ok)">74 <small style="font-size:1.3rem" class="d-up">↑ 3</small></div></div>
         <div class="kpi"><div class="k">Assessed · 7 days</div><div class="v num">347</div></div>
-        <div class="kpi"><div class="k">Open flags</div><div class="v num" style="color:var(--s-warn)">18</div></div>
+        <div class="kpi"><div class="k">Open flags</div><div class="v num" style="color:var(--gold-ink)">18</div></div>
       </div>
 
       <div class="zone"><span class="zn"></span><span class="zl">All teams</span><span class="zr"></span><span class="zc">31 teams · click one to open it</span></div>
@@ -4405,7 +4522,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); openTeamView()"><td><b>Swimming &amp; Diving</b></td><td class="num" style="color:var(--s-good);font-weight:700">75</td>
               <td><div class="hbar"><i style="width:75%;background:var(--s-good)"></i></div></td>
               <td class="d-up">↑ 2</td><td class="num">58</td><td class="num">19</td><td><span class="alertchip ok">0</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,13 14,12 26,11 38,10 50,9 62,7" fill="none" stroke="#00CC00" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="7" r="2.5" fill="#00CC00"/></svg></td></tr>
-            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); openTeamView()"><td><b>Return-to-Sport</b> <small style="color:var(--muted-2)">cross-team</small></td><td class="num" style="color:var(--s-warn);font-weight:700">68</td>
+            <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); openTeamView()"><td><b>Return-to-Sport</b> <small style="color:var(--muted-2)">cross-team</small></td><td class="num" style="color:var(--gold-ink);font-weight:700">68</td>
               <td><div class="hbar"><i style="width:68%;background:var(--s-warn)"></i></div></td>
               <td class="d-up">↑ 4</td><td class="num">24</td><td class="num">18</td><td><span class="alertchip info">6 in protocol</span></td><td><svg width="64" height="20" viewBox="0 0 64 20"><polyline points="2,18 14,16 26,15 38,11 50,8 62,4" fill="none" stroke="#FFC700" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="62" cy="4" r="2.5" fill="#FFC700"/></svg></td></tr>
             <tr onclick="toast('Team view — built out for Track &amp; Field in this demo'); openTeamView()"><td><b>Softball</b></td><td class="num" style="color:var(--s-ok);font-weight:700">73</td>
@@ -4564,7 +4681,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
   <line x1="60" y1="185" x2="540" y2="185" stroke="#D8D2C4" stroke-width="1"/>
   <rect x="60" y="30" width="480" height="310" fill="none" stroke="#E5DFCF" stroke-width="1.5"/>
   <g font-family="Inter,sans-serif" font-weight="800" letter-spacing="1">
-    <text x="72" y="50" font-size="10" fill="#B8860B">SLIPPING</text>
+    <text x="72" y="50" font-size="10" fill="#8A6A00">SLIPPING</text>
     <text x="528" y="50" font-size="10" fill="#3f9a57" text-anchor="end">THRIVING</text>
     <text x="72" y="332" font-size="10" fill="#DC4A3F">ACT NOW</text>
     <text x="528" y="332" font-size="10" fill="#8A908A" text-anchor="end">DEVELOPING</text>
@@ -4590,7 +4707,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="card">
           <h3>Team fingerprint <span class="hsub">vs elite band</span></h3>
           <div class="radarwrap">
-            <svg class="radar" viewBox="0 0 200 210" role="img" aria-label="Radar of the team's movement qualities versus the elite threshold; knee control is the gap">
+            <svg class="radar" viewBox="-42 0 284 210" style="max-width:40rem" role="img" aria-label="Radar of the team's movement qualities versus the elite threshold; knee control is the gap">
               <g fill="none" stroke="#EAE6D8" stroke-width="1">
                 <polygon points="100,60 134.6,80 134.6,120 100,140 65.4,120 65.4,80"/>
                 <polygon points="100,40 152,70 152,130 100,160 48,130 48,70"/>
@@ -4603,11 +4720,11 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
               <circle cx="138.1" cy="122" r="5" fill="#fff" stroke="#DC4A3F" stroke-width="2.5"/>
               <g font-size="8" font-family="Inter,sans-serif" fill="#6F7480" font-weight="700">
                 <text x="100" y="13" text-anchor="middle">Elasticity</text>
-                <text x="174" y="58" text-anchor="start">Symmetry</text>
-                <text x="176" y="147" text-anchor="start">Knee ctrl</text>
-                <text x="100" y="197" text-anchor="middle">Trunk</text>
-                <text x="24" y="147" text-anchor="end">Grnd contact</text>
-                <text x="24" y="58" text-anchor="end">Decel</text>
+                <text x="175" y="58" text-anchor="start">Symmetry</text>
+                <text x="177" y="147" text-anchor="start">Knee control</text>
+                <text x="100" y="197" text-anchor="middle">Trunk stability</text>
+                <text x="25" y="147" text-anchor="end">Ground contact</text>
+                <text x="25" y="58" text-anchor="end">Deceleration</text>
               </g>
             </svg>
             <div class="radar-legend">
@@ -4794,8 +4911,8 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <tr onclick="openAthleteByName('Jaylen Ford')"><td><b>Jaylen Ford</b><br><span class="archtag">Spring-loaded</span></td><td>Football</td><td class="num" style="color:var(--s-good);font-weight:700">81</td><td class="d-up">↑ 2</td><td class="num">9</td><td><span class="alertchip ok">steady</span></td><td><button class="boardbtn " onclick="event.stopPropagation();openAthleteByName('Jaylen Ford')">Report ▸</button></td></tr>
             <tr onclick="openAthleteByName('Rosa Delgado')"><td><b>Rosa Delgado</b><br><span class="archtag">Crossover-lander</span></td><td>Softball</td><td class="num" style="color:var(--s-good);font-weight:700">79</td><td class="d-dn">↓ 3</td><td class="num">11</td><td><span class="alertchip warn">drift alert</span></td><td><button class="boardbtn pri" onclick="event.stopPropagation();openAthleteByName('Rosa Delgado')">Report ▸</button></td></tr>
             <tr onclick="openAthleteByName('Aaliyah Brooks')"><td><b>Aaliyah Brooks</b><br><span class="archtag">Balanced loader</span></td><td>Track &amp; Field</td><td class="num" style="color:var(--s-good);font-weight:700">77</td><td class="d-up">↑ 1</td><td class="num">8</td><td><span class="alertchip ok">steady</span></td></tr>
-            <tr onclick="openAthleteByName('Sam Whitfield')"><td><b>Sam Whitfield</b><br><span class="archtag">Rebuilding · ACL</span></td><td>Return-to-Sport <small style="color:var(--muted-2)">· Football</small></td><td class="num" style="color:var(--s-warn);font-weight:700">66</td><td class="d-up">↑ 6</td><td class="num">10</td><td><span class="alertchip info">week 6 of ACL protocol</span></td></tr>
-            <tr onclick="openAthleteByName('Marcus Webb')"><td><b>Marcus Webb</b><br><span class="archtag">Crossover-lander</span></td><td>Return-to-Sport <small style="color:var(--muted-2)">· Soccer</small></td><td class="num" style="color:var(--s-warn);font-weight:700">61</td><td class="d-dn">↓ 4</td><td class="num">4</td><td><span class="alertchip warn">knee load</span></td></tr>
+            <tr onclick="openAthleteByName('Sam Whitfield')"><td><b>Sam Whitfield</b><br><span class="archtag">Rebuilding · ACL</span></td><td>Return-to-Sport <small style="color:var(--muted-2)">· Football</small></td><td class="num" style="color:var(--gold-ink);font-weight:700">66</td><td class="d-up">↑ 6</td><td class="num">10</td><td><span class="alertchip info">week 6 of ACL protocol</span></td></tr>
+            <tr onclick="openAthleteByName('Marcus Webb')"><td><b>Marcus Webb</b><br><span class="archtag">Crossover-lander</span></td><td>Return-to-Sport <small style="color:var(--muted-2)">· Soccer</small></td><td class="num" style="color:var(--gold-ink);font-weight:700">61</td><td class="d-dn">↓ 4</td><td class="num">4</td><td><span class="alertchip warn">knee load</span></td></tr>
           </tbody>
         </table>
         </div>
@@ -5135,7 +5252,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <tr data-f="watch" onclick="openAthleteByName('Brooke Ellis')"><td><b>Brooke Ellis</b></td><td>Reliever</td><td class="num" style="color:var(--s-ok);font-weight:700">73</td><td class="d-up">↑ 1</td><td>5 days ago</td><td><span class="alertchip info">decel &lt; 65</span></td><td><button class="boardbtn " onclick="event.stopPropagation();openAthleteByName('Brooke Ellis')">Report ▸</button></td></tr>
           <tr data-f="flag" onclick="openAthleteByName('Sofia Reyes')"><td><b>Sofia Reyes</b></td><td>Reliever</td><td class="num" style="color:var(--s-ok);font-weight:700">70</td><td class="d-dn">↓ 2</td><td>yesterday</td><td><span class="alertchip warn">follow-through</span></td><td><button class="boardbtn pri" onclick="event.stopPropagation();openAthleteByName('Sofia Reyes')">Report ▸</button></td></tr>
           <tr data-f="inactive" onclick="openAthleteByName('Maya Johnson')"><td><b>Maya Johnson</b></td><td>Reliever</td><td class="num" style="color:var(--s-ok);font-weight:700">68</td><td>—</td><td>16 days ago</td><td><span class="alertchip info">inactive</span></td><td><button class="boardbtn" onclick="event.stopPropagation();toast('Sends Maya an upload reminder with their last report attached')">Nudge</button></td></tr>
-          <tr data-f="inactive" onclick="openAthleteByName('Jordan Blake')"><td><b>Jordan Blake</b></td><td>Reliever</td><td class="num" style="color:var(--s-warn);font-weight:700">64</td><td>—</td><td>19 days ago</td><td><span class="alertchip info">inactive</span></td><td><button class="boardbtn" onclick="event.stopPropagation();toast('Sends Jordan an upload reminder with their last report attached')">Nudge</button></td></tr>
+          <tr data-f="inactive" onclick="openAthleteByName('Jordan Blake')"><td><b>Jordan Blake</b></td><td>Reliever</td><td class="num" style="color:var(--gold-ink);font-weight:700">64</td><td>—</td><td>19 days ago</td><td><span class="alertchip info">inactive</span></td><td><button class="boardbtn" onclick="event.stopPropagation();toast('Sends Jordan an upload reminder with their last report attached')">Nudge</button></td></tr>
         </tbody>
       </table>
       </div>
@@ -5702,7 +5819,7 @@ function renderDashLanding(){
         <line x1="60" y1="185" x2="540" y2="185" stroke="#D8D2C4" stroke-width="1"/>
         <rect x="60" y="30" width="480" height="310" fill="none" stroke="#E5DFCF" stroke-width="1.5"/>
         <g font-family="Inter,sans-serif" font-weight="800" letter-spacing="1">
-          <text x="72" y="50" font-size="10" fill="#B8860B">SLIPPING</text>
+          <text x="72" y="50" font-size="10" fill="#8A6A00">SLIPPING</text>
           <text x="528" y="50" font-size="10" fill="#3f9a57" text-anchor="end">THRIVING</text>
           <text x="72" y="332" font-size="10" fill="#DC4A3F">ACT NOW</text>
           <text x="528" y="332" font-size="10" fill="#8A908A" text-anchor="end">DEVELOPING</text>
@@ -5867,10 +5984,48 @@ function go(screen){
   if (screen === 'dash') { show('dash'); if (!window.obSeen) obOpen(); }
   else markDemoBar(screen);
   closeNav();
+  syncViewSwitch();
   window.scrollTo(0,0);
 }
 /* one canonical team view: the Org → Teams tab (inline). Every "team" entry point lands here. */
 function openTeamView(){ go('org'); orgTabByKey('teams'); window.scrollTo(0,0); }
+
+/* ---- persistent top bar: Program | Athletes -------------------------------
+   The same segmented control lives in both shell headers. It reuses the
+   existing go()/show() navigation rather than introducing a second mechanism.
+   Program  -> #scr-org, Overview tab (the organisation overview)
+   Athletes -> #scr-app, whichever athlete-side view was last open (dash by default) */
+window.lastAthleteView = 'dash';
+function inProgramView(){
+  const o = document.getElementById('scr-org'), r = document.getElementById('scr-roster');
+  return (o && !o.hidden) || (r && !r.hidden);
+}
+function switchView(which){
+  closeNav();
+  if (which === 'program'){
+    go('org');
+    orgTabByKey('overview');
+  } else {
+    ['scr-login','scr-hub','scr-org','scr-roster','scr-reveals'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.hidden = true;
+    });
+    const j = document.getElementById('scr-join'); if (j) j.hidden = true;
+    document.getElementById('scr-app').hidden = false;
+    show(window.lastAthleteView || 'dash');
+    markDemoBar(window.lastAthleteView || 'dash');
+  }
+  syncViewSwitch();
+  window.scrollTo(0,0);
+}
+/* reflect the current shell in every copy of the switcher */
+function syncViewSwitch(){
+  const want = inProgramView() ? 'program' : 'athletes';
+  document.querySelectorAll('.viewswitch button[data-vs]').forEach(b => {
+    const on = b.dataset.vs === want;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
 /* ---- global nav (hamburger) ---- */
 function toggleNav(e){ if (e) e.stopPropagation(); const m = document.getElementById('navmenu'); m.hidden = !m.hidden; }
 function closeNav(){ const m = document.getElementById('navmenu'); if (m) m.hidden = true; }
@@ -5915,10 +6070,12 @@ function show(view){
   if (view === 'upload') resetUpload();
   if (view === 'dash') renderDashLanding();
   if (view === 'squadupload' && window.sqInit) window.sqInit();
-  document.getElementById('usermenu').hidden = true;
+  window.lastAthleteView = view;           /* so "Athletes" returns you where you were */
+  closeUserMenus();
   document.querySelector('.main').scrollTo(0,0);
   if (document.body.classList.contains('mobile') && (view === 'session' || view === 'athlete')) buildAccordions();
   markDemoBar(view);
+  syncViewSwitch();
 }
 /* demo chrome: jump straight to any screen */
 function demoNav(v){
@@ -5998,16 +6155,37 @@ function markDemoBar(active){
 /* Enter anywhere on the login card signs in */
 document.querySelectorAll('#scr-login input').forEach(inp =>
   inp.addEventListener('keydown', e => { if (e.key === 'Enter') go('dash'); }));
+/* Both shell headers carry an account pill, so there are two account menus
+   (#usermenu in the Athletes shell, #usermenu-org in the Program shell). */
+function closeUserMenus(){
+  document.querySelectorAll('.hdr .menu').forEach(m => { m.hidden = true; });
+}
 function toggleMenu(e){
   e.stopPropagation();
-  const m = document.getElementById('usermenu');
-  m.hidden = !m.hidden;
+  const pill = e.currentTarget && e.currentTarget.closest ? e.currentTarget.closest('.userpill') : null;
+  const m = pill ? pill.querySelector('.menu') : document.getElementById('usermenu');
+  if (!m) return;
+  const willOpen = m.hidden;
+  closeUserMenus();
+  m.hidden = !willOpen;
 }
-document.addEventListener('click', () => { document.getElementById('usermenu').hidden = true; });
+document.addEventListener('click', closeUserMenus);
 
 function athTab(btn, key){
   btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on')); btn.classList.add('on');
   ['trends','signature','riskmap','sessions'].forEach(k => document.getElementById('at-'+k).hidden = k !== key);
+}
+function athTabByKey(key){
+  const map = { trends:0, signature:1, riskmap:2, sessions:3 };
+  const btns = document.querySelectorAll('#athtabs button');
+  if (btns[map[key]]) athTab(btns[map[key]], key);
+}
+/* The Open Thread (Trends tab) is the single source of truth for the active fix.
+   The session report's closing "new call" moment writes to it and links here. */
+function openThread(){
+  show('athlete');
+  athTabByKey('trends');
+  setTimeout(() => jumpGlow('#at-thread'), 60);
 }
 function repTab(btn, key){
   btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on')); btn.classList.add('on');
@@ -6776,7 +6954,7 @@ function renderCmp(){
   s+=`<polygon points="${cmpPoly(A.v)}" fill="rgba(255,199,0,.30)" stroke="#FFC700" stroke-width="2.5"/>`;
   document.getElementById('cmp-radar').innerHTML=s;
   document.getElementById('cmp-bfly').innerHTML=CMP_AX.map((ax,i)=>
-    `<div class="brow"><b class="val num" style="color:#FFC700">${A.v[i]}</b><span class="tr l"><i style="width:${A.v[i]}%"></i></span><span class="lbl2">${ax}</span><span class="tr r"><i style="width:${B.v[i]}%"></i></span><b class="val num" style="color:var(--ink)">${B.v[i]}</b></div>`).join('');
+    `<div class="brow"><b class="val num" style="color:var(--gold-ink)">${A.v[i]}</b><span class="tr l"><i style="width:${A.v[i]}%"></i></span><span class="lbl2">${ax}</span><span class="tr r"><i style="width:${B.v[i]}%"></i></span><b class="val num" style="color:var(--ink)">${B.v[i]}</b></div>`).join('');
   const lead=CMP_AX.filter((_,i)=>A.v[i]>B.v[i]).length;
   document.getElementById('cmp-note').innerHTML=`<span class="ico">💡</span><span><b>${cmpA.split(' ')[0]} leads ${lead} of 5 attributes</b> · Couro Scores ${A.s} vs ${B.s} · ${cmpA.split(' ')[0]} — ${A.team}, ${cmpB.split(' ')[0]} — ${B.team}</span>`;
 }
@@ -6941,6 +7119,27 @@ function xpOpen(k){
 }
 function xpClose(){ document.getElementById('xp').hidden = true; }
 
+/* ---- concept info tooltips (Archetype, FreeFlow) ----
+   Hover handles desktop via CSS; this makes the same ⓘ work on tap and keyboard. */
+function cinfoTog(el, e){
+  if (e) { e.stopPropagation(); e.preventDefault(); }
+  const w = el.closest('.cinfo');
+  if (!w) return;
+  const wasOpen = w.classList.contains('open');
+  cinfoCloseAll();
+  if (!wasOpen) w.classList.add('open');
+}
+function cinfoKey(el, e){
+  if (!e) return;
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { cinfoTog(el, e); }
+  else if (e.key === 'Escape') { cinfoCloseAll(); }
+}
+function cinfoCloseAll(){
+  document.querySelectorAll('.cinfo.open').forEach(n => n.classList.remove('open'));
+}
+document.addEventListener('click', e => { if (!e.target.closest('.cinfo')) cinfoCloseAll(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cinfoCloseAll(); });
+
 /* team roster filter dropdown — replaces the chip row (v29) */
 function fddToggle(e){
   if (e) e.stopPropagation();
@@ -7011,7 +7210,7 @@ const TOUR = [
   { tab:'overview', sel:'#tg-callback', t:'It keeps receipts', b:'The last report made a call on the record — this one shows it landed. Trust first, then the new story.' },
   { tab:'overview', sel:'#tg-story', t:'Then it reads like a story', b:'Three acts: what clicked, what\'s pushing back, and what fixing it unlocks. Green → red → gold, top to bottom.' },
   { tab:'overview', sel:'#tg-fix', t:'One fix, not twenty', b:'Everything funnels into a single priority with its exact drills. This is what the athlete actually does this week — tap any drill for the why, the dose, and the cue.' },
-  { tab:'overview', sel:'#tg-mission', t:'It ends with a mission, not a summary', b:'A drill checklist, a prediction on the record, and a re-test window. The next upload settles the call — that is the reason to come back.' },
+  { tab:'overview', sel:'#tg-mission', t:'It ends with a new call, not a summary', b:'A prediction goes on the record and writes straight to her Open Thread, where the drills and the re-test window live. The next upload settles the call — that is the reason to come back.' },
   { tab:'performance', sel:'#tg-bl', t:'The Bottom Line', b:'All 20+ metrics roll up into Speed, Efficiency, and Durability. The colored tags on every card below tell you which outcome each number feeds.' },
   { tab:'performance', sel:'#tg-fatigue', t:'Fresh vs fatigued — honestly', b:'One short clip can\'t separate fatigue from pacing, so the report says so — and offers the paired-capture protocol instead: upload one fresh rep and one tired rep, and Couro compares them.' },
   { tab:'performance', sel:'#tg-matrix', t:'What to fix first', b:'Every issue plotted by payoff vs effort — start top-left. Tap any dot for the full explanation.' },
@@ -7082,27 +7281,38 @@ function tourEnd(){
   tourI = -1;
 }
 
-/* ---- The Reveal: reuse stroboscope pixels + count-up (v18) ---- */
+/* ---- The Reveal: reuse stroboscope pixels + score reveal (v22) ----
+   The score is authored as its final value in the markup and this code never rewrites it,
+   so a screenshot, a print or a JS-less render can never capture a partial number. The
+   entrance is a run-once CSS flourish (560ms) added via a class that is never removed. */
 (function(){
   const si = document.getElementById('strobeimg'), ri = document.getElementById('revealimg');
   if (si && ri) ri.src = si.src;
   const n = document.getElementById('rv-num');
   if (!n) return;
-  let done = false;
-  const io = new IntersectionObserver(es => { es.forEach(e => {
-    if (e.isIntersecting && !done){
-      done = true; io.disconnect();
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){ n.textContent = '82'; return; }
-      const t0 = performance.now();
-      const step = t => {
-        const p = Math.min(1, (t - t0) / 1300);
-        n.textContent = Math.round(82 * (1 - Math.pow(1 - p, 3)));
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    }
-  }); }, { threshold: .35 });
-  io.observe(n);
+  n.textContent = n.dataset.final || n.textContent.trim() || '82';   /* belt and braces */
+  let io = null;
+  const kick = () => {
+    if (n.dataset.revealed) return;                    /* once per page load, never replays */
+    const r = n.getBoundingClientRect();
+    if (!r.width || !r.height) return;                 /* report screen still hidden */
+    if (r.top > innerHeight || r.bottom < 0) return;   /* scrolled out of view */
+    n.dataset.revealed = '1';
+    if (io) io.disconnect();
+    n.classList.add('rv-count');
+  };
+  if ('IntersectionObserver' in window){
+    io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) kick(); }, { threshold: .35 });
+    io.observe(n);
+  }
+  /* IntersectionObserver does not reliably re-fire when an ancestor's [hidden] is dropped,
+     so also poke it the moment the session report view is shown */
+  const poke = tries => requestAnimationFrame(() => { kick(); if (!n.dataset.revealed && tries > 0) poke(tries - 1); });
+  const vs = document.getElementById('v-session');
+  if (vs && 'MutationObserver' in window){
+    new MutationObserver(() => { if (!vs.hidden) poke(12); })   /* bounded retry: ~12 frames */
+      .observe(vs, { attributes:true, attributeFilter:['hidden'] });
+  }
 })();
 
 /* ---- speed-bucket bands — track_service_female.yaml → speed_bucket_targets (v21) ---- */
@@ -7157,7 +7367,7 @@ function renderMB(bucket){
       '<div class="bandnote">' + (m.lr ? 'L ' + m.lr[0] + m.unit + ' / R ' + m.lr[1] + m.unit + ' · gap ' + (Math.round(Math.abs(m.lr[0]-m.lr[1])*10)/10) + m.unit + ' · ' : '') + 'target ' + t + ' ± ' + (Math.round(tol * 10) / 10) + ' · ' + dirTxt + flip + ' · <b style="color:' + (inb ? '#00CC00' : '#FFC700') + '">' + (inb ? 'IN RANGE' : 'OUTSIDE THIS BUCKET') + '</b></div></div>';
   }).join('');
   document.getElementById('mb-src').innerHTML = 'Bands: <b>track_service_female.yaml → speed_bucket_targets.' + bucket + '</b>' +
-    (bucket === 'acceleration' ? ' — <b style="color:#FFC700">proposed bucket (wf_b3a00e63), not live</b>' : ' (live config)') +
+    (bucket === 'acceleration' ? ' — <b style="color:var(--gold-ink)">proposed bucket (wf_b3a00e63), not live</b>' : ' (live config)') +
     '. Her session auto-detected as <b>run</b> (5.4 m/s) — other buckets shown for comparison. Athlete readings are demo values.';
 }
 
@@ -7271,7 +7481,7 @@ const EXT = {
               ['Agility','81','#00CC00','Lateral agility 82; push-off asymmetry under the 15% flag.'],
               ['Landing Safety','58','#FFC700','Landing knee flexion 27° — under the 30° red-flag line in the config.']],
       bands: [['Landing Knee Flexion','°',27,[30.44,13.86,'higher'],[0,70],{status:'<b style="color:#DC2626">RED FLAG · config flags landings under 30°</b>'}],
-              ['Knee Alignment (valgus) at landing','°',12,[6.74,6.02,'lower'],[0,24],{status:'<b style="color:#FFC700">YELLOW · flags at ≥10°, red at ≥18°</b>'}],
+              ['Knee Alignment (valgus) at landing','°',12,[6.74,6.02,'lower'],[0,24],{status:'<b style="color:var(--gold-ink)">YELLOW · flags at ≥10°, red at ≥18°</b>'}],
               ['Hip Drop','°',9.4,[11.28,5.89,'lower'],[0,24]],
               ['Peak Vertical GRF','×BW',2.9,[2.7,0.93,'higher'],[0.5,4.5]],
               ['Ground Contact Time','s',0.31,[0.35,0.12,'lower'],[0.1,0.7]],
@@ -7404,7 +7614,7 @@ function renderEx(key, tab){
           const wt = w[ax[0]], hot = wt >= 0.2;
           const col = ax[2] >= 85 ? '#00CC00' : ax[2] >= 75 ? '#00CC00' : ax[2] >= 60 ? '#00CC00' : '#FFC700';
           return '<div class="gset"><div class="gname">' + ax[1] +
-            '<small style="' + (hot ? 'color:#FFC700;font-weight:700' : '') + '">' + Math.round(wt * 100) + '% of ' + bbPos + ' score</small></div>' +
+            '<small style="' + (hot ? 'color:var(--gold-ink);font-weight:700' : '') + '">' + Math.round(wt * 100) + '% of ' + bbPos + ' score</small></div>' +
             '<div class="gbar"><span class="gtrack"><i style="width:' + ax[2] + '%;background:' + col + '"></i></span><b class="gv" style="color:' + col + '">' + ax[2] + '</b></div></div>';
         }).join('') +
         '<div class="insight"><span class="ico">💡</span><span><b>' + bbPos.charAt(0).toUpperCase() + bbPos.slice(1) + '-weighted score: ' + overall + '.</b> Same session, different position, different priorities — the gold weights are what this position lives on.</span></div></div>';
@@ -7518,6 +7728,7 @@ renderMB('run');
 
 drawMomap(); renderCmp(); renderRC();
 
+document.querySelectorAll('.tblogo').forEach(el => { el.src = LOGO; });   /* persistent top bar, both shells */
 document.getElementById('orglogo').src = LOGO;
 document.getElementById('rvlogo').src = LOGO;
 document.getElementById('hublogo').src = LOGO;
@@ -7606,7 +7817,7 @@ go('hub');
 .ac-pill{display:inline-flex;align-items:center;gap:5px;font-family:"SF Mono",ui-monospace,monospace;font-size:11px;font-weight:600;padding:1px 7px;border-radius:20px;white-space:nowrap;margin:0 1px;vertical-align:1px}
 .ac-pill::before{content:"";width:6px;height:6px;border-radius:50%}
 .ac-pill.good{background:#E9F7EF;color:#00CC00;border:1px solid #BFE6D2} .ac-pill.good::before{background:#00CC00}
-.ac-pill.warn{background:#FBF0DD;color:#FFC700;border:1px solid #EED9A8} .ac-pill.warn::before{background:#FFC700}
+.ac-pill.warn{background:#FBF0DD;color:var(--gold-ink);border:1px solid #EED9A8} .ac-pill.warn::before{background:#FFC700}
 .ac-pill.muted{background:#F3ECD9;color:#5C564C;border:1px solid #EDE4CE} .ac-pill.muted::before{background:#9C9484}
 .ac-typing{display:inline-flex;gap:4px;padding:3px 2px}
 .ac-typing i{width:6px;height:6px;border-radius:50%;background:#9C9484;animation:acbob 1.2s infinite}
@@ -7855,7 +8066,7 @@ function posePlant(d){
     +'<circle cx="'+kL.toFixed(1)+'" cy="'+kY+'" r="5.5" fill="'+kc+'" stroke="#fff" stroke-width="1.6"/>'
     +'<circle cx="'+kR.toFixed(1)+'" cy="'+kY+'" r="5.5" fill="'+kc+'" stroke="#fff" stroke-width="1.6"/></svg>';
 }
-function bandCol(v){ return v>=82?'#0a7d54':v>=70?'#3f9a57':v>=60?'#B8860B':'#C0392B'; }
+function bandCol(v){ return v>=82?'#0a7d54':v>=70?'#3f9a57':v>=60?'#8A6A00':'#C0392B'; }
 function scls(a){ return a>=75?'sgood':a>=60?'swarn':'sbad'; }
 function radarDots(d,R,col){ var cx=115,cy=115,out=''; SM_COLS.forEach(function(c,i){ var a=-Math.PI/2+i*Math.PI/3, r=d[c[0]]/100*R; out+='<circle cx="'+(cx+r*Math.cos(a)).toFixed(1)+'" cy="'+(cy+r*Math.sin(a)).toFixed(1)+'" r="2.6" fill="'+col+'"/>'; }); return out; }
 function renderTeamCompare(){
@@ -7998,3 +8209,67 @@ function smRenderCmp(){
 
 renderMatrix();
 </script>
+
+<!-- ===================================================================
+     Design review (Jacky) — Tier 1 fixes
+     1. Persistent top bar + Program|Athletes switcher, identical in both shells
+     2. WCAG AA contrast: no brand yellow as text on light surfaces
+     =================================================================== -->
+<style>
+/* ---------- 1. Persistent top bar ---------- */
+.hdr.topbar{ justify-content:space-between; gap:1.6rem; }
+.topbar .tb-left{ display:flex; align-items:center; gap:1.2rem; flex:1 1 0; min-width:0; }
+.topbar .tb-right{ display:flex; align-items:center; gap:1rem; flex:1 1 0; justify-content:flex-end; }
+.topbar .tblogo{ width:46px; height:38px; object-fit:contain; flex:none; }
+.topbar .tb-name{ font-size:1.6rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.topbar .concept-badge{ flex:none; }
+
+/* two-state segmented control — the only way to move between the two shells */
+.viewswitch{ flex:none; display:flex; gap:.3rem; padding:.35rem; background:var(--fill);
+  border:1.5px solid var(--divider); border-radius:var(--r-pill); }
+.viewswitch button{ display:flex; align-items:center; gap:.55rem; border:none; background:transparent;
+  border-radius:var(--r-pill); padding:.65rem 1.5rem; white-space:nowrap;
+  font-family:'Lexend',system-ui,sans-serif; font-size:1.3rem; font-weight:600; color:var(--muted); }
+.viewswitch button svg{ width:1.5rem; height:1.5rem; flex:none; }
+.viewswitch button:hover{ color:var(--ink); background:rgba(0,0,0,.04); }
+/* selected state is the black pill (same treatment as the CONCEPT badge):
+   #fff on #1A1D24 = 16.6:1, versus 1.6:1 for the old yellow-on-white idea */
+.viewswitch button.on,
+.viewswitch button.on:hover{ background:var(--ink-dark); color:#fff; }
+.viewswitch button:focus-visible{ outline:2px solid var(--gold-ink); outline-offset:2px; }
+
+@media (max-width:1280px){ .topbar .tb-name{ display:none; } }
+@media (max-width:1080px){ .topbar .admin-btn{ display:none; } }
+body.mobile .topbar .tb-name,
+body.mobile .topbar .admin-btn,
+body.mobile .topbar .userpill .nm{ display:none; }
+body.mobile .hdr.topbar{ gap:.8rem; }
+body.mobile .topbar .tblogo{ width:34px; height:28px; }
+body.mobile .topbar .concept-badge{ display:none; }
+body.mobile .viewswitch{ padding:.25rem; }
+body.mobile .viewswitch button{ padding:.55rem 1rem; font-size:1.2rem; gap:.4rem; }
+body.mobile .topbar .tb-left{ flex:0 0 auto; }
+body.mobile .topbar .tb-right{ flex:0 0 auto; }
+
+/* ---------- 2. Contrast: minimum size for micro-caps labels ----------
+   These sat at 10–10.5px. Colour is now AA (see --gold-ink / --muted-2),
+   but the smallest tracked caps were still hard to read; lift to 11.5px.
+   Deliberately excludes table/grid headers, which are width-constrained. */
+.us-k, .dz .abtag, .ob-kicker, .focus-eyebrow, .roster-card .sport, .blkick, .ai-k,
+.tms-k, .pat-k, .ffhead, .struct-k, .clipflaglbl, .bhstep .bh-key, .tourcard .tc-step,
+.us-alt .al, .navmenu .nm-head, .cohorts-lbl, .cohort-lbl, .teampick-lbl,
+.ctn-branch .bl, .xp-sec .k, .bltile .bk, .cmp-chips .cl, .kpi .k{ font-size:1.15rem; }
+
+/* ---------- 3. Knock-ons from the new bar ---------- */
+/* The bar now sits above the roster sidebar, so it spans the full width in BOTH
+   shells and the Couro mark lands in the same place in each. Reclaim its 7rem. */
+#scr-app > .shell{ height:calc(100vh - 7rem); }
+body.mobile #scr-app > .shell{ height:calc(100% - 7rem); }
+
+/* The Couro mark now lives in the persistent bar, so the athlete roster's own
+   copy is a duplicate brand mark sitting right beside it. */
+#scr-app .sidebar img.logo{ display:none; }
+/* Toasts used to land on empty header space; the switcher is there now. */
+#toast{ top:9rem; }
+body.mobile #toast{ top:12rem; }
+</style>
