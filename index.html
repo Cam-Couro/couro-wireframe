@@ -15,9 +15,12 @@
   /* a11y: --yellow (1.57:1 on white) and --gold are FILL colours only.
      Any gold TEXT on a light surface must use --gold-ink (#8A6A00 = 5.07:1 on #fff). */
   --gold-ink:#8A6A00;
+  /* #78: caution/watch semantics get their own warm orange, distinct from brand yellow
+     (#FFC700/--gold-ink) and from the red/green status colors. Brand yellow stays purely brand. */
+  --caution:#E0973D; --caution-ink:#8A4B12;
   --ink:#292D32; --ink-dark:#1A1D24; --muted:#6F7480; --muted-2:#70757F;
   --cream:#FFFFFA; --bg:#ffffff; --fill:#F8F9FA; --line:#F1F3F5; --divider:#EAEAEA;
-  --s-great:#059669; --s-good:#00CC00; --s-ok:#99CC00; --s-warn:#FFC700; --s-bad:#FF0000;
+  --s-great:#059669; --s-good:#00CC00; --s-ok:#99CC00; --s-warn:var(--caution); --s-bad:#FF0000;
   --up:#16a34a; --down:#ef4444;
   --r-card:12px; --r-btn:8px; --r-pill:999px;
   --shadow-soft:0 2px 8px rgba(0,0,0,.02);
@@ -88,14 +91,14 @@ button.btn-pop{ animation:btnpop .24s cubic-bezier(.16,1,.3,1); }
   background-repeat:no-repeat; background-position:right 1.4rem center; background-size:1.6rem; }
 .field select:focus{ outline:none; border-color:var(--yellow); box-shadow:0 0 0 4px rgba(255,199,0,.15); background-color:#fff; }
 .field .ic{ position:absolute; left:1.6rem; top:50%; transform:translateY(-50%); width:1.8rem; height:1.8rem; color:var(--muted-2); pointer-events:none; }
-.forgot{ display:block; text-align:right; font-size:1.3rem; color:var(--muted); margin:-.4rem 0 2rem; cursor:pointer; }
+.forgot{ display:block; text-align:right; font-size:1.3rem; color:#565B66; margin:-.4rem 0 2rem; cursor:pointer; } /* a11y: legible gray (~6.8:1 on white), was near-AA-threshold var(--muted) */
 .forgot:hover{ color:var(--ink); }
 .or{ display:flex; align-items:center; gap:1.2rem; color:var(--muted-2); font-size:1.3rem; margin:2.4rem 0 1.6rem; }
 .or::before,.or::after{ content:""; flex:1; height:1px; background:var(--line); }
 .socials{ display:flex; gap:1.2rem; }
 .socials .btn{ flex:1; display:flex; align-items:center; justify-content:center; gap:.8rem; font-size:1.35rem; padding:1.3rem; }
 .auth-foot{ margin-top:2.4rem; font-size:1.4rem; color:var(--muted); }
-.auth-foot b{ color:var(--gold-ink); cursor:pointer; }
+.auth-foot b{ color:var(--gold-ink); font-weight:700; text-decoration:underline; text-underline-offset:2px; cursor:pointer; } /* a11y: real visual weight for primary sign-up path, --gold-ink = 5.07:1 on #fff */
 
 /* ============ App shell ============ */
 .shell{ display:flex; height:100vh; overflow:hidden; }
@@ -316,13 +319,13 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 @media(max-width:860px){ .teamread{ grid-template-columns:1fr; } }
 .tr-col{ background:#fff; border:1.5px solid var(--line); border-radius:var(--r-card); padding:1.8rem 2rem; }
 .tr-col.working{ border-top:4px solid var(--s-great); }
-.tr-col.watch{ border-top:4px solid #FFC700; }
+.tr-col.watch{ border-top:4px solid var(--caution); }
 .tr-col h4{ font-size:1.15rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:1.3rem; }
 .tr-item{ display:flex; gap:1.1rem; padding:1.1rem 0; border-top:1px solid var(--line); }
 .tr-item:first-of-type{ border-top:none; padding-top:0; }
 .tr-item .ti-ic{ flex:none; width:2.2rem; height:2.2rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:700; }
 .tr-col.working .ti-ic{ background:rgba(5,150,105,.14); color:#00CC00; }
-.tr-col.watch .ti-ic{ background:#FFC700; color:#fff; font-family:'Inter',sans-serif; }
+.tr-col.watch .ti-ic{ background:var(--caution); color:#fff; font-family:'Inter',sans-serif; }
 .tr-item .ti-b{ flex:1; }
 .tr-item .ti-b b{ font-size:1.4rem; font-weight:700; }
 .tr-item .ti-b small{ display:block; font-size:1.2rem; color:var(--muted); margin-top:.2rem; line-height:1.45; }
@@ -384,6 +387,17 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 #stypes .cinfo{ align-self:center; margin-left:-.6rem; margin-right:.35rem; }
 /* the ⓘ sits in the stat label, so drop its popover clear of the value it explains */
 .statrow .cinfo-pop{ top:calc(100% + 3.6rem); }
+/* light-on-dark variant: cinfo triggers sitting on the Reveal hero's dark photo background */
+.rv-body .cinfo-btn{ color:rgba(255,255,255,.65); }
+.rv-body .cinfo-btn:hover, .rv-body .cinfo.open .cinfo-btn{ color:#fff; }
+
+/* ---- one visual verb for "the AI helps here" (#77): green pill + sparkle, matching
+   the Ask Couro launcher — applied on top of each button's existing class so its
+   layout/position code (walkbtn flex, btn padding, etc.) is untouched. ---- */
+.ai-cta{ background:linear-gradient(135deg,#00CC00,#00CC00) !important; border-color:#00CC00 !important;
+  color:#fff !important; box-shadow:0 8px 26px -6px rgba(22,163,74,.6); transition:.15s; }
+.ai-cta:hover{ background:linear-gradient(135deg,#00CC00,#00CC00) !important; color:#fff !important;
+  transform:translateY(-1px); box-shadow:0 12px 30px -6px rgba(22,163,74,.7); filter:none; }
 
 /* Trend / chart cards */
 .chart-line{ width:100%; height:auto; }
@@ -404,6 +418,23 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .sess-card .ty{ font-size:1.6rem; font-weight:600; margin:.4rem 0 1.2rem; }
 .sess-card .sc{ font-size:3rem; }
 .sess-card .foot{ font-size:1.25rem; color:var(--muted); margin-top:.6rem; }
+
+/* ---- score-band legend (v34): every score on the Sessions tab is colored against
+   an unstated scale (review #86, #38). Reuses .cinfo — tap the score number itself
+   to see the same Gold/Silver/Bronze bands referenced by the session report's
+   scoretap popover ("Silver band · top 22%" for 82, "Gold starts at 86"). One
+   shared popover body is generated by scoreBandPopoverHTML() in JS so the band
+   definitions live in exactly one place. ---- */
+.sess-card .sc .cinfo{ margin-left:0; vertical-align:baseline; }
+.sess-card .sc .cinfo-btn{ width:auto; height:auto; padding:0 .1rem; border-radius:.4rem; color:inherit; font:inherit; }
+.sess-card .sc .cinfo-btn:hover, .sess-card .sc .cinfo.open .cinfo-btn{ color:inherit; text-decoration:underline; text-decoration-style:dotted; text-underline-offset:.3rem; }
+.sess-card .sc .cinfo-pop{ font-size:1.15rem; width:23rem; text-align:left; left:0; transform:none; --cinfo-arrow:1.3rem; }
+.sbl-rows{ margin-top:.7rem; display:flex; flex-direction:column; gap:.5rem; }
+.sbl-row{ display:flex; align-items:center; gap:.7rem; padding:.4rem .5rem; border-radius:.6rem; }
+.sbl-row.cur{ background:var(--fill); font-weight:700; }
+.sbl-dot{ width:.9rem; height:.9rem; border-radius:50%; flex:none; }
+.sbl-lbl{ flex:1; color:var(--ink); }
+.sbl-rng{ color:var(--muted); font-variant-numeric:tabular-nums; font-size:1.05rem; }
 
 /* Session report */
 .backbar{ display:flex; align-items:center; gap:.8rem; color:var(--muted); font-size:1.4rem; cursor:pointer; margin-bottom:1.6rem; }
@@ -537,8 +568,13 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .plans-wrap h1{ font-size:2.8rem; font-weight:700; text-align:center; }
 .billing-toggle{ display:flex; justify-content:center; margin:2.4rem 0; }
 .billing-toggle .pillgroup{ background:var(--fill); border-radius:var(--r-pill); padding:.4rem; display:flex; }
-.billing-toggle button{ border:none; background:transparent; border-radius:var(--r-pill); padding:.9rem 2.4rem; font-size:1.4rem; font-weight:500; color:var(--muted); }
+.billing-toggle button{ border:none; background:transparent; border-radius:var(--r-pill); padding:.9rem 2.4rem; font-size:1.4rem; font-weight:500; color:var(--muted); display:inline-flex; align-items:center; gap:.6rem; }
 .billing-toggle button.on{ background:var(--yellow); color:var(--ink); font-weight:600; }
+/* Annual carries a visible incentive vs Monthly — computed from the real data-yr/data-mo prices
+   on the plan cards below (e.g. Individual $30/mo → $299/yr = ~17% off), not an invented number
+   (Jacky review #61). Colors flip for contrast whichever pill is currently selected. */
+.billing-toggle .save-badge{ font-size:1.05rem; font-weight:700; padding:.25rem .65rem; border-radius:999px; letter-spacing:.01em; background:rgba(5,150,105,.14); color:var(--s-great); }
+.billing-toggle button.on .save-badge{ background:rgba(27,31,27,.14); color:var(--ink); }
 /* four tiers: 4-up when the wrap is wide, 2x2 mid, single column narrow.
    Container queries (not viewport) so the phone-frame stage sizes it correctly. */
 .plan-cards{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1.6rem; }
@@ -571,11 +607,15 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .hgt span{ color:var(--muted); }
 
 /* ---- Create New Athlete: grouped sections + live profile preview ---- */
-#v-create .create-preview{ display:flex; align-items:center; gap:1.4rem; padding:1.5rem 1.7rem; margin-bottom:2rem;
+#v-create .create-preview{ position:relative; display:flex; align-items:center; gap:1.4rem; padding:1.5rem 1.7rem; margin-bottom:2rem;
   background:linear-gradient(135deg,#FFFDF3,#fff); border:1.5px solid var(--yellow); border-radius:1.4rem; }
+/* "Live preview" eyebrow — makes it explicit this card updates as you type,
+   so it doesn't read as a static, grayed-out/disabled field (Jacky review #54) */
+#v-create .cp-eyebrow{ position:absolute; top:.9rem; right:1.4rem; font-size:1.05rem; font-weight:700;
+  letter-spacing:.04em; text-transform:uppercase; color:var(--s-great); }
 #v-create .cp-av{ flex:none; width:5.2rem; height:5.2rem; border-radius:50%; border:2.5px solid var(--yellow);
   background:var(--fill); display:flex; align-items:center; justify-content:center; font-size:1.9rem; font-weight:700;
-  color:var(--muted-2); text-transform:uppercase; }
+  color:var(--muted-2); text-transform:uppercase; transition:background .2s ease, color .2s ease; }
 #v-create .cp-av.filled{ color:var(--ink); background:#fff; }
 #v-create .cp-name{ font-size:1.7rem; font-weight:700; color:var(--ink); line-height:1.2; }
 #v-create .cp-name.ph{ color:var(--muted-2); font-weight:600; }
@@ -670,7 +710,7 @@ body.mobile .drawer-close{ display:flex; position:absolute; top:1.2rem; right:1.
 .roster-card .coach{ font-size:1.3rem; color:var(--muted); font-weight:400; margin-bottom:1.6rem; }
 .roster-card .row{ display:flex; justify-content:space-between; align-items:center; font-size:1.3rem; padding:.8rem 0; border-top:1px solid var(--line); }
 .alertchip{ display:inline-block; font-size:1.1rem; font-weight:600; border-radius:var(--r-pill); padding:.3rem 1rem; }
-.alertchip.warn{ background:rgba(255,199,0,.18); color:var(--gold-ink); }
+.alertchip.warn{ background:rgba(224,151,61,.18); color:var(--caution-ink); }
 .alertchip.ok{ background:rgba(34,202,90,.14); color:var(--s-great); }
 .alertchip.info{ background:var(--fill); color:var(--muted); }
 
@@ -947,7 +987,7 @@ body.mobile .gaugegrid{ grid-template-columns:1fr 1fr; }
 .riskbtn .head .t{ font-size:1.45rem; font-weight:600; }
 .riskbtn .asym{ font-size:1.05rem; background:var(--fill); border-radius:999px; padding:.2rem .8rem; color:var(--muted); }
 .riskbtn .badge{ margin-left:auto; font-size:1.1rem; font-weight:700; border-radius:999px; padding:.3rem 1.1rem; }
-.badge.hi{ background:#FEE2E2; color:#DC4A3F; } .badge.wa{ background:#FFFBE6; color:var(--gold-ink); } .badge.lo{ background:#e8f8ed; color:#00CC00; }
+.badge.hi{ background:#FEE2E2; color:#DC4A3F; } .badge.wa{ background:#FBEEE0; color:var(--caution-ink); } .badge.lo{ background:#e8f8ed; color:#00CC00; }
 .lrlabels{ display:flex; justify-content:space-between; font-size:1.15rem; color:var(--muted); margin:.9rem 0 .4rem; }
 .splitbar{ display:flex; height:1rem; border-radius:999px; overflow:hidden; background:var(--fill); position:relative; }
 .splitbar::after{ content:""; position:absolute; left:50%; top:0; bottom:0; width:2px; background:#fff; }
@@ -980,7 +1020,7 @@ body.mobile .gaugegrid{ grid-template-columns:1fr 1fr; }
 .ev-badge{ font-size:1.1rem; font-weight:700; letter-spacing:.08em; border-radius:999px; padding:.5rem 1.3rem; background:#E7E5E0; color:#4A504A; }
 .ev-badge.in{ background:#00CC00; color:#fff; }
 .ev-badge.out{ background:#DC4A3F; color:#fff; }
-.ev-badge.watch{ background:#FFC700; color:#1B1F1B; }
+.ev-badge.watch{ background:var(--caution); color:#1B1F1B; }
 .ev-media{ background:#0d0d0d; border-radius:16px; padding:1.6rem; }
 .ev-media img{ width:100%; border-radius:8px; display:block; }
 .ev-compare{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
@@ -1855,7 +1895,7 @@ body.mobile .teamhero .th-meta{ align-items:flex-start; margin-top:0; }
 .tms-legend{ display:flex; flex-direction:column; gap:1rem; }
 .tms-reg{ display:grid; grid-template-columns:auto 1fr; column-gap:.7rem; align-items:center; }
 .tms-reg .dot{ width:1.1rem; height:1.1rem; border-radius:.3rem; grid-row:span 2; }
-.tms-reg.hot .dot{ background:#EF4444; } .tms-reg.watch .dot{ background:#FFC700; } .tms-reg.good .dot{ background:var(--s-good); }
+.tms-reg.hot .dot{ background:#EF4444; } .tms-reg.watch .dot{ background:var(--caution); } .tms-reg.good .dot{ background:var(--s-good); }
 .tms-reg b{ font-size:1.4rem; } .tms-reg small{ color:var(--muted); font-size:1.15rem; }
 .tms-dist{ display:flex; flex-direction:column; gap:1.2rem; margin-bottom:1rem; }
 .tms-strat-top{ display:flex; justify-content:space-between; align-items:baseline; }
@@ -2052,6 +2092,17 @@ body.mobile .tt-row{ grid-template-columns:11rem 1fr 8rem; gap:.9rem; }
 .tmx thead th.on{ color:var(--ink); }
 .tmx thead th:hover{ color:var(--ink); }
 .tmx .caret{ font-size:.9em; }
+/* column-abbreviation info (#70) — same .cinfo affordance used elsewhere, sized down to fit
+   a compact table header without disturbing the sortable-header click target. */
+.tmx thead .cinfo{ margin-left:.3rem; text-transform:none; letter-spacing:0; }
+.tmx thead .cinfo .cinfo-btn{ width:1.3rem; height:1.3rem; cursor:pointer; }
+.tmx thead .cinfo .cinfo-btn svg{ width:1.05rem; height:1.05rem; }
+.tmx thead .cinfo-pop{ width:19rem; font-size:1.05rem; font-weight:400; padding:.85rem 1rem; }
+/* rightmost metric column (Knee, next to Overall) sits close to the table's right edge —
+   flip its popover to open leftward so it never overhangs the table wrap. Verified against
+   the actual header order: Elas/Grnd/Sym/Trunk/Decel/Knee, Knee is always last before Overall. */
+.tmx thead th:nth-last-child(2) .cinfo-pop{ left:auto; right:-.5rem; transform:none; }
+.tmx thead th:nth-last-child(2) .cinfo-pop::before{ left:auto; right:.5rem; margin-left:0; }
 .tmx tbody tr{ cursor:pointer; }
 .tmx tbody td{ padding:.25rem .3rem; }
 .tmx tbody tr:hover .athcell{ color:var(--s-good); }
@@ -2507,6 +2558,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <p style="font-size:1.25rem;color:var(--muted);font-weight:400">Three moved. The fix target barely did — <b style="color:var(--ink)">that's exactly why crossover is this week's mission.</b></p>
         </div>
         <div class="card">
+          <p style="font-size:1.25rem;color:var(--muted);font-weight:400;margin-bottom:.6rem"><b style="color:var(--ink)">Personal best, and still climbing.</b> Three months of upward trend put her at 82 — on pace for 86–88 if the crossover fix holds.</p>
           <h3>Score Trajectory <span style="font-size:1.15rem;color:var(--muted-2);font-weight:400">· annotated with what we did and what it did back</span></h3>
           <svg class="chart-line" viewBox="0 0 600 240">
             <g stroke="#ECE5D3"><line x1="40" y1="25" x2="580" y2="25"/><line x1="40" y1="77" x2="580" y2="77"/><line x1="40" y1="129" x2="580" y2="129"/><line x1="40" y1="180" x2="580" y2="180"/></g>
@@ -2532,7 +2584,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           </div>
         </div>
         <div class="card yb" id="at-thread">
-          <p class="blkick">THE OPEN THREAD</p>
+          <p class="blkick">THE OPEN THREAD<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is the Open Thread?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>The Open Thread</b>A running log of the active fix — drills, checkpoints, and the call, all in one place.</span></span></p>
           <h3 style="margin:.3rem 0 .8rem">Crossover fix — week 2 of 6 &nbsp;<span style="font-size:1.3rem;font-weight:600;color:#00CC00"><span class="thread-dot"></span>ON TRACK</span></h3>
           <div class="grid2">
             <div>
@@ -2555,13 +2607,13 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="card">
           <h3>Metric Trends</h3>
           <p class="mt-sub">What moved this session — her three biggest changes.</p>
-          <div class="trow"><span class="nm" style="color:var(--s-ok)">Symmetry</span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,22 16,20 30,18 44,17 58,14 72,10 84,7" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-ok)">74</b><span class="tpill up">↑ 8</span></div>
-          <div class="trow"><span class="nm" style="color:var(--s-good)">Propulsion</span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,20 16,18 30,19 44,15 58,13 72,12 84,9" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-good)">76</b><span class="tpill up">↑ 3</span></div>
-          <div class="trow"><span class="nm" style="color:var(--s-ok)">Hamstring</span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,10 16,12 30,11 44,13 58,14 72,15 84,15" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-ok)">69</b><span class="tpill dn">↓ 2</span></div>
+          <div class="trow"><span class="nm" style="color:var(--s-ok)">Symmetry<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is Symmetry?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>Symmetry &middot; left/right balance</b>How evenly her stride loads both sides. Higher is better.</span></span></span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,22 16,20 30,18 44,17 58,14 72,10 84,7" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-ok)">74</b><span class="tpill up">↑ 8</span></div>
+          <div class="trow"><span class="nm" style="color:var(--s-good)">Propulsion<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is Propulsion?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>Propulsion &middot; push-off power</b>How much horizontal drive she generates off the ground. Higher is better.</span></span></span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,20 16,18 30,19 44,15 58,13 72,12 84,9" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-good)">76</b><span class="tpill up">↑ 3</span></div>
+          <div class="trow"><span class="nm" style="color:var(--s-ok)">Hamstring<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is Hamstring load?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>Hamstring &middot; load balance</b>How evenly her hamstrings share landing and deceleration load. Higher is better.</span></span></span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,10 16,12 30,11 44,13 58,14 72,15 84,15" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-ok)">69</b><span class="tpill dn">↓ 2</span></div>
           <div id="mt-rest" hidden>
-            <div class="trow"><span class="nm" style="color:var(--s-good)">Elasticity</span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,16 16,14 30,15 44,12 58,10 72,8 84,6" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-good)">83</b><span class="tpill up">↑ 2</span></div>
-            <div class="trow"><span class="nm" style="color:var(--s-good)">Rhythm</span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,14 16,13 30,13 44,12 58,11 72,10 84,9" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-good)">80</b><span class="tpill up">↑ 2</span></div>
-            <div class="trow"><span class="nm" style="color:var(--s-good)">Cadence</span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,15 16,15 30,14 44,14 58,13 72,12 84,12" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-good)">78</b><span class="tpill fl">—</span></div>
+            <div class="trow"><span class="nm" style="color:var(--s-good)">Elasticity<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is Elasticity?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>Elasticity &middot; spring-return</b>How much energy she stores and reuses on each ground contact. Higher is better.</span></span></span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,16 16,14 30,15 44,12 58,10 72,8 84,6" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-good)">83</b><span class="tpill up">↑ 2</span></div>
+            <div class="trow"><span class="nm" style="color:var(--s-good)">Rhythm<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is Rhythm?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>Rhythm &middot; stride timing consistency</b>How evenly spaced her stride timing is, step to step. Higher is better.</span></span></span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,14 16,13 30,13 44,12 58,11 72,10 84,9" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-good)">80</b><span class="tpill up">↑ 2</span></div>
+            <div class="trow"><span class="nm" style="color:var(--s-good)">Cadence<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is Cadence?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>Cadence &middot; stride rate efficiency</b>How close her steps-per-minute is to her efficient range. Higher is better.</span></span></span><svg width="86" height="26" viewBox="0 0 86 26"><polyline points="2,15 16,15 30,14 44,14 58,13 72,12 84,12" fill="none" stroke="#00CC00" stroke-width="2" stroke-linecap="round"/></svg><b class="num" style="color:var(--s-good)">78</b><span class="tpill fl">—</span></div>
           </div>
           <button id="mt-more" class="mt-more" onclick="var b=document.getElementById('mt-rest'); b.hidden=!b.hidden; this.textContent=b.hidden?'Show all 6 ▾':'Show the 3 movers ▴'">Show all 6 ▾</button>
         </div>
@@ -2606,7 +2658,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <button class="card" style="width:100%;text-align:left;cursor:pointer" onclick="toast('Opens the full chain detail with metric popups')">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
             <h3 style="margin:0">Crossover → Adductor → Knee</h3>
-            <span class="badge wa" style="font-size:1.1rem;font-weight:700;border-radius:999px;padding:.3rem 1.1rem">Watch</span>
+            <span class="badge wa" style="display:inline-flex;align-items:center;gap:.6rem;font-size:1.1rem;font-weight:500;background:none;color:var(--gold-ink);border-radius:0;padding:0"><i class="dot10" style="width:.8rem;height:.8rem;background:#FFC700"></i>Watch</span>
           </div>
           <div class="chainstep">
             <div class="nwrap"><span class="n" style="background:#FFC700">1</span><span class="cline"></span></div>
@@ -2625,7 +2677,8 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <p>💡 Kill the crossover and the downstream load resolves itself.<br><b>Lateral band walks · "Run on your own rail"</b></p>
           </div>
         </button>
-        <div class="metric-row" style="margin-top:.6rem"><span><i class="dot10" style="background:#00CC00;margin-right:.8rem"></i>All other joints clear</span><span class="badge lo" style="font-size:1.1rem;font-weight:700;border-radius:999px;padding:.3rem 1.1rem">Clear</span></div>
+        <p style="font-size:1.1rem;color:var(--muted-2);font-weight:400;margin:.8rem 0 0;line-height:1.4">This is a movement-pattern observation, not medical advice. Consult a healthcare professional for pain or injury concerns.</p>
+        <div class="metric-row" style="margin-top:.6rem"><span><i class="dot10" style="background:#00CC00;margin-right:.8rem"></i>All other joints clear</span><span class="badge lo" style="display:inline-flex;align-items:center;gap:.6rem;font-size:1.1rem;font-weight:500;background:none;color:#00CC00;border-radius:0;padding:0"><i class="dot10" style="width:.8rem;height:.8rem;background:#00CC00"></i>Clear</span></div>
       </div>
 
       <!-- Sessions -->
@@ -2634,7 +2687,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <div class="sess-card" onclick="show('session')">
             <span class="medal">🏅</span>
             <div class="dt">Sun, Jul 6, 2026 &nbsp;<span class="statuspill done">COMPLETE</span></div><div class="ty">Track Session</div>
-            <div class="sc num" style="color:var(--s-good)">82 <small style="font-size:1.3rem" class="d-up">↑8</small></div>
+            <div class="sc num" style="color:var(--s-good)"><span class="cinfo sblegend" data-score="82"><span class="cinfo-btn" role="button" tabindex="0" aria-label="Show score band legend" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)">82</span><span class="cinfo-pop"></span></span> <small style="font-size:1.3rem" class="d-up">↑8</small></div>
             <div class="sesspills">
               <span style="border-color:#86efac;background:#f0fdf4;color:#00CC00">Propulsion: 76</span>
               <span style="border-color:#86efac;background:#f0fdf4;color:#00CC00">Elasticity: 83</span>
@@ -2645,18 +2698,18 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           </div>
           <div class="sess-card" onclick="show('session')">
             <div class="dt">Sat, Jun 21, 2026</div><div class="ty">Track Session</div>
-            <div class="sc num" style="color:var(--s-ok)">74</div>
-            <div class="foot">+2 vs previous</div>
+            <div class="sc num" style="color:var(--s-ok)"><span class="cinfo sblegend" data-score="74"><span class="cinfo-btn" role="button" tabindex="0" aria-label="Show score band legend" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)">74</span><span class="cinfo-pop"></span></span></div>
+            <div class="foot">+2 vs previous · tap to open</div>
           </div>
           <div class="sess-card" onclick="show('session')">
             <div class="dt">Sun, Jun 8, 2026</div><div class="ty">Treadmill Session</div>
-            <div class="sc num" style="color:var(--s-ok)">72</div>
-            <div class="foot">Baseline treadmill run</div>
+            <div class="sc num" style="color:var(--s-ok)"><span class="cinfo sblegend" data-score="72"><span class="cinfo-btn" role="button" tabindex="0" aria-label="Show score band legend" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)">72</span><span class="cinfo-pop"></span></span></div>
+            <div class="foot">Baseline treadmill run · tap to open</div>
           </div>
           <div class="sess-card" onclick="show('session')">
             <div class="dt">Mon, May 5, 2026</div><div class="ty">Track Session</div>
-            <div class="sc num" style="color:var(--gold-ink)">58</div>
-            <div class="foot">Returning from break</div>
+            <div class="sc num" style="color:var(--gold-ink)"><span class="cinfo sblegend" data-score="58"><span class="cinfo-btn" role="button" tabindex="0" aria-label="Show score band legend" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)">58</span><span class="cinfo-pop"></span></span></div>
+            <div class="foot">Returning from break · tap to open</div>
           </div>
         </div>
       </div>
@@ -2742,7 +2795,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <button onclick="exSel(this,'bball')">Basketball</button>
           <button onclick="exSel(this,'soft')">Softball</button>
         </div>
-        <div id="tourrow"><button class="btn btn-ghost" style="font-size:1.2rem" onclick="tourStart()">✨ Walk me through this report</button></div>
+        <div id="tourrow"><button class="btn btn-ghost ai-cta" style="font-size:1.2rem" onclick="tourStart()">✨ Walk me through this report</button></div>
       </div>
       <div class="tabs" id="reptabs">
         <button class="on" onclick="repTab(this,'overview')">Overview</button>
@@ -2758,7 +2811,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="reveal" id="tg-head">
           <img id="revealimg" alt="One full gait cycle — nine positions across a single stride">
           <div class="rv-body">
-            <p class="rv-kick">The Reveal · one stride, seen completely</p>
+            <p class="rv-kick">The Reveal<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is the Reveal?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>The Reveal</b>A full gait cycle broken into freeze-frames from one phone video — every joint position across a single stride, made visible in a way full-speed video can't show.</span></span> · one stride, seen completely</p>
             <h3>Best track session on record — symmetry finally clicked</h3>
             <p class="rv-sub">From a few seconds of phone video, Couro tracked <b>thousands of joint positions</b> — 33 landmarks on every frame, every one of them hers. This is the second nobody can see at full speed. Jul 6 · Track Sprint · Glider</p>
             <!-- The 3 stat chips (cadence symmetry/knee drive/contact time) that used to sit
@@ -2767,7 +2820,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
                  same three metrics are still fully available in the "Since her last session"
                  chapter below, just not restated a third time above the fold. -->
             <div class="rv-row">
-              <div class="rv-score"><span class="num" id="rv-num" data-final="82">82</span><small>Couro Score</small></div>
+              <div class="rv-score"><span class="num" id="rv-num" data-final="82">82</span><small>Couro Score<span class="cinfo"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is the Couro Score?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>Couro Score</b>A single 0–100 number summarizing this session's movement quality.</span></span></small></div>
             </div>
           </div>
           <!-- the same caption is burned into the source photo, where the scrim + chips make it
@@ -3184,15 +3237,15 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             </g>
             <g id="bm-front">
             <g class="hotspot" onclick="toast('Left Knee — <b>High</b>: anatomy, 12% asymmetry, Glider-specific advice + recommendation')"><circle cx="52" cy="152" r="9" fill="rgba(239,68,68,.25)" stroke="#FFC700" stroke-width="2"/></g>
-            <g class="hotspot" onclick="toast('Left Adductor — <b>Watch</b>: load 18% above right side')"><circle cx="56" cy="112" r="8" fill="rgba(255,199,0,.3)" stroke="#FFC700" stroke-width="2"/></g>
+            <g class="hotspot" onclick="toast('Left Adductor — <b>Watch</b>: load 18% above right side')"><circle cx="56" cy="112" r="8" fill="rgba(224,151,61,.3)" stroke="#E0973D" stroke-width="2"/></g>
             <g class="hotspot" onclick="toast('Right Knee — <b>Clear</b>: tracking within Glider norms')"><circle cx="67" cy="152" r="9" fill="rgba(16,185,129,.18)" stroke="#00CC00" stroke-width="2"/></g>
             <g class="hotspot" onclick="toast('Ankles — <b>Clear</b>: Achilles load in band both sides')"><circle cx="51" cy="198" r="7" fill="rgba(16,185,129,.18)" stroke="#00CC00" stroke-width="2"/><circle cx="68" cy="198" r="7" fill="rgba(16,185,129,.18)" stroke="#00CC00" stroke-width="2"/></g>
             </g>
             <g id="bm-back" style="display:none">
-            <g class="hotspot" onclick="toast('Left Hamstring — <b>Watch</b>: decel work loading it 9% more than right')"><circle cx="52" cy="126" r="9" fill="rgba(255,199,0,.3)" stroke="#FFC700" stroke-width="2"/></g>
+            <g class="hotspot" onclick="toast('Left Hamstring — <b>Watch</b>: decel work loading it 9% more than right')"><circle cx="52" cy="126" r="9" fill="rgba(224,151,61,.3)" stroke="#E0973D" stroke-width="2"/></g>
             <g class="hotspot" onclick="toast('Right Hamstring — <b>Clear</b>: load in band')"><circle cx="67" cy="126" r="8" fill="rgba(16,185,129,.18)" stroke="#00CC00" stroke-width="2"/></g>
             <g class="hotspot" onclick="toast('Lumbar — <b>Clear</b>: rotation proxies in band, no lateral collapse')"><circle cx="60" cy="82" r="8" fill="rgba(16,185,129,.18)" stroke="#00CC00" stroke-width="2"/></g>
-            <g class="hotspot" onclick="toast('Left Calf / Achilles — <b>Watch</b>: crossover work transfers load down the chain late in runs')"><circle cx="51" cy="182" r="7" fill="rgba(255,199,0,.3)" stroke="#FFC700" stroke-width="2"/></g>
+            <g class="hotspot" onclick="toast('Left Calf / Achilles — <b>Watch</b>: crossover work transfers load down the chain late in runs')"><circle cx="51" cy="182" r="7" fill="rgba(224,151,61,.3)" stroke="#E0973D" stroke-width="2"/></g>
             <g class="hotspot" onclick="toast('Right Calf / Achilles — <b>Clear</b>')"><circle cx="68" cy="182" r="7" fill="rgba(16,185,129,.18)" stroke="#00CC00" stroke-width="2"/></g>
             </g>
           </svg>
@@ -3209,14 +3262,14 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           </button>
           <p class="seclab">WATCH</p>
           <button class="riskbtn" onclick="toast('Metric popup: adductor load detail')">
-            <div class="head"><i class="dot10" style="background:#FFC700"></i><span class="t">Adductor Load</span><span class="asym">9% asymmetry</span><span class="badge wa">Watch</span></div>
+            <div class="head"><i class="dot10" style="background:var(--caution)"></i><span class="t">Adductor Load</span><span class="asym">9% asymmetry</span><span class="badge wa">Watch</span></div>
             <div class="lrlabels"><span>Left: 74</span><span>Right: 66</span></div>
-            <div class="splitbar"><i style="width:53%;background:#FFC700"></i><i style="width:47%;background:#00CC00"></i></div>
+            <div class="splitbar"><i style="width:53%;background:var(--caution)"></i><i style="width:47%;background:#00CC00"></i></div>
           </button>
           <button class="riskbtn" onclick="toast('Metric popup: hamstring load detail')">
-            <div class="head"><i class="dot10" style="background:#FFC700"></i><span class="t">Hamstring Load</span><span class="badge wa">Watch</span></div>
+            <div class="head"><i class="dot10" style="background:var(--caution)"></i><span class="t">Hamstring Load</span><span class="badge wa">Watch</span></div>
             <div class="lrlabels"><span>Left: 69</span><span>Right: 72</span></div>
-            <div class="splitbar"><i style="width:49%;background:#00CC00"></i><i style="width:51%;background:#FFC700"></i></div>
+            <div class="splitbar"><i style="width:49%;background:#00CC00"></i><i style="width:51%;background:var(--caution)"></i></div>
           </button>
         </div>
 
@@ -3318,8 +3371,11 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <h2>Create <span class="yel">New Athlete</span></h2>
         <p class="sub">Add a new athlete to your training program</p>
 
-        <!-- live preview of the profile being created — grounded in the fields below -->
+        <!-- live preview of the profile being created — grounded in the fields below.
+             Labeled "Live preview" so it reads as a dynamic preview, not a disabled field:
+             the avatar, name and meta line all update via updateCreatePreview() on input. -->
         <div class="create-preview">
+          <div class="cp-eyebrow">● Live preview</div>
           <div class="cp-av" id="cpAv">+</div>
           <div>
             <div class="cp-name ph" id="cpName">New athlete</div>
@@ -3353,7 +3409,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <div class="frow">
             <div class="fld"><label>Weight (lbs)</label><input placeholder="e.g. 145"></div>
             <div class="fld"><label>Height</label>
-              <div class="hgt"><input placeholder="5" style="text-align:center"><span>ft</span><span>–</span><input placeholder="7" style="text-align:center"><span>in</span></div>
+              <div class="hgt"><input placeholder="e.g. 5" style="text-align:center"><span>ft</span><span>–</span><input placeholder="e.g. 7" style="text-align:center"><span>in</span></div>
             </div>
           </div>
         </div>
@@ -3481,6 +3537,11 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           #v-upload .up-reviewhero .l{ font-size:1.4rem; color:var(--muted); font-weight:500; margin-top:.5rem; }
           #v-upload .up-reviewhero .l .ses{ color:var(--gold-ink); font-weight:700; text-transform:capitalize; }
           #v-upload .up-pane[hidden]{ display:none; }
+          /* Step 1 is a single question (movement type) — left full-width it stretches edge to
+             edge and leaves the Continue button floating above a lot of empty space (Jacky
+             review #43). Constrain it to the same ~640px column the rest of the app's narrow,
+             single-focus forms use (see .form-card), centered within the page. */
+          #v-upload #up-pane-1{ max-width:64rem; margin:0 auto; }
 
           /* Scope toggle — Individual / Team segmented control (matches .upmode-toggle language).
              "Team" navigates to the squad-upload wizard; it does not toggle in-place content. */
@@ -3541,7 +3602,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <!-- STEP 1 · Movement type — full focus, big touch targets -->
         <div class="up-pane" id="up-pane-1">
           <div class="upsec">
-            <div class="lbl">1 · What are they doing?</div>
+            <div class="lbl">1 · Movement — what are they doing?</div>
             <div class="up-typepick" id="up-typepick">
               <button type="button" class="up-typetrigger" id="up-typetrigger" onclick="upTypeToggleMenu(event)" aria-haspopup="listbox" aria-expanded="false">
                 <span class="tt-ic" id="up-typetrigger-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="2.2"/><path d="M11 9l-3 4 3 2-1 5M11 9l4 1 2 3M11 9l-4 1"/></svg></span>
@@ -3554,7 +3615,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             </div>
             <div class="upfast" style="margin-top:1.6rem">
               <span class="uf-t"><b>Three taps, about 30 seconds.</b> <span class="uf-steps">Pick the move · drop a clip · analyze.</span></span>
-              <button onclick="startUpTour()">✨ Walk me through it</button>
+              <button class="ai-cta" onclick="startUpTour()">✨ Walk me through it</button>
             </div>
           </div>
           <div class="up-nav">
@@ -3668,6 +3729,32 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <span><h4>Delete Account</h4><p>Permanently remove your account and data</p></span>
           <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
         </button>
+        <div class="lbl">Privacy &amp; Data</div>
+        <button class="action-card" onclick="toast('Opens video retention settings — configurable per team, default <b>12 months</b>')">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+          <span><h4>Video Retention</h4><p>Session video is kept for 12 months, then auto-deleted — configurable</p></span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button class="action-card" onclick="toast('Opens sharing settings — choose <b>coach only</b>, <b>coach + parent</b>, or <b>coach + team</b>')">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <span><h4>Sharing Permissions</h4><p>Choose who can see an athlete's video and reports — coach, coach + parent, or coach + team</p></span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button class="action-card" onclick="toast('Opens parental consent tracker for athletes under 14')">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <span><h4>Parental Consent</h4><p>Consent-on-file status for U14 athletes before video capture begins</p></span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button class="action-card" onclick="toast('Prepares a downloadable export of your account and athlete data')">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></span>
+          <span><h4>Export My Data</h4><p>Download a copy of your account, athlete, and session data</p></span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button class="action-card danger" onclick="toast('Opens data erasure request — removes stored video and analysis for a chosen athlete, <b>separate from account deletion</b>')">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--down)" stroke-width="2"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10"/><path d="M1 1l22 22"/></svg></span>
+          <span><h4>Erase Video &amp; Analysis Data</h4><p>Permanently delete stored video and analysis for one athlete, without closing their account</p></span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
       </div>
     </div>
 
@@ -3682,7 +3769,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <div class="billing-toggle">
           <div class="pillgroup">
             <button class="on" onclick="billing(this,'mo')">Monthly</button>
-            <button onclick="billing(this,'yr')">Annual</button>
+            <button onclick="billing(this,'yr')">Annual <span class="save-badge">Save up to 17%</span></button>
           </div>
         </div>
         <div class="plan-cards">
@@ -4500,7 +4587,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
         <h1>Your <span class="yel">Organization</span></h1>
       </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <button class="walkbtn" onclick="startOrgTour()">✨ Walk me through Program view</button>
+        <button class="walkbtn ai-cta" onclick="startOrgTour()">✨ Walk me through Program view</button>
         <button class="btn btn-ghost" onclick="openSquadUpload()">＋ &nbsp;Upload Squad</button>
         <button class="btn btn-yellow" onclick="newRoster()">＋ &nbsp;New Team</button>
       </div>
@@ -4816,7 +4903,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
       <div class="sec">Who to act on</div>
       <div class="grid2 chartrow">
         <div class="card">
-          <h3 class="cardh"><span>Where each athlete stands <span class="hsub" id="sm-sub">trend × strength · color = risk · tap a dot</span></span><button class="cmpbtn" id="sm-cmpbtn" onclick="smCmpToggle()">⇄ Compare</button></h3>
+          <h3 class="cardh"><span>Where each athlete stands <span class="hsub" id="sm-sub">trend × strength · color = risk · hover for name · tap to open</span></span><button class="cmpbtn" id="sm-cmpbtn" onclick="smCmpToggle()">⇄ Compare</button></h3>
         <div class="statusmap-wrap">
           <svg class="statusmap" viewBox="0 0 560 400" role="img" aria-label="Team status map: each athlete plotted by 30-day trend and strength, colored by injury risk">
   <rect x="60" y="30" width="240" height="155" fill="#FBF3DD" opacity=".5"/>
@@ -4838,7 +4925,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
     <text x="50" y="40" text-anchor="end" transform="rotate(-90 50 40)">◂ needs work</text>
     <text x="50" y="335" text-anchor="end" transform="rotate(-90 50 335)">strong ▸</text>
   </g>
-  <g onclick="smDot(this,'Montana Carlson')" style="cursor:pointer"><title>Montana Carlson — tap to open</title><circle cx="454" cy="61" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/><text x="466" y="65" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Montana</text></g><g onclick="smDot(this,'Aaliyah Brooks')" style="cursor:pointer"><title>Aaliyah Brooks — tap to open</title><circle cx="366" cy="86" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Nia Carter')" style="cursor:pointer"><title>Nia Carter — tap to open</title><circle cx="410" cy="123" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Emi Tanaka')" style="cursor:pointer"><title>Emi Tanaka — tap to open</title><circle cx="322" cy="129" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Brooke Ellis')" style="cursor:pointer"><title>Brooke Ellis — tap to open</title><circle cx="388" cy="170" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Jordan Ford')" style="cursor:pointer"><title>Jordan Ford — tap to open</title><circle cx="333" cy="142" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Kayla Chen')" style="cursor:pointer"><title>Kayla Chen — tap to open</title><circle cx="289" cy="154" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Priya Raman')" style="cursor:pointer"><title>Priya Raman — tap to open</title><circle cx="410" cy="216" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Dev Osei')" style="cursor:pointer"><title>Dev Osei — tap to open</title><circle cx="245" cy="160" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Rosa Delgado')" style="cursor:pointer"><title>Rosa Delgado — tap to open</title><circle cx="212" cy="98" r="14" fill="none" stroke="#DC4A3F" stroke-width="1.5" opacity=".4"/><circle cx="212" cy="98" r="9" fill="#DC4A3F" stroke="#fff" stroke-width="1.5"/><text x="225" y="102" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Rosa</text></g><g onclick="smDot(this,'Marcus Webb')" style="cursor:pointer"><title>Marcus Webb — tap to open</title><circle cx="190" cy="232" r="14" fill="none" stroke="#DC4A3F" stroke-width="1.5" opacity=".4"/><circle cx="190" cy="232" r="9" fill="#DC4A3F" stroke="#fff" stroke-width="1.5"/><text x="203" y="236" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Marcus</text></g>
+  <g onclick="smDot(this,'Montana Carlson')" style="cursor:pointer"><title>Montana Carlson — tap to open</title><circle cx="454" cy="61" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/><text x="466" y="65" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Montana</text></g><g onclick="smDot(this,'Aaliyah Brooks')" style="cursor:pointer"><title>Aaliyah Brooks — tap to open</title><circle cx="366" cy="86" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Nia Carter')" style="cursor:pointer"><title>Nia Carter — tap to open</title><circle cx="410" cy="123" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/><text x="422" y="127" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Nia</text></g><g onclick="smDot(this,'Emi Tanaka')" style="cursor:pointer"><title>Emi Tanaka — tap to open</title><circle cx="322" cy="129" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Brooke Ellis')" style="cursor:pointer"><title>Brooke Ellis — tap to open</title><circle cx="388" cy="170" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Jordan Ford')" style="cursor:pointer"><title>Jordan Ford — tap to open</title><circle cx="333" cy="142" r="8" fill="#00CC00" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Kayla Chen')" style="cursor:pointer"><title>Kayla Chen — tap to open</title><circle cx="289" cy="154" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/></g><g onclick="smDot(this,'Priya Raman')" style="cursor:pointer"><title>Priya Raman — tap to open</title><circle cx="410" cy="216" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/><text x="422" y="220" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Priya</text></g><g onclick="smDot(this,'Dev Osei')" style="cursor:pointer"><title>Dev Osei — tap to open</title><circle cx="245" cy="160" r="8" fill="#E0A400" stroke="#fff" stroke-width="1.5"/><text x="257" y="164" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Dev</text></g><g onclick="smDot(this,'Rosa Delgado')" style="cursor:pointer"><title>Rosa Delgado — tap to open</title><circle cx="212" cy="98" r="14" fill="none" stroke="#DC4A3F" stroke-width="1.5" opacity=".4"/><circle cx="212" cy="98" r="9" fill="#DC4A3F" stroke="#fff" stroke-width="1.5"/><text x="225" y="102" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Rosa</text></g><g onclick="smDot(this,'Marcus Webb')" style="cursor:pointer"><title>Marcus Webb — tap to open</title><circle cx="190" cy="232" r="14" fill="none" stroke="#DC4A3F" stroke-width="1.5" opacity=".4"/><circle cx="190" cy="232" r="9" fill="#DC4A3F" stroke="#fff" stroke-width="1.5"/><text x="203" y="236" font-size="11" font-weight="800" fill="#141413" font-family="Inter,sans-serif">Marcus</text></g>
   <g id="sm-sel"></g>
 </svg>
           <div class="sm-legend">
@@ -4884,6 +4971,7 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 
       <div class="sec">Compare the team<span class="sec-r">tap two athletes to compare · tap a column to sort</span></div>
       <div class="card" style="margin-bottom:1.8rem">
+        <div class="insight" style="margin:0 0 1.4rem"><span class="ico">💡</span><span><b>Knee control</b> splits this squad more than any other metric — from <b>Marcus's 44</b> up to <b>Montana's 88</b>, a 44-point spread. Tap a column header's <b>ⓘ</b> to see what each abbreviation measures.</span></div>
         <div id="tmx"></div>
         <div class="tmx-foot"><span class="tmx-key"><i class="k x4"></i>elite 82+</span><span class="tmx-key"><i class="k x3"></i>solid 70–81</span><span class="tmx-key"><i class="k x2"></i>watch 60–69</span><span class="tmx-key"><i class="k x1"></i>flag &lt;60</span></div>
         <div id="tcmp" class="tcmp" hidden></div>
@@ -7301,6 +7389,40 @@ function cinfoCloseAll(){
 document.addEventListener('click', e => { if (!e.target.closest('.cinfo')) cinfoCloseAll(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') cinfoCloseAll(); });
 
+/* ---- score-band legend (v34, review #86/#38) ----
+   One published scale, reused everywhere a Couro score renders. Bands mirror the
+   language already used by the session report's scoretap popover (82 = "Silver
+   band · top 22%"; "Gold starts at 86"), so this is the single source of truth
+   the rest of the app's score popovers should match, not a competing definition. */
+const SCORE_BANDS = [
+  { tier:'gold',   label:'Gold &middot; Elite',       min:86, max:100, color:'#059669' },
+  { tier:'silver', label:'Silver &middot; Solid',      min:70, max:85,  color:'#00CC00' },
+  { tier:'bronze', label:'Bronze &middot; Developing', min:55, max:69,  color:'#E0973D' },
+  { tier:'build',  label:'Building',                   min:0,  max:54,  color:'#FF0000' }
+];
+function scoreBandFor(score){
+  return SCORE_BANDS.find(b => score >= b.min && score <= b.max) || SCORE_BANDS[SCORE_BANDS.length - 1];
+}
+function scoreBandPopoverHTML(score){
+  const cur = scoreBandFor(score);
+  const rows = SCORE_BANDS.map(b => {
+    const rng = b.max >= 100 ? (b.min + '+') : (b.min <= 0 ? ('Below ' + (b.max + 1)) : (b.min + '–' + b.max));
+    return '<div class="sbl-row' + (b.tier === cur.tier ? ' cur' : '') + '"><i class="sbl-dot" style="background:' + b.color + '"></i>' +
+      '<span class="sbl-lbl">' + b.label + '</span><span class="sbl-rng">' + rng + '</span></div>';
+  }).join('');
+  return '<b>' + cur.label.replace('&middot;', '&middot; ' + score + ' &middot;') + '</b>' +
+    '<span style="display:block;color:var(--muted);font-size:1.1rem">Every score in the app is scored against these four bands.</span>' +
+    '<div class="sbl-rows">' + rows + '</div>';
+}
+function scoreBandPopover(){
+  document.querySelectorAll('.sblegend[data-score]').forEach(el => {
+    const score = parseInt(el.getAttribute('data-score'), 10);
+    const pop = el.querySelector('.cinfo-pop');
+    if (pop && !isNaN(score)) pop.innerHTML = scoreBandPopoverHTML(score);
+  });
+}
+scoreBandPopover();
+
 /* team roster filter dropdown — replaces the chip row (v29) */
 function fddToggle(e){
   if (e) e.stopPropagation();
@@ -8122,8 +8244,16 @@ var SM_DATA = {
   'Rosa Delgado':    {x:212,y:98,  arch:'Crossover · flagged',   risk:'flagged', trend:-3, elas:80, gct:78, sym:62, trunk:70, decel:72, knee:74, note:'arm-path drift R +18%', pat:'Crossover-lander', mech:'Trunk opens early — plant shifts off-line, load stacks on one side.'},
   'Marcus Webb':     {x:190,y:232, arch:'Crossover · flagged',   risk:'flagged', trend:-4, elas:76, gct:74, sym:58, trunk:68, decel:66, knee:44, note:'knee valgus at plant L +15%', pat:'Crossover-lander', mech:'Foot crosses hard at plant — knee collapses inward into valgus.'}
 };
-var SM_METRICS = [['elas','Elasticity'],['gct','Ground contact'],['sym','Symmetry'],['trunk','Trunk'],['decel','Deceleration'],['knee','Knee control']];
+var SM_METRICS = [['elas','Elasticity'],['gct','Ground contact'],['sym','Symmetry'],['trunk','Trunk stability'],['decel','Deceleration'],['knee','Knee control']];
 var SM_COLS = [['elas','Elas'],['gct','Grnd'],['sym','Sym'],['trunk','Trunk'],['decel','Decel'],['knee','Knee']];
+/* Full names for the ELAS/GRND/SYM/TRUNK/DECEL/KNEE column abbreviations — matches the
+   labels on the team fingerprint radar above, surfaced via the shared .cinfo tooltip
+   (same ⓘ affordance used elsewhere on the page) so the abbreviations are never a dead end. */
+var SM_COL_FULL = {elas:'Elasticity', gct:'Ground contact', sym:'Symmetry', trunk:'Trunk stability', decel:'Deceleration', knee:'Knee control'};
+function tmxColInfo(key){
+  var full = SM_COL_FULL[key] || key;
+  return '<span class="cinfo tmx-cinfo" onclick="event.stopPropagation()"><span class="cinfo-btn" role="button" tabindex="0" aria-label="What is '+full+'?" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><path d="M12 7.8h.01"/></svg></span><span class="cinfo-pop"><b>'+full+'</b></span></span>';
+}
 /* Default columns: Overall + the single metric with the widest spread across the squad.
    Ranges today — elas 70-92 (22), gct 72-90 (18), sym 58-90 (32), trunk 68-88 (20),
    decel 64-84 (20), knee 44-88 (44). Knee control separates the squad the most, so it
@@ -8160,7 +8290,7 @@ function renderMatrix(){
   var caret=function(k){ return tmxSort===k?(' <span class="caret">'+(tmxDir<0?'▾':'▴')+'</span>'):''; };
   var cols=tmxVisCols();
   var head='<tr><th class="athcol'+(tmxSort==='name'?' on':'')+'" onclick="tmxSortBy(\'name\')">Athlete</th>'+
-    cols.map(function(c){ return '<th class="'+(tmxSort===c[0]?'on':'')+'" onclick="tmxSortBy(\''+c[0]+'\')">'+c[1]+caret(c[0])+'</th>'; }).join('')+
+    cols.map(function(c){ return '<th class="'+(tmxSort===c[0]?'on':'')+'" onclick="tmxSortBy(\''+c[0]+'\')">'+c[1]+caret(c[0])+tmxColInfo(c[0])+'</th>'; }).join('')+
     '<th class="'+(tmxSort==='overall'?'on':'')+'" onclick="tmxSortBy(\'overall\')">Overall'+caret('overall')+'</th></tr>';
   var body=names.map(function(n){
     var d=SM_DATA[n], ov=tmxOverall(d);
@@ -8318,7 +8448,7 @@ function smCmpToggle(){
     document.getElementById('sm-insight').hidden = true;
   } else {
     btn.textContent = '⇄ Compare';
-    if(sub) sub.textContent = 'trend × strength · color = risk · tap a dot';
+    if(sub) sub.textContent = 'trend × strength · color = risk · hover for name · tap to open';
     smCmpClear();
     document.getElementById('sm-insight').hidden = false;
   }
