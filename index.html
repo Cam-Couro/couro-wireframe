@@ -1644,6 +1644,48 @@ body.mobile .reel .clip{ width:11rem; }
 .sc-scrim{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,11,13,.55) 0%, rgba(10,11,13,.72) 45%, rgba(10,11,13,.92) 100%); }
 .sc-in{ position:absolute; inset:0; display:flex; flex-direction:column; padding:2.2rem 2rem; }
 .sc-watermark{ position:absolute; right:1.4rem; bottom:1.5rem; width:2.4rem; height:auto; opacity:.9; filter:drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
+
+/* ===== PDF export sheet — screen styling is just "hidden"; the real layout
+   lives in the @media print block below, which is what window.print() sees. ===== */
+#pdfsheet{ display:none; }
+/* Chrome/Safari drop background-color and box-shadow when printing unless told
+   otherwise — without this the score card and the dark "new call" block would
+   silently render as plain white, which defeats the point of designing them. */
+.pdf-pg, .pdf-pg *{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+.pdf-pg{ font-family:'Lexend',sans-serif; color:#1B1F1B; max-width:52rem; margin:0 auto; }
+.pdf-hd{ display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #1B1F1B; padding-bottom:1rem; margin-bottom:1.6rem; }
+.pdf-brand{ display:flex; align-items:center; gap:.7rem; font-size:1.3rem; font-weight:700; }
+.pdf-brand img{ width:28px; height:24px; object-fit:contain; }
+.pdf-meta{ text-align:right; font-size:1.05rem; color:#565B66; }
+.pdf-meta b{ display:block; color:#1B1F1B; font-size:1.6rem; font-weight:700; }
+.pdf-hero{ display:flex; align-items:center; gap:1.6rem; background:#FAF7EE; border:1.5px solid #ECE5D3; border-radius:1rem; padding:1.4rem 1.6rem; margin-bottom:1.4rem; }
+.pdf-score{ font-size:4.2rem; font-weight:800; line-height:1; color:#059669; }
+.pdf-score small{ font-size:1.1rem; font-weight:600; color:#565B66; display:block; }
+.pdf-hero p{ font-size:1.25rem; line-height:1.5; margin:0; }
+.pdf-sec{ margin-bottom:1.4rem; }
+.pdf-sec h2{ font-size:1.05rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#8A6A00; margin:0 0 .6rem; }
+.pdf-diffrow{ display:flex; gap:1rem; flex-wrap:wrap; }
+.pdf-diffrow div{ flex:1; min-width:9rem; background:#fff; border:1.5px solid #ECE5D3; border-radius:.7rem; padding:.7rem .9rem; }
+.pdf-diffrow .k{ display:block; font-size:.95rem; color:#565B66; }
+.pdf-diffrow .v{ font-size:1.2rem; font-weight:700; }
+.pdf-drills{ list-style:none; margin:0; padding:0; }
+.pdf-drills li{ display:flex; justify-content:space-between; padding:.6rem 0; border-bottom:1px solid #ECE5D3; font-size:1.15rem; }
+.pdf-drills li b{ font-weight:600; }
+.pdf-drills li span{ color:#565B66; }
+.pdf-call{ background:#1B1F1B; color:#fff; border-radius:1rem; padding:1.2rem 1.5rem; }
+.pdf-call .k{ font-size:.95rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#FFC700; }
+.pdf-call h3{ margin:.3rem 0; font-size:1.4rem; }
+.pdf-call p{ margin:0; color:rgba(255,255,255,.75); font-size:1.1rem; }
+.pdf-ft{ display:flex; justify-content:space-between; align-items:center; margin-top:1.8rem; padding-top:1rem; border-top:1px solid #ECE5D3; font-size:1rem; color:#565B66; }
+.pdf-ft img{ width:20px; height:17px; object-fit:contain; opacity:.8; }
+@media print{
+  /* display:none (not visibility:hidden) removes the rest of the app from
+     the layout entirely — visibility:hidden keeps its full scroll height in
+     flow, which is what was producing extra blank trailing pages. */
+  body.pdf-mode > *{ display:none !important; }
+  body.pdf-mode #pdfsheet{ display:block !important; }
+  @page{ margin:.5in; }
+}
 .sc-top{ display:flex; align-items:center; justify-content:space-between; }
 .sc-brand{ display:flex; align-items:center; gap:.7rem; font-size:1.15rem; font-weight:700; letter-spacing:.02em; }
 .sc-brand img{ width:26px; height:22px; object-fit:contain; }
@@ -2737,7 +2779,10 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
           <div class="dt">SUN, JUL 06, 2026</div>
           <h1>Track Session</h1>
         </div>
-        <button class="btn btn-yellow" onclick="openShare()">Share ↗</button>
+        <div style="display:flex;gap:.8rem">
+          <button class="btn btn-ghost" onclick="exportPdf()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:.4rem"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 12v5M12 17l-2-2M12 17l2-2"/></svg>Export PDF</button>
+          <button class="btn btn-yellow" onclick="openShare()">Share ↗</button>
+        </div>
       </div>
       <!-- TL;DR (v33): what happened / do next / re-test. A coach who reads nothing
            else still coaches correctly; the Reveal hero follows for those who scroll. -->
@@ -5690,6 +5735,12 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 </div>
 
 <!-- ===================== SHARE SHEET ===================== -->
+<!-- ===== PDF EXPORT SHEET ===== a purpose-built printable layout, populated from the
+     live report's own DOM at export time so its numbers can never drift from what's
+     on screen. Hidden on screen; only body.pdf-mode + @media print reveal it, and
+     only it — everything else in the app is visibility:hidden for that one print. -->
+<div id="pdfsheet"></div>
+
 <div id="share" class="ev-overlay" hidden onclick="if(event.target===this)closeShare()">
   <div class="share-wrap">
     <button class="share-x" onclick="closeShare()" aria-label="Close">✕</button>
@@ -6592,13 +6643,61 @@ function shareTpl(btn, tpl){ btn.parentElement.querySelectorAll('button').forEac
 function openShare(){ renderShareCard(shareTplCur); document.getElementById('share').hidden = false; }
 function closeShare(){ document.getElementById('share').hidden = true; }
 function shareTo(kind){
+  if (kind === 'pdf'){ closeShare(); exportPdf(); return; }
   const msg = {
     ig:'Opening Instagram — your Story card is ready to post',
     msg:'Opening Messages — your report link is attached',
-    link:'Link copied — anyone you send it to gets their first report free',
-    pdf:'Rendering your report PDF — downloads in a moment'
+    link:'Link copied — anyone you send it to gets their first report free'
   };
   toast(msg[kind] || 'Shared');
+}
+
+/* ---- real PDF export: a purpose-built print layout (#pdfsheet), populated from
+   the live report's own DOM so its numbers can never drift from what's on screen,
+   then handed to the browser's native print pipeline. No external library, no
+   network dependency — window.print() -> "Save as PDF" produces a real file. */
+function exportPdf(){
+  const name = (document.getElementById('ath-name') || {}).textContent || 'Athlete';
+  const date = (document.querySelector('#v-session .rep-title .dt') || {}).textContent || '';
+  const kind = (document.querySelector('#v-session .rep-title h1') || {}).textContent || 'Session Report';
+  const scoreEl = document.getElementById('rv-num');
+  const score = scoreEl ? (scoreEl.dataset.final || scoreEl.textContent) : '';
+  const tldr = [...document.querySelectorAll('#tg-tldr .tl')].map(el => ({
+    k: (el.querySelector('b') || {}).textContent || '', v: (el.querySelector('span') || {}).innerHTML || ''
+  }));
+  const diffs = [...document.querySelectorAll('#tg-diff .dchip')].map(el => ({
+    k: (el.querySelector('.dk') || {}).textContent || '', v: (el.querySelector('.dv') || {}).textContent || ''
+  }));
+  const fixTitle = (document.querySelector('#tg-fix h4') || {}).textContent || '';
+  const drills = [...document.querySelectorAll('#tg-fix .fixdrill')].map(el => ({
+    t: (el.querySelector('.t') || {}).textContent || '', m: (el.querySelector('.m') || {}).textContent || ''
+  }));
+  const callH3 = document.querySelector('#tg-mission h3');
+  const callTitle = callH3 ? callH3.textContent : '';
+  const callBody = (callH3 && callH3.nextElementSibling) ? callH3.nextElementSibling.textContent : '';
+  const stamp = new Date().toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+
+  document.getElementById('pdfsheet').innerHTML =
+    '<div class="pdf-pg">'
+    + '<div class="pdf-hd"><span class="pdf-brand"><img src="'+LOGO+'" alt="">Couro</span>'
+    + '<span class="pdf-meta"><b>'+name+'</b>'+kind+' · '+date+'</span></div>'
+    + '<div class="pdf-hero"><div class="pdf-score">'+score+'<small>/ 100</small></div>'
+    + '<p>'+(tldr[0] ? tldr[0].v : '')+'</p></div>'
+    + '<div class="pdf-sec"><h2>Since last session</h2><div class="pdf-diffrow">'
+    + diffs.map(d => '<div><span class="k">'+d.k+'</span><span class="v">'+d.v+'</span></div>').join('')
+    + '</div></div>'
+    + '<div class="pdf-sec"><h2>The fix — '+fixTitle+'</h2><ul class="pdf-drills">'
+    + drills.map(d => '<li><b>'+d.t+'</b><span>'+d.m+'</span></li>').join('')
+    + '</ul></div>'
+    + '<div class="pdf-call"><span class="k">The new call</span><h3>'+callTitle+'</h3><p>'+callBody+'</p></div>'
+    + '<div class="pdf-ft"><span>Generated '+stamp+' · couro.io</span><img src="'+LOGO+'" alt="Couro"></div>'
+    + '</div>';
+
+  document.body.classList.add('pdf-mode');
+  const cleanup = () => { document.body.classList.remove('pdf-mode'); window.removeEventListener('afterprint', cleanup); };
+  window.addEventListener('afterprint', cleanup);
+  setTimeout(() => window.print(), 60);
+  setTimeout(cleanup, 4000); /* fallback for browsers that don't fire afterprint reliably */
 }
 
 function initials(n){ return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
