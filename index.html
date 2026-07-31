@@ -898,10 +898,17 @@ body.mobile .bltile::after{ content:"Tap ›"; display:block; margin-top:.5rem; 
 .connWrap{ display:flex; align-items:center; gap:1.2rem; margin:1.2rem 0 1.2rem 2rem; }
 .connBar{ width:.5rem; height:2.5rem; border-radius:999px; }
 .connWrap p{ color:var(--muted); font-size:1.3rem; font-style:italic; }
-.fixchain{ background:#dcfce7; border:1.5px solid #00CC00; border-radius:16px; padding:2rem; }
+/* Was a full light-green fill + green border — the heaviest treatment on the page,
+   stacked directly between two other cards (Breakthrough, New Call) that were making
+   the same "look at me" bid. Matched to .story's lighter left-accent-only pattern so
+   Fix reads as equally important without every section fighting for the same weight. */
+.fixchain{ background:#fff; border:1.5px solid var(--line); border-left:4px solid #00CC00; border-radius:16px; padding:2rem; }
 .fixchain h4{ font-size:1.7rem; margin-bottom:.4rem; }
 .fixdrills{ display:flex; gap:1.2rem; margin-top:1.4rem; flex-wrap:wrap; }
-.fixdrill{ flex:1; min-width:16rem; background:#fff; border:1px solid #ECE5D3; border-radius:12px; padding:1.4rem; }
+/* Was background:#fff, which read fine as a white chip against .fixchain's old
+   light-green fill — now that .fixchain is white too, white-on-white would have
+   made these disappear, so they get the app's standard subtle fill instead. */
+.fixdrill{ flex:1; min-width:16rem; background:var(--fill); border:1px solid #ECE5D3; border-radius:12px; padding:1.4rem; }
 .fixdrill .t{ font-size:1.5rem; font-weight:600; } .fixdrill .m{ font-size:1.2rem; color:#4A504A; margin-top:.3rem; }
 .goodchips{ display:flex; gap:.8rem; flex-wrap:wrap; margin-top:1rem; }
 .goodchips span{ border:1px solid #86efac; background:#dcfce7; color:#00CC00; border-radius:999px; padding:.5rem 1.3rem; font-size:1.2rem; font-weight:600; }
@@ -2774,7 +2781,10 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <button class="zoom" title="Zoom" onclick="toast('Zooms into the athlete bounding box')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B1F1B" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M8 11h6M11 8v6"/></svg></button>
           </div>
         </div>
-        <div class="scorebox card yb">
+        <!-- Dropped the .yb (gold border) modifier — this card no longer needs to compete
+             with THE NEW CALL for "this is the important one" when the TL;DR above it
+             already established what matters first. -->
+        <div class="scorebox card">
           <div class="gauge-wrap">
             <span class="cinfo scoretap">
             <span class="cinfo-btn" role="button" tabindex="0" aria-label="Show score band and percentile" onclick="cinfoTog(this,event)" onkeydown="cinfoKey(this,event)">
@@ -2791,7 +2801,10 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
             <h3 style="margin:0">Couro Run Score</h3>
             <span class="scoretap-hint">Tap the score for band + percentile</span>
             <span class="arch-pill delta"><b>&uarr; 8</b> vs last &nbsp;&middot;&nbsp; personal best</span>
-            <p class="insight"><b>Best stride symmetry to date.</b> Strength: vertical control. Focus: left knee drive on the back straight.</p>
+            <!-- Removed the "Best stride symmetry to date / Strength: vertical control..."
+                 line: it was a third distinct visual treatment stacked in one card, and it
+                 only restated what "Her Edge" already says on the Signature tab and what
+                 this session's Fix already says below. -->
             <div class="deltas">
               <div class="d"><div class="k">vs 5 sessions ago</div><div class="v num" style="color:var(--up)">+14</div></div>
             </div>
