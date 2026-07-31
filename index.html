@@ -6731,8 +6731,13 @@ function exportPdf(){
   const name = (document.getElementById('ath-name') || {}).textContent || 'Athlete';
   const date = (document.querySelector('#v-session .rep-title .dt') || {}).textContent || '';
   const kind = (document.querySelector('#v-session .rep-title h1') || {}).textContent || 'Session Report';
+  const orgName = (document.querySelector('.tb-name') || {}).textContent || '';
   const scoreEl = document.getElementById('rv-num');
   const score = scoreEl ? (scoreEl.dataset.final || scoreEl.textContent) : '';
+  // scoreBandFor() is the same function the in-app score-tap popover uses
+  // (see SCORE_BANDS above), so the PDF can never disagree with the app
+  // about what a given number means to someone who doesn't already know.
+  const band = (typeof scoreBandFor === 'function' && score) ? scoreBandFor(parseInt(score, 10)) : null;
   const tldr = [...document.querySelectorAll('#tg-tldr .tl')].map(el => ({
     k: (el.querySelector('b') || {}).textContent || '', v: (el.querySelector('span') || {}).textContent || ''
   }));
@@ -6812,15 +6817,28 @@ function exportPdf(){
   pdf.text(X0, cy, name, { size:19, bold:true });
   cy += 21;
   pdf.text(X0, cy, kind + '  -  ' + date, { size:10.5, color:'#565B66' });
-  cy += 15;
+  cy += 17;
+  // Frames who this is for and what's in it before anything else — this leaves
+  // the app as a standalone document, read cold by someone (a parent, another
+  // coach) with zero context on what Couro is or why there are 4 pages here.
+  if (orgName) { pdf.text(X0, cy, 'Prepared by ' + orgName + ' for ' + name + "'s training file", { size:9, color:'#8A908A' }); cy += 13; }
+  pdf.text(X0, cy, 'This report: Overview, Performance, Risk & Body Map, Research & Sources', { size:9, color:'#8A908A' });
+  cy += 14;
   pdf.hline(X0, cy, X0 + CW, '#1B1F1B', 1.5);
   cy += 24;
 
   const tldrLines = tldr[0] ? pdf.wrap(tldr[0].v, CW - 160, 12, false) : [];
-  const heroH = Math.max(66, 26 + tldrLines.length * 16);
+  const heroH = Math.max(80, 40 + tldrLines.length * 16);
   pdf.rect(X0, cy, CW, heroH, { fill:'#FAF7EE', stroke:'#ECE5D3', strokeW:1 });
   pdf.text(X0 + 18, cy + 14, score, { size:32, bold:true, color:'#059669' });
   pdf.text(X0 + 18 + pdf.textWidth(score, 32, true) + 4, cy + 34, '/100', { size:10, color:'#565B66' });
+  // The raw score means nothing to a reader outside the app — the band is the
+  // same one the in-app score-tap popover shows, just spelled out here since
+  // there's no tap gesture on paper.
+  if (band){
+    const bandLabel = band.label.replace(/&middot;/g, ' - ') + '  (' + band.min + '-' + (band.max >= 100 ? '100' : band.max) + ')';
+    pdf.text(X0 + 18, cy + 58, bandLabel, { size:8.5, bold:true, color:band.color });
+  }
   tldrLines.forEach((line, i) => pdf.text(X0 + 150, cy + 18 + i * 16, line, { size:12 }));
   cy += heroH + 22;
 
