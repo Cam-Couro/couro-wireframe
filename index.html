@@ -6635,6 +6635,8 @@ function shareTo(kind){
    with the rest of this file being a single self-contained HTML document. */
 function makePdfWriter(pageW, pageH){
   let content = '';
+  const pages = [];
+  function newPage(){ pages.push(content); content = ''; }
   function rgb(hex){
     const n = parseInt(hex.replace('#',''), 16);
     return [((n>>16)&255)/255, ((n>>8)&255)/255, (n&255)/255].map(v => v.toFixed(3));
@@ -6695,23 +6697,34 @@ function makePdfWriter(pageW, pageH){
     content += (w||0.75)+' w\n'+r+' '+g+' '+b+' RG\n'+x1+' '+y+' m '+x2+' '+y+' l S\n';
   }
   function build(){
+    newPage(); // flush whatever's still in `content` as the final page
+    const n = pages.length;
     const objs = {};
+    const pageObjNum = i => 3 + i * 2;
+    const contentObjNum = i => 4 + i * 2;
+    const fontRegNum = 3 + n * 2;
+    const fontBoldNum = fontRegNum + 1;
+
     objs[1] = '<< /Type /Catalog /Pages 2 0 R >>';
-    objs[2] = '<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
-    objs[3] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+pageW+' '+pageH+'] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>';
-    objs[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
-    objs[5] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
-    objs[6] = '<< /Length '+content.length+' >>\nstream\n'+content+'endstream';
+    objs[2] = '<< /Type /Pages /Kids ['+pages.map((_,i)=>pageObjNum(i)+' 0 R').join(' ')+'] /Count '+n+' >>';
+    pages.forEach((pageContent, i) => {
+      objs[pageObjNum(i)] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+pageW+' '+pageH+'] /Resources << /Font << /F1 '+fontRegNum+' 0 R /F2 '+fontBoldNum+' 0 R >> >> /Contents '+contentObjNum(i)+' 0 R >>';
+      objs[contentObjNum(i)] = '<< /Length '+pageContent.length+' >>\nstream\n'+pageContent+'endstream';
+    });
+    objs[fontRegNum] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+    objs[fontBoldNum] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
+
+    const total = fontBoldNum;
     let pdf = '%PDF-1.4\n';
     const offsets = [0];
-    for (let i=1;i<=6;i++){ offsets[i] = pdf.length; pdf += i+' 0 obj\n'+objs[i]+'\nendobj\n'; }
+    for (let i=1;i<=total;i++){ offsets[i] = pdf.length; pdf += i+' 0 obj\n'+objs[i]+'\nendobj\n'; }
     const xrefStart = pdf.length;
-    pdf += 'xref\n0 7\n0000000000 65535 f \n';
-    for (let i=1;i<=6;i++) pdf += String(offsets[i]).padStart(10,'0')+' 00000 n \n';
-    pdf += 'trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n'+xrefStart+'\n%%EOF';
+    pdf += 'xref\n0 '+(total+1)+'\n0000000000 65535 f \n';
+    for (let i=1;i<=total;i++) pdf += String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+    pdf += 'trailer\n<< /Size '+(total+1)+' /Root 1 0 R >>\nstartxref\n'+xrefStart+'\n%%EOF';
     return pdf;
   }
-  return { text, rect, hline, wrap, textWidth, build };
+  return { text, rect, hline, wrap, textWidth, newPage, build };
 }
 
 function exportPdf(){
@@ -6734,6 +6747,60 @@ function exportPdf(){
   const callTitle = callH3 ? callH3.textContent : '';
   const callBody = (callH3 && callH3.nextElementSibling) ? callH3.nextElementSibling.textContent : '';
   const stamp = new Date().toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+
+  /* The report has 4 tabs (Overview/Performance/Risk/Research) but repTab()
+     only toggles `hidden` — the other three tabs' content is always present
+     in the DOM, so it can be scraped here regardless of which tab a coach
+     happened to leave open. One page per tab, same real-data-only approach
+     as the Overview page above. */
+  const blTiles = [...document.querySelectorAll('#tg-bl .bltile')].map(el => ({
+    k: ((el.querySelector('.bk') || {}).textContent || '').trim(),
+    v: (el.querySelector('.gnum') || {}).textContent || '',
+    status: (el.querySelector('.status') || {}).textContent || '',
+    hook: (el.querySelector('.blhook') || {}).textContent || ''
+  }));
+  const oneFixSpans = document.querySelectorAll('#rt-performance .onefix > span');
+  const oneFixText = oneFixSpans[1] ? oneFixSpans[1].textContent : '';
+  const perfHighlights = [...document.querySelectorAll('#rt-performance .leftg .mintitem')].map(el => ({
+    t: (el.querySelector('.t') || {}).textContent || '',
+    v: ((el.querySelector('.v') || {}).textContent || '').replace(/\s+/g,' ').trim(),
+    tag: (el.querySelector('.tag') || {}).textContent || '',
+    d: (el.querySelector('.d-up, .d-dn') || {}).textContent || ''
+  }));
+
+  const riskItems = [...document.querySelectorAll('#rt-risk .riskbtn')].map(el => {
+    const lr = el.querySelectorAll('.lrlabels span');
+    return {
+      name: (el.querySelector('.head .t') || {}).textContent || '',
+      asym: (el.querySelector('.head .asym') || {}).textContent || '',
+      badge: (el.querySelector('.head .badge') || {}).textContent || '',
+      left: (lr[0] || {}).textContent || '',
+      right: (lr[1] || {}).textContent || '',
+      insight: (el.querySelector('.insight') || {}).textContent || '',
+      drill: (() => {
+        const rc = el.querySelector('.recocard');
+        if (!rc) return '';
+        // the drill text and its <small>Cue: "..."</small> sit back-to-back with no
+        // whitespace between them in the markup, so a plain textContent read runs
+        // them together ("...pre-runCue:..."); split main text from the cue first.
+        const small = rc.querySelector('small');
+        const cueText = small ? small.textContent : '';
+        const mainText = small ? rc.textContent.slice(0, rc.textContent.length - cueText.length) : rc.textContent;
+        return [mainText, cueText].map(s => s.replace(/\s+/g,' ').trim()).filter(Boolean).join('  -  ');
+      })()
+    };
+  });
+  const cues = [...document.querySelectorAll('#rt-risk .cuepills span')].map(el => el.textContent);
+
+  const papers = [...document.querySelectorAll('#rt-research .papercard')].map(el => {
+    const card = el.closest('.card');
+    return {
+      tier: (el.querySelector('.tbadge') || {}).textContent || '',
+      title: (el.querySelector('.pt') || {}).textContent || '',
+      meta: (el.querySelector('.pm') || {}).textContent || '',
+      relevance: (el.querySelector('.pr') || {}).textContent || ''
+    };
+  });
 
   const PW = 612, PH = 792, X0 = 56, CW = PW - X0*2;
   const pdf = makePdfWriter(PW, PH);
@@ -6786,8 +6853,117 @@ function exportPdf(){
   pdf.text(X0 + 18, cy + 14, 'THE NEW CALL', { size:9, bold:true, color:'#FFC700' });
   pdf.text(X0 + 18, cy + 30, callTitle, { size:13.5, bold:true, color:'#FFFFFF' });
   callLines.forEach((line, i) => pdf.text(X0 + 18, cy + 48 + i * 14, line, { size:10.5, color:'#D8D8D8' }));
-  cy += callH + 22;
 
+  /* Running header for every page after the first: same identity strip so a
+     page can't get separated from who/when it's about, plus a right-aligned
+     section label. textWidth() (already exercised above, for the score's
+     "/100") makes right-alignment safe here without needing full glyph metrics. */
+  function pageHeader(label){
+    let hy = 50;
+    pdf.text(X0, hy, 'COURO', { size:13, bold:true });
+    pdf.text(X0 + 60, hy + 2, name + '  -  ' + date, { size:9.5, color:'#565B66' });
+    pdf.text(X0 + CW - pdf.textWidth(label, 11, true), hy + 1, label, { size:11, bold:true, color:'#8A6A00' });
+    hy += 20;
+    pdf.hline(X0, hy, X0 + CW, '#1B1F1B', 1);
+    return hy + 24;
+  }
+
+  // ===== PAGE 2 — PERFORMANCE =====
+  pdf.newPage();
+  cy = pageHeader('PERFORMANCE');
+
+  if (blTiles.length){
+    pdf.text(X0, cy, 'THE BOTTOM LINE', { size:10, bold:true, color:'#8A6A00' });
+    cy += 18;
+    const tileW = (CW - (blTiles.length - 1) * 14) / blTiles.length;
+    const tileTop = cy;
+    let tileMaxH = 74;
+    blTiles.forEach((t, i) => {
+      const x = X0 + i * (tileW + 14);
+      const hookLines = pdf.wrap(t.hook, tileW - 24, 9, false).slice(0, 2);
+      const h = Math.max(74, 58 + hookLines.length * 11);
+      tileMaxH = Math.max(tileMaxH, h);
+      pdf.rect(x, tileTop, tileW, h, { stroke:'#ECE5D3', strokeW:1 });
+      pdf.text(x + 12, tileTop + 12, t.k.toUpperCase(), { size:8.5, bold:true, color:'#565B66' });
+      const scoreColor = /watch/i.test(t.status) ? '#B8860B' : '#059669';
+      pdf.text(x + 12, tileTop + 36, t.v, { size:22, bold:true, color:scoreColor });
+      pdf.text(x + 12 + pdf.textWidth(t.v, 22, true) + 6, tileTop + 44, t.status, { size:9, color:'#565B66' });
+      hookLines.forEach((l, li) => pdf.text(x + 12, tileTop + 58 + li * 11, l, { size:9 }));
+    });
+    cy = tileTop + tileMaxH + 20;
+  }
+
+  if (oneFixText){
+    const ofLines = pdf.wrap(oneFixText, CW - 32, 11, false);
+    const ofH = 16 + ofLines.length * 14;
+    pdf.rect(X0, cy, CW, ofH, { fill:'#FFFBEB', stroke:'#FDE68A', strokeW:1 });
+    ofLines.forEach((l, i) => pdf.text(X0 + 16, cy + 14 + i * 14, l, { size:11 }));
+    cy += ofH + 22;
+  }
+
+  if (perfHighlights.length){
+    pdf.text(X0, cy, "WHAT'S DRIVING PERFORMANCE", { size:10, bold:true, color:'#8A6A00' });
+    cy += 17;
+    perfHighlights.forEach((h, i) => {
+      pdf.text(X0, cy, h.t, { size:10.5, bold:true });
+      pdf.text(X0 + 220, cy, h.v, { size:10.5, bold:true, color:'#059669' });
+      pdf.text(X0 + 300, cy, h.tag + (h.d ? '  ' + h.d : ''), { size:9.5, color:'#565B66' });
+      cy += 15;
+      if (i < perfHighlights.length - 1) pdf.hline(X0, cy, X0 + CW, '#ECE5D3', 0.75);
+      cy += 11;
+    });
+  }
+
+  // ===== PAGE 3 — RISK & BODY MAP =====
+  pdf.newPage();
+  cy = pageHeader('RISK & BODY MAP');
+
+  riskItems.forEach(item => {
+    const isHigh = /high/i.test(item.badge), isWatch = /watch/i.test(item.badge);
+    const badgeColor = isHigh ? '#DC4A3F' : isWatch ? '#B8860B' : '#059669';
+    pdf.text(X0, cy, item.name, { size:12, bold:true });
+    pdf.text(X0 + CW - 80, cy, item.badge.toUpperCase(), { size:9, bold:true, color:badgeColor });
+    cy += 15;
+    if (item.left || item.right){
+      pdf.text(X0, cy, [item.left, item.right, item.asym && ('(' + item.asym + ')')].filter(Boolean).join('   '), { size:9.5, color:'#565B66' });
+      cy += 14;
+    }
+    if (item.insight){
+      pdf.wrap(item.insight, CW - 20, 10, false).forEach(l => { pdf.text(X0 + 10, cy, l, { size:10 }); cy += 13; });
+    }
+    if (item.drill){
+      pdf.wrap(item.drill, CW - 20, 9.5, false).forEach(l => { pdf.text(X0 + 10, cy, l, { size:9.5, color:'#374151' }); cy += 12; });
+    }
+    cy += 8;
+    pdf.hline(X0, cy, X0 + CW, '#ECE5D3', 0.75);
+    cy += 16;
+  });
+
+  if (cues.length){
+    pdf.text(X0, cy, 'CUES FOR NEXT RUN', { size:10, bold:true, color:'#8A6A00' });
+    cy += 16;
+    pdf.wrap(cues.join('   *   '), CW, 10.5, false).forEach(l => { pdf.text(X0, cy, l, { size:10.5 }); cy += 14; });
+  }
+
+  // ===== PAGE 4(+) — RESEARCH & SOURCES =====
+  pdf.newPage();
+  cy = pageHeader('RESEARCH & SOURCES');
+
+  papers.forEach(p => {
+    if (cy > 700){ pdf.newPage(); cy = 50; } // overflow guard: paper count isn't bounded
+    const titleLines = pdf.wrap(p.title, CW - 40, 11, false);
+    titleLines.forEach((l, i) => pdf.text(X0 + 34, cy + i * 13, l, { size:11, bold:true }));
+    pdf.text(X0, cy, p.tier, { size:9, bold:true, color:'#8A6A00' });
+    cy += Math.max(13, titleLines.length * 13) + 3;
+    pdf.text(X0 + 34, cy, p.meta, { size:9, color:'#565B66' });
+    cy += 14;
+    pdf.wrap(p.relevance, CW - 34, 9.5, false).forEach(l => { pdf.text(X0 + 34, cy, l, { size:9.5, color:'#374151' }); cy += 12; });
+    cy += 10;
+    pdf.hline(X0, cy, X0 + CW, '#ECE5D3', 0.5);
+    cy += 15;
+  });
+
+  cy += 6;
   pdf.hline(X0, cy, X0 + CW, '#ECE5D3', 0.75);
   cy += 15;
   pdf.text(X0, cy, 'Generated ' + stamp + '  -  couro.io', { size:9.5, color:'#565B66' });
