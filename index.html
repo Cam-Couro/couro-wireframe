@@ -1645,47 +1645,6 @@ body.mobile .reel .clip{ width:11rem; }
 .sc-in{ position:absolute; inset:0; display:flex; flex-direction:column; padding:2.2rem 2rem; }
 .sc-watermark{ position:absolute; right:1.4rem; bottom:1.5rem; width:2.4rem; height:auto; opacity:.9; filter:drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
 
-/* ===== PDF export sheet — screen styling is just "hidden"; the real layout
-   lives in the @media print block below, which is what window.print() sees. ===== */
-#pdfsheet{ display:none; }
-/* Chrome/Safari drop background-color and box-shadow when printing unless told
-   otherwise — without this the score card and the dark "new call" block would
-   silently render as plain white, which defeats the point of designing them. */
-.pdf-pg, .pdf-pg *{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }
-.pdf-pg{ font-family:'Lexend',sans-serif; color:#1B1F1B; max-width:52rem; margin:0 auto; }
-.pdf-hd{ display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #1B1F1B; padding-bottom:1rem; margin-bottom:1.6rem; }
-.pdf-brand{ display:flex; align-items:center; gap:.7rem; font-size:1.3rem; font-weight:700; }
-.pdf-brand img{ width:28px; height:24px; object-fit:contain; }
-.pdf-meta{ text-align:right; font-size:1.05rem; color:#565B66; }
-.pdf-meta b{ display:block; color:#1B1F1B; font-size:1.6rem; font-weight:700; }
-.pdf-hero{ display:flex; align-items:center; gap:1.6rem; background:#FAF7EE; border:1.5px solid #ECE5D3; border-radius:1rem; padding:1.4rem 1.6rem; margin-bottom:1.4rem; }
-.pdf-score{ font-size:4.2rem; font-weight:800; line-height:1; color:#059669; }
-.pdf-score small{ font-size:1.1rem; font-weight:600; color:#565B66; display:block; }
-.pdf-hero p{ font-size:1.25rem; line-height:1.5; margin:0; }
-.pdf-sec{ margin-bottom:1.4rem; }
-.pdf-sec h2{ font-size:1.05rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#8A6A00; margin:0 0 .6rem; }
-.pdf-diffrow{ display:flex; gap:1rem; flex-wrap:wrap; }
-.pdf-diffrow div{ flex:1; min-width:9rem; background:#fff; border:1.5px solid #ECE5D3; border-radius:.7rem; padding:.7rem .9rem; }
-.pdf-diffrow .k{ display:block; font-size:.95rem; color:#565B66; }
-.pdf-diffrow .v{ font-size:1.2rem; font-weight:700; }
-.pdf-drills{ list-style:none; margin:0; padding:0; }
-.pdf-drills li{ display:flex; justify-content:space-between; padding:.6rem 0; border-bottom:1px solid #ECE5D3; font-size:1.15rem; }
-.pdf-drills li b{ font-weight:600; }
-.pdf-drills li span{ color:#565B66; }
-.pdf-call{ background:#1B1F1B; color:#fff; border-radius:1rem; padding:1.2rem 1.5rem; }
-.pdf-call .k{ font-size:.95rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#FFC700; }
-.pdf-call h3{ margin:.3rem 0; font-size:1.4rem; }
-.pdf-call p{ margin:0; color:rgba(255,255,255,.75); font-size:1.1rem; }
-.pdf-ft{ display:flex; justify-content:space-between; align-items:center; margin-top:1.8rem; padding-top:1rem; border-top:1px solid #ECE5D3; font-size:1rem; color:#565B66; }
-.pdf-ft img{ width:20px; height:17px; object-fit:contain; opacity:.8; }
-@media print{
-  /* display:none (not visibility:hidden) removes the rest of the app from
-     the layout entirely — visibility:hidden keeps its full scroll height in
-     flow, which is what was producing extra blank trailing pages. */
-  body.pdf-mode > *{ display:none !important; }
-  body.pdf-mode #pdfsheet{ display:block !important; }
-  @page{ margin:.5in; }
-}
 .sc-top{ display:flex; align-items:center; justify-content:space-between; }
 .sc-brand{ display:flex; align-items:center; gap:.7rem; font-size:1.15rem; font-weight:700; letter-spacing:.02em; }
 .sc-brand img{ width:26px; height:22px; object-fit:contain; }
@@ -5747,11 +5706,8 @@ body.mobile .crumb .athnav{ width:100%; margin-top:.5rem; justify-content:space-
 </div>
 
 <!-- ===================== SHARE SHEET ===================== -->
-<!-- ===== PDF EXPORT SHEET ===== a purpose-built printable layout, populated from the
-     live report's own DOM at export time so its numbers can never drift from what's
-     on screen. Hidden on screen; only body.pdf-mode + @media print reveal it, and
-     only it — everything else in the app is visibility:hidden for that one print. -->
-<div id="pdfsheet"></div>
+<!-- PDF export (exportPdf(), in the main script block) builds a .pdf file directly
+     in memory and downloads it — no DOM sheet or print stylesheet needed here. -->
 
 <div id="share" class="ev-overlay" hidden onclick="if(event.target===this)closeShare()">
   <div class="share-wrap">
@@ -6668,6 +6624,96 @@ function shareTo(kind){
    the live report's own DOM so its numbers can never drift from what's on screen,
    then handed to the browser's native print pipeline. No external library, no
    network dependency — window.print() -> "Save as PDF" produces a real file. */
+/* ---- real PDF file generation — no print dialog ----------------------------
+   window.print() hands rendering to the OS print pipeline, which is why the
+   first version of this picked up Safari's own header/footer text and needed
+   the user to manually enable "Print backgrounds." A hand-built PDF file sent
+   straight to disk has none of that: it looks identical on every browser/OS
+   because nothing outside this function decides how it renders. The PDF
+   spec's minimal object set (Catalog/Pages/Page/Font/Contents + an xref
+   table) is simple enough to write directly — no library, no CDN, consistent
+   with the rest of this file being a single self-contained HTML document. */
+function makePdfWriter(pageW, pageH){
+  let content = '';
+  function rgb(hex){
+    const n = parseInt(hex.replace('#',''), 16);
+    return [((n>>16)&255)/255, ((n>>8)&255)/255, (n&255)/255].map(v => v.toFixed(3));
+  }
+  function esc(s){ return String(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+  /* Standard PDF text fonts (Helvetica) are single-byte WinAnsi — rather than
+     map every possible typographic character correctly, sanitize to the safe
+     printable-ASCII range. Loses nothing important: real report content here
+     is plain sentences, not typography that depends on curly quotes. */
+  function sanitize(s){
+    return String(s)
+      .replace(/[–—]/g, '-')
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/→/g, '->').replace(/↑/g, '^').replace(/↓/g, 'v')
+      .replace(/[▲▴▼▾]/g, '^')
+      .replace(/[●○•]/g, '*')
+      .replace(/·/g, '.').replace(/×/g, 'x')
+      .replace(/[^\x20-\x7E]/g, '');
+  }
+  function charW(ch, bold){
+    if (ch === ' ') return 278;
+    if (/[A-Z]/.test(ch)) return bold ? 722 : 667;
+    if (/[a-z]/.test(ch)) return bold ? 556 : 500;
+    if (/[0-9]/.test(ch)) return 556;
+    return bold ? 400 : 350;
+  }
+  function textWidth(str, size, bold){
+    let w = 0; for (const ch of sanitize(str)) w += charW(ch, bold);
+    return w / 1000 * size;
+  }
+  function wrap(str, maxW, size, bold){
+    const words = sanitize(str).split(' ');
+    const lines = []; let cur = '';
+    for (const w of words){
+      const test = cur ? cur + ' ' + w : w;
+      if (cur && textWidth(test, size, bold) > maxW){ lines.push(cur); cur = w; } else cur = test;
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  function text(x, yTop, str, opts){
+    opts = opts || {};
+    const size = opts.size || 11, bold = !!opts.bold, color = opts.color || '#1B1F1B';
+    const [r,g,b] = rgb(color);
+    const y = (pageH - yTop - size * 0.78).toFixed(2);
+    content += r+' '+g+' '+b+' rg\nBT /'+(bold?'F2':'F1')+' '+size+' Tf '+x+' '+y+' Td ('+esc(sanitize(str))+') Tj ET\n';
+  }
+  function rect(x, yTop, w, h, opts){
+    opts = opts || {};
+    const y = (pageH - yTop - h).toFixed(2);
+    if (opts.fill){ const [r,g,b] = rgb(opts.fill); content += r+' '+g+' '+b+' rg\n'+x+' '+y+' '+w+' '+h+' re f\n'; }
+    if (opts.stroke){ const [r,g,b] = rgb(opts.stroke); content += (opts.strokeW||1)+' w\n'+r+' '+g+' '+b+' RG\n'+x+' '+y+' '+w+' '+h+' re S\n'; }
+  }
+  function hline(x1, yTop, x2, color, w){
+    const [r,g,b] = rgb(color || '#ECE5D3');
+    const y = (pageH - yTop).toFixed(2);
+    content += (w||0.75)+' w\n'+r+' '+g+' '+b+' RG\n'+x1+' '+y+' m '+x2+' '+y+' l S\n';
+  }
+  function build(){
+    const objs = {};
+    objs[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+    objs[2] = '<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
+    objs[3] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+pageW+' '+pageH+'] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>';
+    objs[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+    objs[5] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
+    objs[6] = '<< /Length '+content.length+' >>\nstream\n'+content+'endstream';
+    let pdf = '%PDF-1.4\n';
+    const offsets = [0];
+    for (let i=1;i<=6;i++){ offsets[i] = pdf.length; pdf += i+' 0 obj\n'+objs[i]+'\nendobj\n'; }
+    const xrefStart = pdf.length;
+    pdf += 'xref\n0 7\n0000000000 65535 f \n';
+    for (let i=1;i<=6;i++) pdf += String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+    pdf += 'trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n'+xrefStart+'\n%%EOF';
+    return pdf;
+  }
+  return { text, rect, hline, wrap, textWidth, build };
+}
+
 function exportPdf(){
   const name = (document.getElementById('ath-name') || {}).textContent || 'Athlete';
   const date = (document.querySelector('#v-session .rep-title .dt') || {}).textContent || '';
@@ -6675,7 +6721,7 @@ function exportPdf(){
   const scoreEl = document.getElementById('rv-num');
   const score = scoreEl ? (scoreEl.dataset.final || scoreEl.textContent) : '';
   const tldr = [...document.querySelectorAll('#tg-tldr .tl')].map(el => ({
-    k: (el.querySelector('b') || {}).textContent || '', v: (el.querySelector('span') || {}).innerHTML || ''
+    k: (el.querySelector('b') || {}).textContent || '', v: (el.querySelector('span') || {}).textContent || ''
   }));
   const diffs = [...document.querySelectorAll('#tg-diff .dchip')].map(el => ({
     k: (el.querySelector('.dk') || {}).textContent || '', v: (el.querySelector('.dv') || {}).textContent || ''
@@ -6689,27 +6735,72 @@ function exportPdf(){
   const callBody = (callH3 && callH3.nextElementSibling) ? callH3.nextElementSibling.textContent : '';
   const stamp = new Date().toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
 
-  document.getElementById('pdfsheet').innerHTML =
-    '<div class="pdf-pg">'
-    + '<div class="pdf-hd"><span class="pdf-brand"><img src="'+LOGO+'" alt="">Couro</span>'
-    + '<span class="pdf-meta"><b>'+name+'</b>'+kind+' · '+date+'</span></div>'
-    + '<div class="pdf-hero"><div class="pdf-score">'+score+'<small>/ 100</small></div>'
-    + '<p>'+(tldr[0] ? tldr[0].v : '')+'</p></div>'
-    + '<div class="pdf-sec"><h2>Since last session</h2><div class="pdf-diffrow">'
-    + diffs.map(d => '<div><span class="k">'+d.k+'</span><span class="v">'+d.v+'</span></div>').join('')
-    + '</div></div>'
-    + '<div class="pdf-sec"><h2>The fix — '+fixTitle+'</h2><ul class="pdf-drills">'
-    + drills.map(d => '<li><b>'+d.t+'</b><span>'+d.m+'</span></li>').join('')
-    + '</ul></div>'
-    + '<div class="pdf-call"><span class="k">The new call</span><h3>'+callTitle+'</h3><p>'+callBody+'</p></div>'
-    + '<div class="pdf-ft"><span>Generated '+stamp+' · couro.io</span><img src="'+LOGO+'" alt="Couro"></div>'
-    + '</div>';
+  const PW = 612, PH = 792, X0 = 56, CW = PW - X0*2;
+  const pdf = makePdfWriter(PW, PH);
+  let cy = 50;
 
-  document.body.classList.add('pdf-mode');
-  const cleanup = () => { document.body.classList.remove('pdf-mode'); window.removeEventListener('afterprint', cleanup); };
-  window.addEventListener('afterprint', cleanup);
-  setTimeout(() => window.print(), 60);
-  setTimeout(cleanup, 4000); /* fallback for browsers that don't fire afterprint reliably */
+  pdf.text(X0, cy, 'COURO', { size:16, bold:true });
+  pdf.text(X0 + 78, cy + 3, 'SESSION REPORT', { size:9, bold:true, color:'#8A6A00' });
+  cy += 27;
+  pdf.text(X0, cy, name, { size:19, bold:true });
+  cy += 21;
+  pdf.text(X0, cy, kind + '  -  ' + date, { size:10.5, color:'#565B66' });
+  cy += 15;
+  pdf.hline(X0, cy, X0 + CW, '#1B1F1B', 1.5);
+  cy += 24;
+
+  const tldrLines = tldr[0] ? pdf.wrap(tldr[0].v, CW - 160, 12, false) : [];
+  const heroH = Math.max(66, 26 + tldrLines.length * 16);
+  pdf.rect(X0, cy, CW, heroH, { fill:'#FAF7EE', stroke:'#ECE5D3', strokeW:1 });
+  pdf.text(X0 + 18, cy + 14, score, { size:32, bold:true, color:'#059669' });
+  pdf.text(X0 + 18 + pdf.textWidth(score, 32, true) + 4, cy + 34, '/100', { size:10, color:'#565B66' });
+  tldrLines.forEach((line, i) => pdf.text(X0 + 150, cy + 18 + i * 16, line, { size:12 }));
+  cy += heroH + 22;
+
+  pdf.text(X0, cy, 'SINCE LAST SESSION', { size:10, bold:true, color:'#8A6A00' });
+  cy += 16;
+  const chips = diffs.slice(0, 4);
+  const chipW = (CW - (chips.length - 1) * 10) / Math.max(1, chips.length);
+  chips.forEach((d, i) => {
+    const x = X0 + i * (chipW + 10);
+    pdf.rect(x, cy, chipW, 40, { stroke:'#ECE5D3', strokeW:1 });
+    pdf.text(x + 8, cy + 9, d.k, { size:8.5, color:'#565B66' });
+    pdf.text(x + 8, cy + 24, d.v, { size:10.5, bold:true });
+  });
+  cy += 40 + 22;
+
+  pdf.text(X0, cy, ('THE FIX - ' + fixTitle).toUpperCase(), { size:10, bold:true, color:'#8A6A00' });
+  cy += 17;
+  drills.forEach((d, i) => {
+    pdf.text(X0, cy, d.t, { size:11.5, bold:true });
+    pdf.text(X0 + CW - 110, cy, d.m, { size:10, color:'#565B66' });
+    cy += 15;
+    if (i < drills.length - 1) pdf.hline(X0, cy, X0 + CW, '#ECE5D3', 0.75);
+    cy += 11;
+  });
+  cy += 8;
+
+  const callLines = pdf.wrap(callBody, CW - 40, 10.5, false);
+  const callH = 48 + callLines.length * 14;
+  pdf.rect(X0, cy, CW, callH, { fill:'#1B1F1B' });
+  pdf.text(X0 + 18, cy + 14, 'THE NEW CALL', { size:9, bold:true, color:'#FFC700' });
+  pdf.text(X0 + 18, cy + 30, callTitle, { size:13.5, bold:true, color:'#FFFFFF' });
+  callLines.forEach((line, i) => pdf.text(X0 + 18, cy + 48 + i * 14, line, { size:10.5, color:'#D8D8D8' }));
+  cy += callH + 22;
+
+  pdf.hline(X0, cy, X0 + CW, '#ECE5D3', 0.75);
+  cy += 15;
+  pdf.text(X0, cy, 'Generated ' + stamp + '  -  couro.io', { size:9.5, color:'#565B66' });
+
+  const blob = new Blob([pdf.build()], { type:'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Couro - ' + name.replace(/[^\w\- ]/g,'') + ' - ' + date.replace(/[^\w\- ]/g,'') + '.pdf';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
 function initials(n){ return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
